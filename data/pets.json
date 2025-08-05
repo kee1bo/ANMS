@@ -1,0 +1,97 @@
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "name": "Buddy",
+        "species": "bird",
+        "breed": "Golden Retriever",
+        "age": 3,
+        "weight": 25.5,
+        "ideal_weight": 24,
+        "activity_level": "low",
+        "health_status": "Healthy",
+        "photo": "\ud83d\udc26",
+        "personality": "Friendly and energetic",
+        "created_at": "2025-07-29 18:52:54",
+        "gender": "",
+        "body_condition_score": null,
+        "spayed_neutered": "",
+        "medical_conditions": "",
+        "medications": "",
+        "dietary_notes": "",
+        "updated_at": "2025-07-30 14:03:37"
+    },
+    {
+        "id": 2,
+        "user_id": 7,
+        "name": "blue",
+        "species": "Cat",
+        "breed": "roon",
+        "age": 12,
+        "weight": 16,
+        "ideal_weight": 16,
+        "activity_level": "Low",
+        "health_status": "Healthy",
+        "photo": "\ud83d\udc31",
+        "personality": null,
+        "created_at": "2025-07-29 20:42:28"
+    },
+    {
+        "id": 3,
+        "user_id": 1,
+        "name": "Max",
+        "species": "dog",
+        "breed": "Golden Retriever",
+        "gender": "male",
+        "age": 3,
+        "weight": 25.2,
+        "ideal_weight": 24,
+        "body_condition_score": 5,
+        "activity_level": "medium",
+        "spayed_neutered": "yes",
+        "medical_conditions": "",
+        "medications": "",
+        "personality": "Friendly and energetic",
+        "dietary_notes": "No known allergies",
+        "health_status": "healthy",
+        "photo": "\ud83d\udc15",
+        "created_at": "2025-07-29 20:58:46",
+        "updated_at": "2025-07-30 05:00:45",
+        "nutrition_data": {
+            "daily_calories": null,
+            "protein_requirement": null,
+            "fat_requirement": null,
+            "carb_requirement": null,
+            "feeding_schedule": [],
+            "current_food": null,
+            "food_preferences": [],
+            "allergies": []
+        },
+        "health_records": [
+            {
+                "id": 1,
+                "type": "vet_visit",
+                "date": "2025-07-29",
+                "title": "Annual checkup",
+                "notes": "All vitals normal, vaccinations up to date",
+                "vet_name": "Dr. Smith",
+                "recorded_at": "2025-07-30 05:00:45"
+            }
+        ],
+        "weight_history": [
+            {
+                "date": "2025-07-29",
+                "weight": 25.5,
+                "body_condition_score": 5,
+                "notes": "Initial weight record"
+            },
+            {
+                "date": "2025-07-29",
+                "weight": 25.2,
+                "body_condition_score": 5,
+                "notes": "Weekly weigh-in",
+                "recorded_at": "2025-07-30 04:57:40"
+            }
+        ]
+    }
+]

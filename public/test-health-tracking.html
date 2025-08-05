@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Tracking Test - ANMS</title>
+    <link rel="stylesheet" href="assets/css/design-tokens.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/enhanced-style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Health Tracking Interface Test</h1>
+        
+        <div class="test-section">
+            <h2>Health Dashboard Demo</h2>
+            <button id="show-health-dashboard" class="btn btn--primary">
+                Show Health Dashboard
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h2>Health Forms Demo</h2>
+            <div class="btn-group">
+                <button id="show-log-vitals" class="btn btn--secondary">Log Vitals</button>
+                <button id="show-log-activity" class="btn btn--secondary">Log Activity</button>
+                <button id="show-add-medication" class="btn btn--secondary">Add Medication</button>
+                <button id="show-add-record" class="btn btn--secondary">Add Health Record</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modal-container"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/modules/state-manager.js"></script>
+    <script src="assets/js/modules/form-validator.js"></script>
+    <script src="assets/js/modules/pet-manager.js"></script>
+    <script src="assets/js/modules/nutrition-manager.js"></script>
+    <script src="assets/js/modules/health-tracking-manager.js"></script>
+    <script src="assets/js/components/modal.js"></script>
+    <script src="assets/js/components/notification.js"></script>
+    <script src="assets/js/components/form-components.js"></script>
+    <script src="assets/js/components/health-tracking.js"></script>
+    <script src="assets/js/ui-manager.js"></script>
+    <script src="assets/js/auth.js"></script>
+
+    <script>
+        // Mock API Client for testing
+        class MockAPIClient {
+            async get(url, params) {
+                console.log('Mock GET:', url, params);
+                return { data: this.getMockData(url) };
+            }
+            
+            async post(url, data) {
+                console.log('Mock POST:', url, data);
+                return { data: { success: true, id: Math.random() } };
+            }
+            
+            getMockData(url) {
+                if (url.includes('/health')) {
+                    return {
+                        weight: {
+                            current: 25.5,
+                            ideal: 24.0,
+                            trend: 'stable',
+                            last_weighed: '2024-01-10',
+                            entries: []
+                        },
+                        vitals: {
+                            temperature: 38.7,
+                            heart_rate: 85,
+                            respiratory_rate: 22,
+                            last_checked: '2024-01-08'
+                        },
+                        activity: {
+                            daily_exercise: '45 minutes',
+                            last_activity: '2024-01-10',
+                            progress: 75
+                        },
+                        medications: [],
+                        alerts: [],
+                        records: []
+                    };
+                }
+                return {};
+            }
+        }
+
+        // Mock Auth Manager
+        class MockAuthManager {
+            isAuthenticated() { return true; }
+            getCurrentUser() { return { id: 1, name: 'Test User' }; }
+        }
+
+        // Initialize components
+        const mockApiClient = new MockAPIClient();
+        const mockAuth = new MockAuthManager();
+        const stateManager = new StateManager();
+        const ui = new UIManager();
+        const healthTracking = new HealthTrackingManager(mockApiClient, stateManager);
+
+        // Mock pet data
+        const mockPet = {
+            id: 1,
+            name: 'Buddy',
+            species: 'dog',
+            current_weight: 25.5,
+            ideal_weight: 24.0,
+            activity_level: 'moderate'
+        };
+
+        // Test button handlers
+        document.getElementById('show-health-dashboard').addEventListener('click', () => {
+            const healthData = healthTracking.generateMockHealthData(1);
+            const modal = ui.createModal(
+                `${mockPet.name} - Health Dashboard`,
+                ui.renderHealthDashboard(mockPet, healthData),
+                'fullscreen'
+            );
+            document.body.appendChild(modal);
+            
+            // Initialize health dashboard functionality
+            initializeHealthDashboard(modal);
+        });
+
+        document.getElementById('show-log-vitals').addEventListener('click', () => {
+            const modal = ui.createModal(
+                'Log Vital Signs',
+                ui.renderLogVitalsForm(mockPet.id),
+                'medium'
+            );
+            document.body.appendChild(modal);
+        });
+
+        document.getElementById('show-log-activity').addEventListener('click', () => {
+            const modal = ui.createModal(
+                'Log Activity',
+                ui.renderLogActivityForm(mockPet.id),
+                'medium'
+            );
+            document.body.appendChild(modal);
+        });
+
+        document.getElementById('show-add-medication').addEventListener('click', () => {
+            const modal = ui.createModal(
+                'Add Medication',
+                ui.renderAddMedicationForm(mockPet.id),
+                'medium'
+            );
+            document.body.appendChild(modal);
+        });
+
+        document.getElementById('show-add-record').addEventListener('click', () => {
+            const modal = ui.createModal(
+                'Add Health Record',
+                ui.renderAddHealthRecordForm(mockPet.id),
+                'large'
+            );
+            document.body.appendChild(modal);
+        });
+
+        // Health dashboard initialization function
+        function initializeHealthDashboard(modal) {
+            const healthTabs = modal.querySelectorAll('.health-tab');
+            const healthTabContents = modal.querySelectorAll('.health-tab-content');
+
+            healthTabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const targetTab = e.target.dataset.tab;
+                    
+                    // Remove active class from all tabs and contents
+                    healthTabs.forEach(t => t.classList.remove('health-tab--active'));
+                    healthTabContents.forEach(content => {
+                        content.classList.remove('health-tab-content--active');
+                    });
+                    
+                    // Add active class to clicked tab and corresponding content
+                    e.target.classList.add('health-tab--active');
+                    const targetContent = modal.querySelector(`[data-tab-content="${targetTab}"]`);
+                    if (targetContent) {
+                        targetContent.classList.add('health-tab-content--active');
+                    }
+                });
+            });
+        }
+
+        // Global click handler for modal actions
+        document.addEventListener('click', (event) => {
+            const target = event.target.closest('[data-action]');
+            if (!target) return;
+
+            const action = target.dataset.action;
+
+            switch (action) {
+                case 'close-modal':
+                    ui.closeModal();
+                    break;
+                case 'dismiss-alert':
+                    target.closest('.alert-item').remove();
+                    ui.showSuccess('Alert dismissed');
+                    break;
+            }
+        });
+
+        // Global form handler
+        document.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const form = event.target;
+            const action = form.dataset.action;
+
+            console.log('Form submitted:', action, new FormData(form));
+            ui.closeModal();
+            ui.showSuccess(`${action} completed successfully!`);
+        });
+
+        console.log('Health Tracking Test Page Loaded');
+    </script>
+
+    <style>
+        .test-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+        }
+        
+        .test-section h2 {
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-group .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+    </style>
+</body>
+</html>

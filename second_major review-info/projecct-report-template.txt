@@ -1,0 +1,304 @@
+
+
+
+
+
+
+
+
+
+
+FACULTY OF SCIENCE & TECHNOLOGY
+
+
+
+
+
+
+MSc [Degree Title] 
+[Month Year] 
+
+
+
+
+
+
+[Dissertation Title] 
+
+
+
+
+by
+
+
+
+
+[Your Name] 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Faculty of Science & Technology
+Department of Computing and Informatics
+Individual Masters Project
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Abstract
+
+[The text within the square brackets must be deleted along with the square brackets when finalising your own abstract. 
+
+The abstract for an undergraduate dissertation should be between 200 - 350 words.
+
+Arial, Normal, 11pt with 1.2 or 1.5 line spacing should be used. The text in this part has 1.5 line spacing.
+
+An abstract is a brief, accurate and comprehensive summary of the entire dissertation. It is the first thing to be read by your examiners to help them know the brief content of the dissertation. It also serves as a “sales pitch” to form the first impression of your work. 
+
+A good abstract should be accurate, self-contained, concise, specific and clear. A quick way to assess the quality of your abstract is to check whether it answers the questions why, how, what and so what.
+
+It is easier to write the Abstract the last.]
+
+Dissertation Declaration
+
+[The text within the square brackets must be deleted along with the square brackets when finalising your declaration.
+
+Arial, Normal, 11pt with 1.2 line spacing should be used. The text in this part has 1.2 line spacing.
+
+Note if your project is CONFIDENTIAL because of your client, you will need to adapt this declaration based on the agreement between you and your client accordingly. Do not forget to state the name of your client clearly.]
+
+I agree that, should the University wish to retain it for reference purposes, a copy of my dissertation may be held by Bournemouth University normally for a period of 3 academic years. I understand that once the retention period has expired my dissertation will be destroyed.
+
+Confidentiality
+
+I confirm that this dissertation does not contain information of a commercial or confidential nature or include personal information other than that which would normally be in the public domain unless the relevant permissions have been obtained. Any information which identifies a particular individual's religious or political beliefs, information relating to their health, ethnicity, criminal history, or sex life has been anonymised unless permission has been granted for its publication from the person to whom it relates.
+
+Copyright
+
+The copyright for this dissertation remains with me.
+
+Requests for Information
+
+I agree that this dissertation may be made available as the result of a request for information under the Freedom of Information Act.
+
+
+Signed:                                                                                                     .
+
+Name:  [Your name] 
+
+Date:  [Date of signing this declaration] 
+
+Programme:  [Your degree title] 
+
+
+Original Work Declaration
+
+This dissertation and the project that it is based on are my own work, except where stated, in accordance with University regulations.
+ 
+ 
+Signed:                                                                                                     . 
+
+Name:  [Your name] 
+ 
+Date:  [Date of signing this declaration] 
+
+Acknowledgments
+
+[The text within the square brackets must be deleted along with the square brackets when finalising your own acknowledgements. 
+
+Arial, Normal, 11pt with 1.2 or 1.5 line spacing should be used. The text in this part has 1.5 line spacing.
+
+This is your opportunity to mention individuals who have been particularly helpful. Reading the acknowledgements in the past dissertations in the project library will give you an idea of the ways in which different kinds of help have been appreciated and mentioned.]
+ 
+
+TABLE OF CONTENTS
+[The text within the square brackets must be deleted along with the square brackets when finalising your Table of Contents. 
+
+If you use the standard headings in this template, Heading 1, Heading 2 and Heading 3, you can instruct Word to build your Table of Contents for you. Choose the References ribbon, and the leftmost item is Table of Contents.  Choose “Insert Table of Contents…” and click OK in the popup window, and your table will be built. Then if you change things just right click the generated TOC and choose “Update field”, then choose “Update entire table”.
+
+An example is provided below – you can simply update it to make your own table of contents.]
+
+1	INTRODUCTION	1
+1.1	Problem definition	2
+1.2	Aims and objectives	2
+1.3	Sample heading	2
+1.4	Another sample heading	2
+2	CHAPTER TITLE	3
+2.1	Sample heading	3
+2.2	Another sample heading	3
+3	ANOTHER CHAPTER	4
+3.1	Sample heading	4
+4	CHAPTER TITLE	5
+5	CHAPTER TITLE	6
+6	CHAPTER TITLE	7
+7	CONCLUSION	8
+REFERENCES	9
+APPENDIX A	10
+
+
+LIST OF FIGURES
+[The text within the square brackets must be deleted along with the square brackets when finalising your List of Figures. 
+
+If you use the standard captions in this template, you can instruct Word to build your List of Figures for you. After inserting a figure, always select the figure and choose the References ribbon, and the middle item is Insert Caption. Click it and click OK to confirm. Then follow the same step in the Table of Contents to build your List of Figures.
+
+An example is provided below – you can simply update it to make your own list of figures.]
+
+Figure 1: Example figure.	1
+Figure 2: Sample figure.	4
+Figure 3: Sample figure.	8
+
+    1 INTRODUCTION
+
+[The text within the square brackets must be deleted along with the square brackets when finalising your chapters. 
+
+This is only a guidance template. Depending on the nature of your project, the structure of your dissertation is open to discussion. Please check with your supervisor if you are not sure. 
+
+Arial, Normal, 11pt with 1.2 or 1.5 line spacing should be used in the main body. The text in this part has 1.5 line spacing. 
+
+Figures must be correctly numbered with captions and paragraph text should not be wrapped around figures - same rules apply to tables. An example of figures can be found below.
+
+Figure 1: Example figure.
+
+The Introduction chapter can cover the following information:
+    • Problem definition,
+    • Aims and objectives,
+    • Success criteria for each objective, 
+    • Overview of the remaining chapters, etc.
+
+All chapters can have sub-sections.]
+
+
+        1.1 Problem definition
+
+
+
+        1.2 Aims and objectives
+
+
+
+
+        1.3 Sample heading
+
+
+
+        1.4 Another sample heading
+
+
+
+
+
+    2 CHAPTER TITLE
+
+
+        2.1 Sample heading
+
+
+
+        2.2 Another sample heading
+
+
+
+
+    3 ANOTHER CHAPTER
+
+
+        3.1 Sample heading
+
+
+
+Figure 2: Sample figure.
+
+
+
+
+
+
+    4 CHAPTER TITLE
+
+
+
+
+
+
+    5 CHAPTER TITLE
+
+
+
+
+
+    6 CHAPTER TITLE
+
+
+
+
+
+
+
+
+
+
+    7 CONCLUSION
+[The text within the square brackets must be deleted along with the square brackets themselves when finalising your chapters. 
+
+Arial, Normal, 11pt with 1.2 or 1.5 line spacing should be used. The text in this part has 1.5 line spacing.
+
+Figures must be correctly numbered with captions and paragraph text should not be wrapped around figures - same rules apply to tables. An example of figures can be found below.
+
+
+Figure 3: Sample figure.
+
+Conclusion chapter marks the end of the project report and it is a summary which brings together many of the points that you have made in other chapters. Future work, any limitations or potential improvements can be included here.
+
+Word count should be included at the end of the last section. Please look at Section 5 of the Project Handbook for word count policy.]
+Word count (main body of the report): 
+
+REFERENCES
+[The text within the square brackets must be deleted along with the square brackets themselves when finalising your Bibliography. 
+
+The References (sometimes called Bibliography) section contains a list of work cited in your dissertation. References should be listed according to BU Harvard Style. For more details, please visit: https://libguides.bournemouth.ac.uk/bu-referencing-harvard-style.]
+
+APPENDIX A
+[The text within the square brackets must be deleted along with the square brackets themselves when finalising this part. 
+
+Each Appendix should be identified with a letter (A, B, C, …).
+
+You should not assume that people will read an appendix unless they are directed to do so in the main body of the report, and even then you should make the Main Body self-contained as the appendix may not be read in detail; the appendix is not a way of subverting the word count limit of the Main Body of the report. You can direct a reader to an appendix with a phrase such as “see appendix A for further details”.
+
+The following list of documents must be included as appendices:
+    • Project Proposal including your original plan
+    • A copy of Completed and approved BU Research Ethics Checklist
+    • List of the contents of the Large File (code/artefact) submission on Brightspace
+    • Artefact (e.g., System Requirements Specifications, Company Reports, Network Designs, Software Designs, Test Plans and Results, Business Plans, etc.)
+
+The following list of documents could be included as appendices:
+    • Important communications between you and your client (private data should be deleted and all data should be anonymised)]
+    • Extra background information that is not included in the main body but is helpful to understand the project such as a brief summary of the used methods or techniques.
+    • Revised project proposals and plans.
+    • Any other relevant information, please discuss with your supervisor first.

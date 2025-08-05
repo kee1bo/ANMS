@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - PetCare Pro</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 20px;
+            background: #f9fafb;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .status-good { color: #22c55e; }
+        .status-error { color: #ef4444; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        #test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>PetCare Pro - Debug Dashboard</h1>
+    
+    <div class="debug-section">
+        <h2>API Tests</h2>
+        <button onclick="testLogin()">Test Login (Mock Credentials)</button>
+        <button onclick="testHealthCheck()">Test Health Check</button>
+        <button onclick="testWithAuth()">Test Get Pets (With Auth)</button>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Frontend Tests</h2>
+        <button onclick="testCSS()">Test CSS Loading</button>
+        <button onclick="testJS()">Test JavaScript Loading</button>
+        <button onclick="openMainApp()">Open Main Application</button>
+    </div>
+    
+    <div id="test-results"></div>
+
+    <script>
+        const results = document.getElementById('test-results');
+        let authToken = null;
+
+        function log(message) {
+            results.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            console.log(message);
+        }
+
+        async function testLogin() {
+            log('Testing login...');
+            try {
+                const response = await fetch('/api.php?action=auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'login',
+                        email: 'test@example.com',
+                        password: 'password'
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    authToken = data.token;
+                    log('✅ Login successful! Token: ' + data.token.substr(0, 20) + '...');
+                    log('✅ User: ' + data.user.name + ' (' + data.user.email + ')');
+                } else {
+                    log('❌ Login failed: ' + data.error);
+                }
+            } catch (error) {
+                log('❌ Login error: ' + error.message);
+            }
+        }
+
+        async function testHealthCheck() {
+            log('Testing health check...');
+            try {
+                const response = await fetch('/api.php?action=health');
+                const data = await response.json();
+                if (data.success) {
+                    log('✅ API Health: ' + data.status);
+                } else {
+                    log('❌ Health check failed');
+                }
+            } catch (error) {
+                log('❌ Health check error: ' + error.message);
+            }
+        }
+
+        async function testWithAuth() {
+            if (!authToken) {
+                log('❌ No auth token. Please login first.');
+                return;
+            }
+            
+            log('Testing authenticated request...');
+            try {
+                const response = await fetch('/api.php?action=get_pets', {
+                    headers: {
+                        'Authorization': 'Bearer ' + authToken,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    log('✅ Got pets data: ' + data.pets.length + ' pets found');
+                    data.pets.forEach(pet => {
+                        log('  - ' + pet.name + ' (' + pet.species + ')');
+                    });
+                } else {
+                    log('❌ Get pets failed: ' + data.error);
+                }
+            } catch (error) {
+                log('❌ Get pets error: ' + error.message);
+            }
+        }
+
+        function testCSS() {
+            log('Testing CSS files...');
+            const cssFiles = [
+                'assets/css/design-tokens.css',
+                'assets/css/design-system.css', 
+                'assets/css/modern-landing.css',
+                'assets/css/dashboard.css',
+                'assets/css/modal-fixes.css'
+            ];
+            
+            cssFiles.forEach(async (file) => {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        log('✅ CSS loaded: ' + file);
+                    } else {
+                        log('❌ CSS failed: ' + file + ' (' + response.status + ')');
+                    }
+                } catch (error) {
+                    log('❌ CSS error: ' + file + ' - ' + error.message);
+                }
+            });
+        }
+
+        function testJS() {
+            log('Testing JavaScript files...');
+            const jsFiles = [
+                'assets/js/api-client.js',
+                'assets/js/modern-app.js'
+            ];
+            
+            jsFiles.forEach(async (file) => {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        log('✅ JS loaded: ' + file);
+                    } else {
+                        log('❌ JS failed: ' + file + ' (' + response.status + ')');
+                    }
+                } catch (error) {
+                    log('❌ JS error: ' + file + ' - ' + error.message);
+                }
+            });
+        }
+
+        function openMainApp() {
+            log('Opening main application...');
+            window.open('/', '_blank');
+        }
+
+        // Auto-run health check on load
+        window.onload = () => {
+            log('Debug dashboard loaded');
+            testHealthCheck();
+        };
+    </script>
+</body>
+</html>

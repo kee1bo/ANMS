@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANMS - Animal Nutrition Management System</title>
+    <meta name="description" content="A web-based system for creating personalized animal nutrition plans based on scientific guidelines. An MSc Information Technology research project by Malik Zia ul islam.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>ANMS</h1>
+                    <p>Animal Nutrition Management</p>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <a href="#features">Features</a>
+                <a href="#research">Research</a>
+                <a href="#demo">Demo</a>
+            </nav>
+            <div class="header-actions">
+                <a href="?action=login" class="btn btn-secondary">Access System</a>
+                <a href="?action=login" class="btn btn-primary">Try Demo</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="section-badge">MSc Information Technology Research Project by Malik Zia ul islam</div>
+                <h1>Precision Nutrition for <span class="highlight">Optimal Animal Health</span></h1>
+                <p>A web-based system for creating personalized animal nutrition plans based on scientific guidelines. Developed to revolutionize animal care through data-driven health management.</p>
+                <div class="hero-actions">
+                    <a href="?action=login" class="btn btn-primary">Explore Demo System</a>
+                    <a href="#research" class="btn btn-secondary">View Research Details</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <span class="section-badge">Core Capabilities</span>
+                <h2>Research-Driven Features</h2>
+                <p>Built on academic research and scientific principles, offering comprehensive tools for professional animal nutrition management.</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                        <h3>Algorithm-Driven Diet Planning</h3>
+                        <p>Generates personalized nutrition plans based on species, age, weight, and health conditions with an accuracy of over 95% against veterinary guidelines.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h10M7 12h10M7 17h10"/></svg>
+                        </div>
+                        <h3>Comprehensive Database</h3>
+                        <p>Manages detailed animal profiles, nutritional requirements, and food composition data with query performance under 2 seconds.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <h3>Real-Time Health Monitoring</h3>
+                        <p>Track weight changes, activity levels, and health metrics with automated report generation for data-driven care.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Section -->
+        <section id="research" class="research">
+            <div class="container">
+                <div class="research-content">
+                    <div class="research-text">
+                        <span class="section-badge">Academic Foundation</span>
+                        <h2>MSc Information Technology Research</h2>
+                        <p>This system is the outcome of a dissertation project exploring the intersection of technology and animal healthcare, focusing on data-driven nutrition management solutions.</p>
+                        <div class="research-points">
+                            <div class="research-point">
+                                <svg class="research-point-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <div>
+                                    <h4>Accurate & Personalized Plans</h4>
+                                    <p>How can a web system translate animal data into actionable nutritional plans?</p>
+                                </div>
+                            </div>
+                            <div class="research-point">
+                                <svg class="research-point-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <div>
+                                    <h4>Rule-Based Algorithm</h4>
+                                    <p>What is the most effective way to implement a rule-based algorithm from veterinary science?</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="research-image">
+                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=2670&auto=format&fit=crop" alt="A happy dog being fed.">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="demo" class="cta">
+            <div class="container">
+                <h2>Explore the Research System</h2>
+                <p>Access the fully functional demonstration system and experience how academic research translates into practical animal nutrition management solutions.</p>
+                <a href="?action=login" class="btn btn-secondary">Access Demo (test@example.com / password)</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 ANMS Research Project by Malik Zia ul islam. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#features">Features</a>
+                    <a href="#research">Research</a>
+                    <a href="?action=login">Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

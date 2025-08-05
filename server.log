@@ -1,0 +1,85 @@
+[Thu Jul 31 12:24:33 2025] PHP 8.3.6 Development Server (http://localhost:8080) started
+[Thu Jul 31 12:24:37 2025] 127.0.0.1:54890 Accepted
+[Thu Jul 31 12:24:37 2025] 127.0.0.1:54890 [404]: GET /auth/user-dashboard.html - No such file or directory
+[Thu Jul 31 12:24:37 2025] 127.0.0.1:54890 Closing
+[Thu Jul 31 12:24:44 2025] 127.0.0.1:54896 Accepted
+[Thu Jul 31 12:24:44 2025] 127.0.0.1:54896 [200]: GET /test-meal-planner-enhanced.html
+[Thu Jul 31 12:24:44 2025] 127.0.0.1:54896 Closing
+[Thu Jul 31 12:26:09 2025] 127.0.0.1:39776 Accepted
+[Thu Jul 31 12:26:09 2025] 127.0.0.1:39776 [404]: GET /auth/user-dashboard.html - No such file or directory
+[Thu Jul 31 12:26:09 2025] 127.0.0.1:39776 Closing
+[Thu Jul 31 12:39:12 2025] 127.0.0.1:36530 Accepted
+[Thu Jul 31 12:39:12 2025] 127.0.0.1:36530 [200]: GET /test-food-database-manager.html
+[Thu Jul 31 12:39:12 2025] 127.0.0.1:36530 Closing
+[Thu Jul 31 13:20:29 2025] 127.0.0.1:60010 Accepted
+[Thu Jul 31 13:20:29 2025] 127.0.0.1:60010 [404]: GET /auth/user-dashboard.html - No such file or directory
+[Thu Jul 31 13:20:29 2025] 127.0.0.1:60010 Closing
+[Thu Jul 31 13:21:00 2025] 127.0.0.1:50238 Accepted
+[Thu Jul 31 13:21:00 2025] 127.0.0.1:50238 [404]: GET /auth/user-dashboard.html - No such file or directory
+[Thu Jul 31 13:21:00 2025] 127.0.0.1:50238 Closing
+[Thu Jul 31 13:21:04 2025] 127.0.0.1:50242 Accepted
+[Thu Jul 31 13:21:04 2025] 127.0.0.1:50242 [404]: GET /manifest.json - No such file or directory
+[Thu Jul 31 13:21:04 2025] 127.0.0.1:50242 Closing
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41006 Accepted
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41006 [200]: GET /?id=47b8a54f-1829-4b66-9e8c-96e1ff1e2bd9&vscodeBrowserReqId=1753948298549
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41006 Closing
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41012 Accepted
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41028 Accepted
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41038 Accepted
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41044 Accepted
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41050 Accepted
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41058 Accepted
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41012 [200]: GET /assets/css/app.css
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41028 [200]: GET /assets/css/nutrition-calculator.css
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41038 [200]: GET /assets/css/meal-planner.css
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41044 [200]: GET /assets/js/app.js
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41050 [200]: GET /assets/js/components/nutrition-calculator.js
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41058 [200]: GET /assets/js/components/meal-planner.js
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41012 Closing
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41028 Closing
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41038 Closing
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41044 Closing
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41050 Closing
+[Thu Jul 31 13:21:38 2025] 127.0.0.1:41058 Closing
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33954 Accepted
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33954 [200]: GET /
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33954 Closing
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33966 Accepted
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33966 [200]: GET /assets/css/app.css
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33966 Closing
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33968 Accepted
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33972 Accepted
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33968 [200]: GET /assets/css/nutrition-calculator.css
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33972 [200]: GET /assets/css/meal-planner.css
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33968 Closing
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33972 Closing
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33978 Accepted
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33978 [200]: GET /assets/js/app.js
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33978 Closing
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33986 Accepted
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33998 Accepted
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33986 [200]: GET /assets/js/components/nutrition-calculator.js
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33998 [200]: GET /assets/js/components/meal-planner.js
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33986 Closing
+[Thu Jul 31 13:21:55 2025] 127.0.0.1:33998 Closing
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34004 Accepted
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34004 [200]: GET /
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34004 Closing
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34018 Accepted
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34020 Accepted
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34026 Accepted
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34028 Accepted
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34036 Accepted
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34048 Accepted
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34018 [200]: GET /assets/css/app.css
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34020 [200]: GET /assets/css/nutrition-calculator.css
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34026 [200]: GET /assets/css/meal-planner.css
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34028 [200]: GET /assets/js/app.js
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34036 [200]: GET /assets/js/components/nutrition-calculator.js
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34018 Closing
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34020 Closing
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34026 Closing
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34028 Closing
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34036 Closing
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34048 [200]: GET /assets/js/components/meal-planner.js
+[Thu Jul 31 13:22:04 2025] 127.0.0.1:34048 Closing

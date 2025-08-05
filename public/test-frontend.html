@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANMS Frontend Test</title>
+    <link rel="stylesheet" href="assets/css/design-tokens.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/enhanced-style.css">
+    <style>
+        .test-section {
+            margin: var(--space-8) 0;
+            padding: var(--space-6);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            background: var(--white);
+        }
+        
+        .test-section h2 {
+            color: var(--primary-600);
+            margin-bottom: var(--space-4);
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+            margin-top: var(--space-4);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: var(--space-2);
+        }
+        
+        .status-success { background-color: var(--success-500); }
+        .status-warning { background-color: var(--warning-500); }
+        .status-error { background-color: var(--error-500); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; padding: var(--space-8) 0;">
+            <h1>🧪 ANMS Frontend Test Suite</h1>
+            <p>Testing the complete frontend implementation</p>
+        </header>
+
+        <!-- Authentication Test -->
+        <div class="test-section">
+            <h2>🔐 Authentication System</h2>
+            <p>Test user registration, login, and authentication flows</p>
+            <div class="test-buttons">
+                <button class="btn btn--primary" onclick="testLogin()">Test Login Modal</button>
+                <button class="btn btn--secondary" onclick="testRegister()">Test Register Modal</button>
+                <button class="btn btn--secondary" onclick="testUserProfile()">Test User Profile</button>
+            </div>
+        </div>
+
+        <!-- Pet Management Test -->
+        <div class="test-section">
+            <h2>🐕 Pet Management System</h2>
+            <p>Test pet creation, editing, and detailed views</p>
+            <div class="test-buttons">
+                <button class="btn btn--primary" onclick="testAddPet()">Test Add Pet</button>
+                <button class="btn btn--secondary" onclick="testEditPet()">Test Edit Pet</button>
+                <button class="btn btn--secondary" onclick="testPetDetails()">Test Pet Details</button>
+                <button class="btn btn--secondary" onclick="testUploadPhoto()">Test Photo Upload</button>
+            </div>
+        </div>
+
+        <!-- Health Tracking Test -->
+        <div class="test-section">
+            <h2>📊 Health Tracking</h2>
+            <p>Test health data entry and tracking features</p>
+            <div class="test-buttons">
+                <button class="btn btn--primary" onclick="testLogWeight()">Test Log Weight</button>
+                <button class="btn btn--secondary" onclick="testHealthCheckup()">Test Health Checkup</button>
+                <button class="btn btn--secondary" onclick="testScheduleFeeding()">Test Schedule Feeding</button>
+            </div>
+        </div>
+
+        <!-- Nutrition System Test -->
+        <div class="test-section">
+            <h2>🥗 Nutrition Planning</h2>
+            <p>Test nutrition plan generation and management</p>
+            <div class="test-buttons">
+                <button class="btn btn--primary" onclick="testNutritionWizard()">Test Nutrition Wizard</button>
+                <button class="btn btn--secondary" onclick="testNutritionPlan()">Test Generated Plan</button>
+                <button class="btn btn--secondary" onclick="testMealCalendar()">Test Meal Calendar</button>
+                <button class="btn btn--secondary" onclick="testPortionCalculator()">Test Portion Calculator</button>
+                <button class="btn btn--secondary" onclick="testFoodRecommendations()">Test Food Recommendations</button>
+            </div>
+        </div>
+
+        <!-- UI Components Test -->
+        <div class="test-section">
+            <h2>🎨 UI Components</h2>
+            <p>Test individual UI components and interactions</p>
+            <div class="test-buttons">
+                <button class="btn btn--primary" onclick="testNotifications()">Test Notifications</button>
+                <button class="btn btn--secondary" onclick="testModals()">Test Modal System</button>
+                <button class="btn btn--secondary" onclick="testFormValidation()">Test Form Validation</button>
+                <button class="btn btn--secondary" onclick="testSettings()">Test Settings</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Test -->
+        <div class="test-section">
+            <h2>📈 Dashboard</h2>
+            <p>Test dashboard rendering and functionality</p>
+            <div class="test-buttons">
+                <button class="btn btn--primary" onclick="testDashboard()">Test Dashboard</button>
+                <button class="btn btn--secondary" onclick="testLandingPage()">Test Landing Page</button>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="test-section">
+            <h2>⚡ System Status</h2>
+            <div id="system-status">
+                <p><span class="status-indicator status-success"></span>Frontend modules loaded</p>
+                <p><span class="status-indicator status-success"></span>CSS design system active</p>
+                <p><span class="status-indicator status-warning"></span>Backend API connection (test required)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript Modules -->
+    <script src="assets/js/modules/state-manager.js"></script>
+    <script src="assets/js/modules/form-validator.js"></script>
+    <script src="assets/js/modules/pet-manager.js"></script>
+    <script src="assets/js/modules/nutrition-manager.js"></script>
+    <script src="assets/js/components/modal.js"></script>
+    <script src="assets/js/components/form-components.js"></script>
+    <script src="assets/js/components/notification.js"></script>
+    <script src="assets/js/ui-manager.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        // Test Functions
+        let testApp;
+
+        // Initialize test environment
+        document.addEventListener('DOMContentLoaded', () => {
+            // Create a test instance of the app without auto-initialization
+            const apiClient = new APIClient();
+            const ui = new UIManager();
+            const stateManager = new StateManager();
+            const auth = new AuthManager(apiClient);
+            const petManager = new PetManager(apiClient, stateManager);
+            const nutritionManager = new NutritionManager(apiClient, stateManager);
+            
+            testApp = {
+                ui,
+                auth,
+                petManager,
+                nutritionManager,
+                stateManager,
+                apiClient
+            };
+
+            console.log('🧪 Test environment initialized');
+            updateSystemStatus();
+        });
+
+        function updateSystemStatus() {
+            const statusDiv = document.getElementById('system-status');
+            const checks = [
+                { name: 'StateManager', check: () => typeof StateManager !== 'undefined' },
+                { name: 'UIManager', check: () => typeof UIManager !== 'undefined' },
+                { name: 'PetManager', check: () => typeof PetManager !== 'undefined' },
+                { name: 'NutritionManager', check: () => typeof NutritionManager !== 'undefined' },
+                { name: 'Modal Component', check: () => typeof Modal !== 'undefined' },
+                { name: 'FormValidator', check: () => typeof FormValidator !== 'undefined' }
+            ];
+
+            let html = '';
+            checks.forEach(({ name, check }) => {
+                const status = check() ? 'success' : 'error';
+                html += `<p><span class="status-indicator status-${status}"></span>${name} ${status === 'success' ? 'loaded' : 'failed'}</p>`;
+            });
+
+            statusDiv.innerHTML = html;
+        }
+
+        // Authentication Tests
+        function testLogin() {
+            const modal = testApp.ui.createModal('Login', testApp.ui.renderLoginForm());
+            document.body.appendChild(modal);
+        }
+
+        function testRegister() {
+            const modal = testApp.ui.createModal('Create Account', testApp.ui.renderRegisterForm());
+            document.body.appendChild(modal);
+        }
+
+        function testUserProfile() {
+            const mockUser = {
+                first_name: 'John',
+                last_name: 'Doe',
+                email: 'john.doe@example.com',
+                role: 'pet_owner',
+                location: 'New York, NY'
+            };
+            const modal = testApp.ui.createModal('User Profile', testApp.ui.renderUserProfile(mockUser));
+            document.body.appendChild(modal);
+        }
+
+        // Pet Management Tests
+        function testAddPet() {
+            const modal = testApp.ui.createModal('Add New Pet', testApp.ui.renderAddPetForm());
+            document.body.appendChild(modal);
+        }
+
+        function testEditPet() {
+            const mockPet = {
+                id: 1,
+                name: 'Buddy',
+                species: 'dog',
+                breed: 'Golden Retriever',
+                date_of_birth: '2020-05-15',
+                gender: 'male',
+                current_weight: 28.5,
+                ideal_weight: 27.0,
+                activity_level: 'high',
+                is_neutered: true,
+                body_condition_score: 5,
+                microchip_id: 'ABC123456789'
+            };
+            const modal = testApp.ui.createModal(`Edit ${mockPet.name}`, testApp.ui.renderEditPetForm(mockPet));
+            document.body.appendChild(modal);
+        }
+
+        function testPetDetails() {
+            const mockPet = {
+                id: 1,
+                name: 'Buddy',
+                species: 'dog',
+                breed: 'Golden Retriever',
+                date_of_birth: '2020-05-15',
+                gender: 'male',
+                current_weight: 28.5,
+                ideal_weight: 27.0,
+                activity_level: 'high',
+                is_neutered: true,
+                body_condition_score: 5,
+                microchip_id: 'ABC123456789',
+                health_conditions: ['Hip Dysplasia'],
+                allergies: ['Chicken', 'Wheat'],
+                medications: ['Joint Supplement'],
+                personality_traits: { energy: 'high', friendliness: 'very_friendly' },
+                has_nutrition_plan: true,
+                photo_url: null
+            };
+            
+            const modal = testApp.ui.createModal(
+                `${mockPet.name} - Pet Details`,
+                testApp.ui.renderPetDetails(mockPet),
+                'large'
+            );
+            document.body.appendChild(modal);
+            
+            // Setup tab functionality
+            setupTestTabs(modal);
+        }
+
+        function setupTestTabs(modal) {
+            const tabs = modal.querySelectorAll('.pet-tab');
+            const tabContents = modal.querySelectorAll('.pet-tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.dataset.tab;
+                    
+                    tabs.forEach(t => t.classList.remove('pet-tab--active'));
+                    tabContents.forEach(content => content.classList.remove('pet-tab-content--active'));
+                    
+                    tab.classList.add('pet-tab--active');
+                    const targetContent = modal.querySelector(`[data-tab-content="${targetTab}"]`);
+                    if (targetContent) {
+                        targetContent.classList.add('pet-tab-content--active');
+                    }
+                });
+            });
+        }
+
+        function testUploadPhoto() {
+            const modal = testApp.ui.createModal('Upload Pet Photo', `
+                <form class="form">
+                    <div class="form-group">
+                        <label for="photo" class="form-label">Select Photo</label>
+                        <input type="file" id="photo" name="photo" class="form-input" accept="image/*">
+                    </div>
+                    <div class="photo-preview" id="photo-preview" style="display: none;">
+                        <img id="preview-image" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn--secondary" onclick="testApp.ui.closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn--primary">Upload Photo</button>
+                    </div>
+                </form>
+            `);
+            document.body.appendChild(modal);
+        }
+
+        // Health Tracking Tests
+        function testLogWeight() {
+            const modal = testApp.ui.createModal('Log Weight', testApp.ui.renderLogWeightForm(1));
+            document.body.appendChild(modal);
+        }
+
+        function testHealthCheckup() {
+            const modal = testApp.ui.createModal('Health Checkup', testApp.ui.renderHealthCheckupForm(1));
+            document.body.appendChild(modal);
+        }
+
+        function testScheduleFeeding() {
+            const modal = testApp.ui.createModal('Schedule Feeding', testApp.ui.renderScheduleFeedingForm(1));
+            document.body.appendChild(modal);
+        }
+
+        // Nutrition Tests
+        function testNutritionPlan() {
+            const mockPlan = {
+                daily_calories: 1847,
+                daily_protein_grams: 115,
+                daily_fat_grams: 51,
+                daily_carb_grams: 200,
+                daily_fiber_grams: 14,
+                meals_per_day: 2,
+                food_recommendations: JSON.stringify([
+                    { name: 'Premium Adult Dog Food', portion: '2 cups' },
+                    { name: 'Chicken & Rice Formula', portion: '1.5 cups' }
+                ]),
+                special_instructions: 'Feed twice daily. Monitor weight weekly.'
+            };
+            const modal = testApp.ui.createModal('Nutrition Plan', testApp.ui.renderNutritionPlan(mockPlan));
+            document.body.appendChild(modal);
+        }
+
+        // New Nutrition Planning Tests
+        function testNutritionWizard() {
+            const mockPet = {
+                id: 1,
+                name: 'Buddy',
+                species: 'dog',
+                breed: 'Golden Retriever',
+                date_of_birth: '2020-05-15',
+                current_weight: 28.5,
+                ideal_weight: 27.0,
+                activity_level: 'high'
+            };
+            
+            const modal = testApp.ui.createModal(
+                `Nutrition Plan for ${mockPet.name}`,
+                testApp.ui.renderNutritionPlanWizard(mockPet),
+                'large'
+            );
+            document.body.appendChild(modal);
+            
+            // Setup basic wizard functionality for testing
+            setupTestWizard(modal, mockPet);
+        }
+
+        function setupTestWizard(modal, pet) {
+            let currentStep = 1;
+            const totalSteps = 4;
+            
+            const steps = modal.querySelectorAll('.wizard-step');
+            const contents = modal.querySelectorAll('.wizard-content');
+            const prevBtn = modal.querySelector('.wizard-btn-prev');
+            const nextBtn = modal.querySelector('.wizard-btn-next');
+            const generateBtn = modal.querySelector('.wizard-btn-generate');
+
+            const updateStep = (step) => {
+                steps.forEach((s, index) => {
+                    s.classList.remove('wizard-step--active', 'wizard-step--completed');
+                    if (index + 1 === step) {
+                        s.classList.add('wizard-step--active');
+                    } else if (index + 1 < step) {
+                        s.classList.add('wizard-step--completed');
+                    }
+                });
+
+                contents.forEach((content, index) => {
+                    content.classList.remove('wizard-content--active');
+                    if (index + 1 === step) {
+                        content.classList.add('wizard-content--active');
+                    }
+                });
+
+                prevBtn.disabled = step === 1;
+                nextBtn.style.display = step === totalSteps ? 'none' : 'inline-flex';
+                generateBtn.style.display = step === totalSteps ? 'inline-flex' : 'none';
+
+                currentStep = step;
+
+                // Update preview on final step
+                if (step === totalSteps) {
+                    updateTestPreview(modal, pet);
+                }
+            };
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    updateStep(currentStep - 1);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep < totalSteps) {
+                    updateStep(currentStep + 1);
+                }
+            });
+
+            generateBtn.addEventListener('click', () => {
+                testApp.ui.showSuccess('Nutrition plan would be generated here!');
+                testApp.ui.closeModal();
+                testNutritionPlan(); // Show the generated plan
+            });
+
+            updateStep(1);
+        }
+
+        function updateTestPreview(modal, pet) {
+            const goalsPreview = modal.querySelector('#goals-preview');
+            if (goalsPreview) {
+                goalsPreview.innerHTML = `
+                    <div class="preview-grid">
+                        <div class="preview-item">
+                            <span class="preview-label">Primary Goal:</span>
+                            <span class="preview-value">Maintain Weight</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Target Weight:</span>
+                            <span class="preview-value">${pet.current_weight} kg</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Timeline:</span>
+                            <span class="preview-value">3 Months</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Meals per Day:</span>
+                            <span class="preview-value">2</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const caloriesElement = modal.querySelector('#estimated-calories');
+            if (caloriesElement) {
+                caloriesElement.textContent = '1,847';
+            }
+        }
+
+        function testMealCalendar() {
+            const mockPlan = {
+                daily_calories: 1847,
+                daily_protein_grams: 115,
+                daily_fat_grams: 51,
+                meals_per_day: 2
+            };
+            
+            const mockPet = {
+                id: 1,
+                name: 'Buddy',
+                species: 'dog'
+            };
+            
+            const modal = testApp.ui.createModal(
+                `Meal Calendar - ${mockPet.name}`,
+                testApp.ui.renderMealPlanningCalendar(mockPlan, mockPet),
+                'large'
+            );
+            document.body.appendChild(modal);
+        }
+
+        function testPortionCalculator() {
+            const mockPet = {
+                id: 1,
+                name: 'Buddy',
+                species: 'dog',
+                current_weight: 28.5
+            };
+            
+            const modal = testApp.ui.createModal(
+                `Portion Calculator - ${mockPet.name}`,
+                testApp.ui.renderPortionCalculator(mockPet),
+                'large'
+            );
+            document.body.appendChild(modal);
+        }
+
+        function testFoodRecommendations() {
+            const mockPet = {
+                id: 1,
+                name: 'Buddy',
+                species: 'dog',
+                current_weight: 28.5,
+                activity_level: 'high'
+            };
+            
+            const modal = testApp.ui.createModal(
+                `Food Recommendations for ${mockPet.name}`,
+                testApp.ui.renderFoodRecommendationSystem(mockPet),
+                'large'
+            );
+            document.body.appendChild(modal);
+        }
+
+        function testNutritionHistory() {
+            testApp.ui.showInfo('Nutrition history feature - Coming soon!');
+        }
+
+        // UI Component Tests
+        function testNotifications() {
+            testApp.ui.showSuccess('Success notification test!');
+            setTimeout(() => testApp.ui.showWarning('Warning notification test!'), 1000);
+            setTimeout(() => testApp.ui.showError('Error notification test!'), 2000);
+            setTimeout(() => testApp.ui.showInfo('Info notification test!'), 3000);
+        }
+
+        function testModals() {
+            Modal.confirm('Do you want to test the confirm modal?').then(result => {
+                if (result) {
+                    Modal.alert('You clicked confirm! This is an alert modal.');
+                }
+            });
+        }
+
+        function testFormValidation() {
+            testApp.ui.showInfo('Form validation is integrated into all forms. Try submitting empty required fields!');
+        }
+
+        function testSettings() {
+            const modal = testApp.ui.createModal('Settings', testApp.ui.renderSettings());
+            document.body.appendChild(modal);
+        }
+
+        // Dashboard Tests
+        function testDashboard() {
+            const mockPets = [
+                {
+                    id: 1,
+                    name: 'Buddy',
+                    species: 'dog',
+                    date_of_birth: '2020-05-15',
+                    current_weight: 28.5,
+                    has_nutrition_plan: true
+                },
+                {
+                    id: 2,
+                    name: 'Whiskers',
+                    species: 'cat',
+                    date_of_birth: '2019-03-10',
+                    current_weight: 4.2,
+                    has_nutrition_plan: false
+                }
+            ];
+            
+            const mockUser = { first_name: 'John', last_name: 'Doe' };
+            const dashboardHTML = testApp.ui.renderDashboard(mockPets, mockUser);
+            
+            // Create a new window to show dashboard
+            const newWindow = window.open('', '_blank', 'width=1200,height=800');
+            newWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Dashboard Test</title>
+                    <link rel="stylesheet" href="assets/css/design-tokens.css">
+                    <link rel="stylesheet" href="assets/css/enhanced-style.css">
+                </head>
+                <body>${dashboardHTML}</body>
+                </html>
+            `);
+        }
+
+        function testLandingPage() {
+            const landingHTML = testApp.ui.renderLandingPage();
+            
+            // Create a new window to show landing page
+            const newWindow = window.open('', '_blank', 'width=1200,height=800');
+            newWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Landing Page Test</title>
+                    <link rel="stylesheet" href="assets/css/design-tokens.css">
+                    <link rel="stylesheet" href="assets/css/enhanced-style.css">
+                </head>
+                <body>${landingHTML}</body>
+                </html>
+            `);
+        }
+
+        // API Connection Test
+        async function testAPIConnection() {
+            try {
+                const response = await testApp.apiClient.get('/health');
+                testApp.ui.showSuccess('API connection successful!');
+                console.log('API Response:', response);
+            } catch (error) {
+                testApp.ui.showError('API connection failed: ' + error.message);
+                console.error('API Error:', error);
+            }
+        }
+
+        // Auto-test API connection on load
+        setTimeout(testAPIConnection, 2000);
+    </script>
+</body>
+</html>

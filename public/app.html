@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANMS - Animal Nutrition Management System</title>
+    <link rel="stylesheet" href="assets/css/design-tokens.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/enhanced-style.css">
+    <style>
+        /* Application-specific styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary-500);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--space-4);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification-container {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--gray-300);
+        }
+
+        .notification--show {
+            transform: translateX(0);
+        }
+
+        .notification--success {
+            border-left-color: var(--success-500);
+        }
+
+        .notification--error {
+            border-left-color: var(--error-500);
+        }
+
+        .notification--warning {
+            border-left-color: var(--warning-500);
+        }
+
+        .notification__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4);
+        }
+
+        .notification__message {
+            flex: 1;
+            margin-right: var(--space-3);
+        }
+
+        .notification__close {
+            background: none;
+            border: none;
+            font-size: var(--text-lg);
+            cursor: pointer;
+            color: var(--gray-500);
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification__close:hover {
+            color: var(--gray-700);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+
+        .modal__backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal__container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal--medium .modal__container {
+            max-width: 500px;
+        }
+
+        .modal--large .modal__container {
+            max-width: 800px;
+        }
+
+        .modal__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modal__title {
+            margin: 0;
+            font-size: var(--text-xl);
+            font-weight: 600;
+        }
+
+        .modal__close {
+            background: none;
+            border: none;
+            font-size: var(--text-2xl);
+            cursor: pointer;
+            color: var(--gray-500);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal__close:hover {
+            color: var(--gray-700);
+        }
+
+        .modal__body {
+            padding: var(--space-6);
+        }
+
+        .form-error {
+            color: var(--error-500);
+            font-size: var(--text-sm);
+            margin-top: var(--space-1);
+        }
+
+        .field-error {
+            color: var(--error-500);
+            font-size: var(--text-sm);
+            margin-top: var(--space-1);
+        }
+
+        .form-input.error,
+        .form-select.error {
+            border-color: var(--error-500);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-16) var(--space-8);
+        }
+
+        .empty-state__icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-6);
+        }
+
+        .empty-state__title {
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+            color: var(--gray-900);
+        }
+
+        .empty-state__description {
+            color: var(--gray-600);
+            margin-bottom: var(--space-8);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-6);
+            margin-top: var(--space-8);
+        }
+
+        .pet-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .pet-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .pet-card__image {
+            text-align: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .pet-card__photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .pet-card__placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-500);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            margin: 0 auto;
+        }
+
+        .pet-card__name {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            text-align: center;
+        }
+
+        .pet-card__details {
+            color: var(--gray-600);
+            text-align: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .pet-card__actions {
+            display: flex;
+            gap: var(--space-2);
+            justify-content: center;
+        }
+
+        .nutrition-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .nutrition-stat {
+            text-align: center;
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .nutrition-stat__label {
+            display: block;
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            margin-bottom: var(--space-1);
+        }
+
+        .nutrition-stat__value {
+            display: block;
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .dashboard-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: var(--space-6) 0;
+        }
+
+        .dashboard-header__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dashboard-header__title {
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .dashboard-header__actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .landing-header {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: var(--white);
+            padding: var(--space-16) 0;
+            text-align: center;
+        }
+
+        .landing-header__title {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+        }
+
+        .landing-header__subtitle {
+            font-size: var(--text-xl);
+            opacity: 0.9;
+            margin-bottom: var(--space-8);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .landing-header__actions {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: var(--space-8);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .feature-card__icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-4);
+        }
+
+        .feature-card__title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-3);
+        }
+
+        .feature-card__description {
+            color: var(--gray-600);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-8);
+            margin-top: var(--space-12);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Application content will be rendered here -->
+    </div>
+
+    <!-- JavaScript Modules - Load in correct order -->
+    <script src="assets/js/modules/state-manager.js"></script>
+    <script src="assets/js/modules/form-validator.js"></script>
+    <script src="assets/js/modules/pet-manager.js"></script>
+    <script src="assets/js/modules/nutrition-manager.js"></script>
+    <script src="assets/js/components/modal.js"></script>
+    <script src="assets/js/components/form-components.js"></script>
+    <script src="assets/js/components/notification.js"></script>
+    <script src="assets/js/ui-manager.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

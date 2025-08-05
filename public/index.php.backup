@@ -1,0 +1,214 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Bootstrap\App;
+use App\Infrastructure\Http\Request;
+use App\Infrastructure\Http\Response;
+use App\Infrastructure\Repository\UserRepository;
+use App\Infrastructure\Repository\PetRepository;
+use App\Application\Services\AuthenticationService;
+use App\Application\Services\PetService;
+use App\Application\Services\NutritionService;
+use App\Infrastructure\Http\Controllers\AuthController;
+use App\Infrastructure\Http\Controllers\PetController;
+use App\Infrastructure\Http\Middleware\AuthenticationMiddleware;
+use App\Infrastructure\Http\Middleware\RateLimitMiddleware;
+
+// Load the application
+$app = require_once __DIR__ . '/../bootstrap/app.php';
+$container = $app->getContainer();
+
+// Get router
+$router = $container->get(\App\Infrastructure\Http\Router::class);
+
+// Register services in container
+$container->add(\App\Domain\User\UserRepositoryInterface::class, UserRepository::class);
+$container->add(\App\Domain\Pet\PetRepositoryInterface::class, PetRepository::class);
+
+// Define routes
+$router->get('/', function (Request $request) {
+    return new Response('
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Nutrition Management System</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 40px; background: #f8fafc; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #2563eb; margin-bottom: 30px; }
+        .feature { margin: 20px 0; padding: 20px; background: #f1f5f9; border-radius: 8px; }
+        .status { color: #059669; font-weight: 600; }
+        .api-list { background: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .api-endpoint { font-family: monospace; background: #374151; color: #f9fafb; padding: 8px 12px; border-radius: 4px; margin: 5px 0; }
+        .tech-stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .tech-item { background: #e0f2fe; padding: 15px; border-radius: 8px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Animal Nutrition Management System</h1>
+        <p class="status">✅ System Status: Operational</p>
+        
+        <div class="feature">
+            <h3>🏗️ Modern Architecture Implemented</h3>
+            <p>Built with modern PHP 8.2+ architecture following Domain-Driven Design principles, complete with dependency injection, repository pattern, and comprehensive testing framework.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🗄️ Advanced Database Schema</h3>
+            <p>Comprehensive database design with proper relationships, indexing, and migration system. Includes tables for users, pets, nutrition plans, health records, food items, and educational content.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🔐 Security & Authentication</h3>
+            <p>JWT-based authentication system with role-based access control, password hashing, and two-factor authentication support.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🐕 Pet Management System</h3>
+            <p>Complete pet profile management with health tracking, weight monitoring, activity levels, and veterinary integration.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🧮 Advanced Nutrition Engine</h3>
+            <p>Scientific nutrition calculation engine with species-specific requirements, life stage considerations, and personalized meal planning.</p>
+        </div>
+
+        <div class="tech-stack">
+            <div class="tech-item">
+                <strong>Backend</strong><br>
+                PHP 8.2+, MySQL 8.0
+            </div>
+            <div class="tech-item">
+                <strong>Architecture</strong><br>
+                DDD, Repository Pattern
+            </div>
+            <div class="tech-item">
+                <strong>Security</strong><br>
+                JWT, Bcrypt, 2FA
+            </div>
+            <div class="tech-item">
+                <strong>Testing</strong><br>
+                PHPUnit, Mockery
+            </div>
+            <div class="tech-item">
+                <strong>DevOps</strong><br>
+                Docker, Nginx
+            </div>
+            <div class="tech-item">
+                <strong>Quality</strong><br>
+                PHPStan, CodeSniffer
+            </div>
+        </div>
+
+        <div class="api-list">
+            <h3>🚀 Available API Endpoints</h3>
+            <div class="api-endpoint">GET /api/health - System health check</div>
+            <div class="api-endpoint">POST /api/auth/register - User registration</div>
+            <div class="api-endpoint">POST /api/auth/login - User authentication</div>
+            <div class="api-endpoint">POST /api/auth/refresh - Refresh JWT token</div>
+            <div class="api-endpoint">GET /api/auth/me - Get current user</div>
+            <div class="api-endpoint">GET /api/pets - List user pets (Auth required)</div>
+            <div class="api-endpoint">POST /api/pets - Create new pet (Auth required)</div>
+            <div class="api-endpoint">GET /api/pets/{id} - Get pet details (Auth required)</div>
+            <div class="api-endpoint">PUT /api/pets/{id} - Update pet (Auth required)</div>
+            <div class="api-endpoint">DELETE /api/pets/{id} - Delete pet (Auth required)</div>
+            <div class="api-endpoint">POST /api/pets/{id}/nutrition-plan - Generate nutrition plan</div>
+            <div class="api-endpoint">GET /api/pets/{id}/nutrition-requirements - Get nutrition requirements</div>
+        </div>
+
+        <div class="feature">
+            <h3>📊 Implementation Progress</h3>
+            <ul>
+                <li>✅ Project Foundation & Modern Architecture</li>
+                <li>✅ Database Schema & Migration System</li>
+                <li>✅ Core Domain Models (User, Pet)</li>
+                <li>✅ Authentication & Authorization</li>
+                <li>✅ Repository Pattern Implementation</li>
+                <li>✅ Business Logic Services</li>
+                <li>✅ Advanced Nutrition Engine</li>
+                <li>✅ RESTful API with Middleware</li>
+                <li>✅ Testing Framework Setup</li>
+                <li>✅ Docker Development Environment</li>
+                <li>⏳ Frontend Interface</li>
+                <li>⏳ Health Monitoring System</li>
+            </ul>
+        </div>
+
+        <div class="feature">
+            <h3>🛠️ Development Setup</h3>
+            <p>To run the development environment:</p>
+            <div class="api-endpoint">docker-compose up -d</div>
+            <div class="api-endpoint">composer install</div>
+            <div class="api-endpoint">php database/migrate.php</div>
+            <div class="api-endpoint">php database/seed.php</div>
+        </div>
+    </div>
+</body>
+</html>
+    ');
+});
+
+// System health check
+$router->get('/api/health', function (Request $request) {
+    return Response::json([
+        'status' => 'healthy',
+        'timestamp' => date('Y-m-d H:i:s'),
+        'version' => '2.0.0',
+        'environment' => $_ENV['APP_ENV'] ?? 'production',
+        'features' => [
+            'authentication' => true,
+            'pet_management' => true,
+            'nutrition_engine' => true,
+            'rate_limiting' => true
+        ]
+    ]);
+});
+
+// Public authentication routes (no auth required)
+$router->group(['prefix' => 'api/auth'], function ($router) {
+    $router->post('/register', [AuthController::class, 'register']);
+    $router->post('/login', [AuthController::class, 'login']);
+    $router->post('/refresh', [AuthController::class, 'refreshToken']);
+    $router->post('/reset-password', [AuthController::class, 'resetPassword']);
+});
+
+// Protected authentication routes (auth required)
+$router->group([
+    'prefix' => 'api/auth',
+    'middleware' => [AuthenticationMiddleware::class]
+], function ($router) {
+    $router->get('/me', [AuthController::class, 'me']);
+    $router->post('/change-password', [AuthController::class, 'changePassword']);
+    $router->post('/enable-2fa', [AuthController::class, 'enableTwoFactor']);
+    $router->post('/disable-2fa', [AuthController::class, 'disableTwoFactor']);
+    $router->post('/verify-2fa', [AuthController::class, 'verifyTwoFactor']);
+});
+
+// Protected pet management routes
+$router->group([
+    'prefix' => 'api/pets',
+    'middleware' => [RateLimitMiddleware::class, AuthenticationMiddleware::class]
+], function ($router) {
+    $router->get('/', [PetController::class, 'index']);
+    $router->post('/', [PetController::class, 'store']);
+    $router->get('/{id}', [PetController::class, 'show']);
+    $router->put('/{id}', [PetController::class, 'update']);
+    $router->delete('/{id}', [PetController::class, 'destroy']);
+    
+    // Nutrition endpoints
+    $router->post('/{id}/nutrition-plan', [PetController::class, 'generateNutritionPlan']);
+    $router->get('/{id}/nutrition-requirements', [PetController::class, 'getNutritionRequirements']);
+    
+    // Health management endpoints
+    $router->post('/{id}/health-conditions', [PetController::class, 'addHealthCondition']);
+    $router->delete('/{id}/health-conditions/{condition}', [PetController::class, 'removeHealthCondition']);
+    $router->post('/{id}/allergies', [PetController::class, 'addAllergy']);
+    $router->delete('/{id}/allergies/{allergen}', [PetController::class, 'removeAllergy']);
+});
+
+// Run the application
+$app->run();

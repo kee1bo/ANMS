@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Data Validation Test - ANMS</title>
+    <link rel="stylesheet" href="assets/css/design-tokens.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/enhanced-style.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .test-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            background: var(--white);
+        }
+        
+        .test-section h2 {
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+            border-bottom: 2px solid var(--primary-100);
+            padding-bottom: 0.5rem;
+        }
+        
+        .test-results {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .test-passed {
+            color: var(--success-600);
+        }
+        
+        .test-failed {
+            color: var(--error-600);
+        }
+        
+        .test-warning {
+            color: var(--warning-600);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-group .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .validation-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .validation-form .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .validation-form .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .bulk-import-area {
+            margin-top: 1rem;
+        }
+        
+        .bulk-import-area textarea {
+            width: 100%;
+            height: 200px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .metric-card {
+            padding: 1rem;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-600);
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-top: 0.5rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--success-500);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Health Data Validation Testing Suite</h1>
+        <p>Comprehensive testing for health data recording and validation functionality.</p>
+        
+        <!-- Test Suite Controls -->
+        <div class="test-section">
+            <h2>Test Suite Controls</h2>
+            <div class="btn-group">
+                <button id="run-all-tests" class="btn btn--primary">
+                    🧪 Run All Tests
+                </button>
+                <button id="run-weight-tests" class="btn btn--secondary">
+                    ⚖️ Weight Tests
+                </button>
+                <button id="run-medication-tests" class="btn btn--secondary">
+                    💊 Medication Tests
+                </button>
+                <button id="run-bulk-tests" class="btn btn--secondary">
+                    📊 Bulk Data Tests
+                </button>
+                <button id="performance-test" class="btn btn--info">
+                    ⚡ Performance Test
+                </button>
+                <button id="clear-results" class="btn btn--outline">
+                    🗑️ Clear Results
+                </button>
+            </div>
+            
+            <div id="test-progress" class="progress-bar" style="display: none;">
+                <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+            </div>
+            
+            <div id="test-results" class="test-results" style="display: none;"></div>
+        </div>
+
+        <!-- Interactive Weight Validation -->
+        <div class="test-section">
+            <h2>Interactive Weight Validation</h2>
+            <form id="weight-validation-form" class="validation-form">
+                <div class="form-group">
+                    <label for="weight" class="form-label">Weight (kg)</label>
+                    <input type="number" id="weight" name="weight" class="form-input" 
+                           step="0.1" min="0" max="200" placeholder="25.5">
+                </div>
+                <div class="form-group">
+                    <label for="recorded_date" class="form-label">Date</label>
+                    <input type="date" id="recorded_date" name="recorded_date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="recorded_time" class="form-label">Time</label>
+                    <input type="time" id="recorded_time" name="recorded_time" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="body_condition_score" class="form-label">Body Condition (1-9)</label>
+                    <input type="number" id="body_condition_score" name="body_condition_score" 
+                           class="form-input" min="1" max="9" placeholder="5">
+                </div>
+                <div class="form-group">
+                    <label for="pet_species" class="form-label">Pet Species</label>
+                    <select id="pet_species" name="pet_species" class="form-select">
+                        <option value="dog">Dog</option>
+                        <option value="cat">Cat</option>
+                        <option value="rabbit">Rabbit</option>
+                        <option value="bird">Bird</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="measurement_method" class="form-label">Measurement Method</label>
+                    <select id="measurement_method" name="measurement_method" class="form-select">
+                        <option value="home_scale">Home Scale</option>
+                        <option value="vet_scale">Veterinary Scale</option>
+                        <option value="estimated">Estimated</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label for="health_notes" class="form-label">Notes</label>
+                    <textarea id="health_notes" name="health_notes" class="form-textarea" rows="2" 
+                              placeholder="Any observations about your pet's condition..."></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="btn btn--primary">Validate Weight Entry</button>
+                </div>
+            </form>
+            <div id="weight-validation-results" class="test-results" style="display: none;"></div>
+        </div>
+
+        <!-- Interactive Medication Validation -->
+        <div class="test-section">
+            <h2>Interactive Medication Validation</h2>
+            <form id="medication-validation-form" class="validation-form">
+                <div class="form-group">
+                    <label for="medication_name" class="form-label">Medication Name</label>
+                    <input type="text" id="medication_name" name="medication_name" class="form-input" 
+                           placeholder="Rimadyl">
+                </div>
+                <div class="form-group">
+                    <label for="dosage" class="form-label">Dosage</label>
+                    <input type="text" id="dosage" name="dosage" class="form-input" 
+                           placeholder="75mg">
+                </div>
+                <div class="form-group">
+                    <label for="frequency" class="form-label">Frequency</label>
+                    <select id="frequency" name="frequency" class="form-select">
+                        <option value="">Select frequency</option>
+                        <option value="once_daily">Once Daily</option>
+                        <option value="twice_daily">Twice Daily</option>
+                        <option value="three_times_daily">Three Times Daily</option>
+                        <option value="every_other_day">Every Other Day</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="as_needed">As Needed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" id="start_date" name="start_date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="date" id="end_date" name="end_date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="pet_weight" class="form-label">Pet Weight (kg)</label>
+                    <input type="number" id="pet_weight" name="pet_weight" class="form-input" 
+                           step="0.1" placeholder="25.0">
+                </div>
+                <div class="form-group full-width">
+                    <label for="prescribed_by" class="form-label">Prescribed By</label>
+                    <input type="text" id="prescribed_by" name="prescribed_by" class="form-input" 
+                           placeholder="Dr. Smith, ABC Veterinary Clinic">
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="btn btn--primary">Validate Medication Entry</button>
+                </div>
+            </form>
+            <div id="medication-validation-results" class="test-results" style="display: none;"></div>
+        </div>
+
+        <!-- Bulk Data Import Testing -->
+        <div class="test-section">
+            <h2>Bulk Data Import Testing</h2>
+            <div class="bulk-import-area">
+                <label for="bulk-data" class="form-label">Bulk Health Data (JSON format)</label>
+                <textarea id="bulk-data" class="form-textarea" placeholder='[
+  {"weight": 25.5, "recorded_date": "2024-01-15", "body_condition_score": 5},
+  {"weight": 26.0, "recorded_date": "2024-01-16"},
+  {"medication_name": "Rimadyl", "dosage": "75mg", "frequency": "twice_daily", "start_date": "2024-01-15"}
+]'></textarea>
+                <div class="btn-group">
+                    <button id="validate-bulk-data" class="btn btn--primary">Validate Bulk Data</button>
+                    <button id="load-sample-data" class="btn btn--secondary">Load Sample Data</button>
+                </div>
+            </div>
+            <div id="bulk-validation-results" class="test-results" style="display: none;"></div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="test-section">
+            <h2>Performance Metrics</h2>
+            <div class="performance-metrics">
+                <div class="metric-card">
+                    <div class="metric-value" id="total-tests">0</div>
+                    <div class="metric-label">Total Tests</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="passed-tests">0</div>
+                    <div class="metric-label">Passed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="failed-tests">0</div>
+                    <div class="metric-label">Failed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="success-rate">0%</div>
+                    <div class="metric-label">Success Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="test-duration">0ms</div>
+                    <div class="metric-label">Duration</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="validation-speed">0</div>
+                    <div class="metric-label">Validations/sec</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/health-data-validation.js"></script>
+    <script src="assets/js/pet-validation-tests.js"></script>
+
+    <script>
+        // Initialize components
+        const validator = new HealthDataValidator();
+        const testSuite = new HealthDataValidationTests();
+        
+        // Set default date to today
+        document.getElementById('recorded_date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('start_date').value = new Date().toISOString().split('T')[0];
+
+        // Test suite controls
+        document.getElementById('run-all-tests').addEventListener('click', async () => {
+            showProgress();
+            const startTime = performance.now();
+            
+            const results = testSuite.runAllTests();
+            
+            const endTime = performance.now();
+            const duration = endTime - startTime;
+            
+            displayTestResults(results, duration);
+            updateMetrics(results, duration);
+            hideProgress();
+        });
+
+        document.getElementById('run-weight-tests').addEventListener('click', () => {
+            showProgress();
+            const startTime = performance.now();
+            
+            // Run only weight-related tests
+            testSuite.testResults = { passed: 0, failed: 0, total: 0, details: [] };
+            testSuite.testWeightValidation();
+            testSuite.testSpeciesSpecificValidation();
+            testSuite.testTrendAnalysis();
+            
+            const results = testSuite.generateTestReport();
+            const endTime = performance.now();
+            
+            displayTestResults(results, endTime - startTime);
+            updateMetrics(results, endTime - startTime);
+            hideProgress();
+        });
+
+        document.getElementById('run-medication-tests').addEventListener('click', () => {
+            showProgress();
+            const startTime = performance.now();
+            
+            // Run only medication-related tests
+            testSuite.testResults = { passed: 0, failed: 0, total: 0, details: [] };
+            testSuite.testMedicationValidation();
+            testSuite.testDosageCalculations();
+            
+            const results = testSuite.generateTestReport();
+            const endTime = performance.now();
+            
+            displayTestResults(results, endTime - startTime);
+            updateMetrics(results, endTime - startTime);
+            hideProgress();
+        });
+
+        document.getElementById('run-bulk-tests').addEventListener('click', () => {
+            showProgress();
+            const startTime = performance.now();
+            
+            // Run only bulk validation tests
+            testSuite.testResults = { passed: 0, failed: 0, total: 0, details: [] };
+            testSuite.testBulkDataValidation();
+            
+            const results = testSuite.generateTestReport();
+            const endTime = performance.now();
+            
+            displayTestResults(results, endTime - startTime);
+            updateMetrics(results, endTime - startTime);
+            hideProgress();
+        });
+
+        document.getElementById('performance-test').addEventListener('click', () => {
+            showProgress();
+            const performanceResults = testSuite.performanceTest(1000);
+            
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <div class="test-passed">⚡ Performance Test Results:</div>
+                <div>Duration: ${performanceResults.duration.toFixed(2)}ms</div>
+                <div>Records/second: ${performanceResults.recordsPerSecond}</div>
+                <div>Valid records: ${performanceResults.validationResults.summary.valid_count}/1000</div>
+                <div>Invalid records: ${performanceResults.validationResults.summary.invalid_count}/1000</div>
+                <div>Warning records: ${performanceResults.validationResults.summary.warning_count}/1000</div>
+            `;
+            
+            // Update performance metrics
+            document.getElementById('validation-speed').textContent = performanceResults.recordsPerSecond;
+            document.getElementById('test-duration').textContent = performanceResults.duration.toFixed(0) + 'ms';
+            
+            hideProgress();
+        });
+
+        document.getElementById('clear-results').addEventListener('click', () => {
+            document.getElementById('test-results').style.display = 'none';
+            document.getElementById('weight-validation-results').style.display = 'none';
+            document.getElementById('medication-validation-results').style.display = 'none';
+            document.getElementById('bulk-validation-results').style.display = 'none';
+            
+            // Reset metrics
+            document.getElementById('total-tests').textContent = '0';
+            document.getElementById('passed-tests').textContent = '0';
+            document.getElementById('failed-tests').textContent = '0';
+            document.getElementById('success-rate').textContent = '0%';
+            document.getElementById('test-duration').textContent = '0ms';
+            document.getElementById('validation-speed').textContent = '0';
+        });
+
+        // Interactive weight validation
+        document.getElementById('weight-validation-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                weight: parseFloat(formData.get('weight')),
+                recorded_date: formData.get('recorded_date'),
+                recorded_time: formData.get('recorded_time') || null,
+                body_condition_score: formData.get('body_condition_score') ? parseInt(formData.get('body_condition_score')) : null,
+                measurement_method: formData.get('measurement_method'),
+                health_notes: formData.get('health_notes') || null
+            };
+            
+            const species = formData.get('pet_species');
+            const result = validator.validateWeightEntry(data, species);
+            
+            displayValidationResult('weight-validation-results', result, data);
+        });
+
+        // Interactive medication validation
+        document.getElementById('medication-validation-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                medication_name: formData.get('medication_name'),
+                dosage: formData.get('dosage'),
+                frequency: formData.get('frequency'),
+                start_date: formData.get('start_date'),
+                end_date: formData.get('end_date') || null,
+                prescribed_by: formData.get('prescribed_by') || null
+            };
+            
+            const petWeight = formData.get('pet_weight') ? parseFloat(formData.get('pet_weight')) : null;
+            const result = validator.validateMedicationEntry(data, petWeight);
+            
+            displayValidationResult('medication-validation-results', result, data);
+        });
+
+        // Bulk data validation
+        document.getElementById('validate-bulk-data').addEventListener('click', () => {
+            const bulkDataText = document.getElementById('bulk-data').value;
+            
+            try {
+                const bulkData = JSON.parse(bulkDataText);
+                const result = validator.validateBulkHealthData(bulkData, 'dog');
+                
+                displayBulkValidationResult(result);
+            } catch (error) {
+                const resultsDiv = document.getElementById('bulk-validation-results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = `<div class="test-failed">❌ JSON Parse Error: ${error.message}</div>`;
+            }
+        });
+
+        document.getElementById('load-sample-data').addEventListener('click', () => {
+            const sampleData = [
+                {"weight": 25.5, "recorded_date": "2024-01-15", "body_condition_score": 5, "measurement_method": "home_scale"},
+                {"weight": 26.0, "recorded_date": "2024-01-16", "health_notes": "Seems more active today"},
+                {"weight": "invalid", "recorded_date": "2024-01-17"},
+                {"medication_name": "Rimadyl", "dosage": "75mg", "frequency": "twice_daily", "start_date": "2024-01-15"},
+                {"medication_name": "Metacam", "dosage": "5mg", "frequency": "once_daily", "start_date": "2024-01-16", "end_date": "2024-01-30"},
+                {"record_type": "vet_visit", "recorded_date": "2024-01-15", "reason": "Annual checkup", "veterinarian": "Dr. Smith"},
+                {"record_type": "vaccination", "recorded_date": "2024-01-15", "vaccine_name": "Rabies"},
+                {"record_type": "health_note", "recorded_date": "2024-01-15", "notes": "Pet seems lethargic today, monitoring closely"}
+            ];
+            
+            document.getElementById('bulk-data').value = JSON.stringify(sampleData, null, 2);
+        });
+
+        // Utility functions
+        function showProgress() {
+            document.getElementById('test-progress').style.display = 'block';
+            document.getElementById('progress-fill').style.width = '0%';
+            
+            // Simulate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                }
+                document.getElementById('progress-fill').style.width = progress + '%';
+            }, 100);
+        }
+
+        function hideProgress() {
+            setTimeout(() => {
+                document.getElementById('test-progress').style.display = 'none';
+            }, 500);
+        }
+
+        function displayTestResults(results, duration) {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.style.display = 'block';
+            
+            let html = `
+                <div class="test-passed">📊 Test Suite Results (${duration.toFixed(2)}ms)</div>
+                <div>Total Tests: ${results.summary.total_tests}</div>
+                <div>Passed: <span class="test-passed">${results.summary.passed}</span></div>
+                <div>Failed: <span class="test-failed">${results.summary.failed}</span></div>
+                <div>Success Rate: ${results.summary.success_rate}</div>
+                <br>
+            `;
+            
+            // Show failed tests
+            if (results.summary.failed > 0) {
+                html += '<div class="test-failed">❌ Failed Tests:</div>';
+                results.details.filter(t => t.status !== 'PASSED').forEach(test => {
+                    html += `<div class="test-failed">  - ${test.name}: ${test.error || 'Test assertion failed'}</div>`;
+                });
+                html += '<br>';
+            }
+            
+            // Show test categories
+            html += '<div>📋 Test Categories:</div>';
+            Object.entries(results.categories).forEach(([category, tests]) => {
+                const passed = tests.filter(t => t.status === 'PASSED').length;
+                const total = tests.length;
+                html += `<div>  ${category.replace(/_/g, ' ')}: ${passed}/${total}</div>`;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function displayValidationResult(elementId, result, originalData) {
+            const resultsDiv = document.getElementById(elementId);
+            resultsDiv.style.display = 'block';
+            
+            let html = `
+                <div class="${result.isValid ? 'test-passed' : 'test-failed'}">
+                    ${result.isValid ? '✅ Validation Passed' : '❌ Validation Failed'}
+                </div>
+            `;
+            
+            if (result.errors && result.errors.length > 0) {
+                html += '<div class="test-failed">Errors:</div>';
+                result.errors.forEach(error => {
+                    html += `<div class="test-failed">  - ${error}</div>`;
+                });
+            }
+            
+            if (result.warnings && result.warnings.length > 0) {
+                html += '<div class="test-warning">Warnings:</div>';
+                result.warnings.forEach(warning => {
+                    html += `<div class="test-warning">  - ${warning}</div>`;
+                });
+            }
+            
+            if (result.normalizedData) {
+                html += '<div>Normalized Data:</div>';
+                html += `<pre>${JSON.stringify(result.normalizedData, null, 2)}</pre>`;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function displayBulkValidationResult(result) {
+            const resultsDiv = document.getElementById('bulk-validation-results');
+            resultsDiv.style.display = 'block';
+            
+            let html = `
+                <div class="test-passed">📊 Bulk Validation Results</div>
+                <div>Total Records: ${result.summary.total}</div>
+                <div>Valid: <span class="test-passed">${result.summary.valid_count}</span></div>
+                <div>Invalid: <span class="test-failed">${result.summary.invalid_count}</span></div>
+                <div>Warnings: <span class="test-warning">${result.summary.warning_count}</span></div>
+                <br>
+            `;
+            
+            if (result.invalid.length > 0) {
+                html += '<div class="test-failed">❌ Invalid Records:</div>';
+                result.invalid.forEach(item => {
+                    html += `<div class="test-failed">  Record ${item.index}: ${item.validation.errors.join(', ')}</div>`;
+                });
+                html += '<br>';
+            }
+            
+            if (result.warnings.length > 0) {
+                html += '<div class="test-warning">⚠️ Warnings:</div>';
+                result.warnings.forEach(item => {
+                    html += `<div class="test-warning">  Record ${item.index}: ${item.warnings.join(', ')}</div>`;
+                });
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function updateMetrics(results, duration) {
+            document.getElementById('total-tests').textContent = results.summary.total_tests;
+            document.getElementById('passed-tests').textContent = results.summary.passed;
+            document.getElementById('failed-tests').textContent = results.summary.failed;
+            document.getElementById('success-rate').textContent = results.summary.success_rate;
+            document.getElementById('test-duration').textContent = duration.toFixed(0) + 'ms';
+            
+            const validationsPerSecond = Math.round((results.summary.total_tests / (duration / 1000)));
+            document.getElementById('validation-speed').textContent = validationsPerSecond;
+        }
+
+        console.log('Health Data Validation Test Page Loaded');
+    </script>
+</body>
+</html>

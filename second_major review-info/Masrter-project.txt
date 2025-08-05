@@ -1,0 +1,201 @@
+Faculty of Science and Technology
+Department of Computing & Informatics
+Submission Coursework Brief
+Postgraduate
+Unit: INDIVIDUAL MASTERS PROJECT (COMP7024)
+Unit Contact: Hari Pandey Credits: 60 Level: 7
+Assessment Title: Individual Masters Project (May 25 Start)
+Assessment Number:     1     of     1
+Assessment Type: Individual Weighting: 100%
+Deadline: 05/09/2025 at 12:00 PM Submission Method: Turnitin (+ large file submission box)
+Quality Assessor (QA): Benjamin Gorman Other Marker(s): N/A
+Can I use Generative AI tools?
+Basic spelling and grammar correction tools are permitted.
+The following originality requirements will apply to this assignment:
+You are allowed to use any Generative AI or other AI powered tools, such as ChatGPT, for specific aspects as directed
+by the Unit Leader. Where any part of your assessment is sourced, or partially sourced from a generative AI tool, this
+requires a reference in the BU Harvard style.
+Task:
+1. Introduction
+You are required to produce a 6,000-word dissertation of academic quality, based on independent research that includes an
+artefact of up to 5,000 words or the equivalent of efforts (please see Project Handbook). In the dissertation, you will
+demonstrate your ability to identify and systematically study a problem as well as select, implement, and evaluate an
+appropriate approach to solving the problem. The subject of your project must be related to your degree title, and to the
+outcomes of that title. More information is provided in the Project Handbook.
+2. Valid Artefact
+All projects are expected to produce an artefact. An artefact is defined as a self-existing product of the project with a view to
+subsequent use. Your project involves the research, design, implementation, and evaluation of an artefact that solves a
+particular problem and answers novel research questions relevant to your course of study. In other words, a project should
+have an artefact as a technical solution to the related problem. You may build an artefact or write an artefact based on the
+valid project definition for your degree title. If you write an artefact, you must make sure the artefact is actionable, which
+means the artefact can be exploited technically. For more details on artefacts related to your degree, please see Section 3 of
+the Handbook.
+3. Deliverables
+Jun 2025 - v2 **
+Page 1 of 5
+APPROVED_L7_COMP7024_2024-25_sub_brief
+Deliverable Due By Feedback
+Proposal 21st March 2025 Formative
+Online Ethics Checklist 11th April 2025 Summative
+First Progress Review 23rd – 27th June 2025 Formative
+Second progress Review 4th – 8th August 2025 Formative
+Final Project Submission
+(via Turnitin + Large File box on Brightspace)
+5th September 2025 Summative
+Video Submission 10th September 2025 Summative
+Question and Answer 15th  – 27th September 2025 Summative
+4. Supervisory Meetings
+Typically, you meet with your supervisor for continuous support. There may be some changes to this based on supervisor
+availability, but it is your responsibility to liaise with your supervisor and attend all meetings scheduled to discuss milestones
+(Project kick-off, Background study and Methodology, Mid Review and halfway point, Artefact demo, results and discussion,
+Draft review, and feedback). Should you not be able to make a meeting, you should email your supervisor as soon as possible
+explaining why, and rescheduling where possible. Missing two meetings without any contact with your supervisor will result
+in the instigation of the formal attendance process which can lead to withdrawal from the course.
+5. Citing Sources and Plagiarism
+All work submitted for this project should represent your own original contribution. This includes written content and any
+source code you develop, except where you make appropriate and clear use of external sources or tools. Any use of secondary
+sources (such as literature, data, or existing code) must be properly cited using the BU Harvard referencing style:
+http://libguides.bournemouth.ac.uk/bu-referencing-harvard-style. You should also ensure you understand what constitutes
+plagiarism: https://libguides.bournemouth.ac.uk/study-skills-referencing-plagiarism
+References must be included both within the text and in the final reference list. If you use Generative AI tools for any part of
+your work, including code, see Section 6 for specific guidance on disclosure. If in doubt, speak with your Project Supervisor or
+the Project Coordinator.
+6. Originality and Use of Generative AI
+In addition to properly citing your sources, you are permitted to use Generative AI (gAI) and other AI-powered tools (e.g.,
+ChatGPT, Copilot, DALL·E, Grammarly) as part of your project work. However, any use of these tools must be clearly and
+appropriately disclosed. This guidance aligns with professional standards in computing and engineering disciplines. If you use
+AI tools to generate or significantly enhance any part of your dissertation—such as text, code, figures, tables, citations, data
+analysis, or images—you must briefly explain how and where the tools were used. Disclosure should be included in a visible
+section of your work, such as the Acknowledgments, Original Work Declaration, or Methodology.
+For example: “ChatGPT was used to assist in generating summaries for the literature review and for improving clarity in the
+Discussion section.” Where possible, be specific. For example: “GitHub Copilot was used during initial prototyping (Section 4.2). All
+output was reviewed, tested, and edited prior to inclusion.”
+You must also make it clear what work is your own and what has been generated or heavily assisted by AI tools—particularly
+in the methodology and any artefact appendix. Failure to disclose such use may be treated as an academic offence, in the
+Jun 2025 - v2 **
+Page 2 of 5
+APPROVED_L7_COMP7024_2024-25_sub_brief
+same way that undeclared copying or plagiarism would be. Use of tools for spelling, grammar, or minor language
+improvements (e.g., MS Word’s spelling checker, Grammarly) does not require detailed disclosure if used for routine editing. 
+Intended Learning Outcomes (ILOs)
+This unit assesses your ability to:
+1. Demonstrate knowledge and understanding which is appropriate to the subject area and the ability to handle
+inconsistency in the problem domain and produce a viable solution.
+2. Apply analytical and critical evaluation when exploring solutions for a given problem domain.
+3. Explore problem-solving skills and the application of knowledge across discipline areas.
+4. Design, manage and demonstrate an appropriate test and verification strategy.
+5. Demonstrate effective conduct of research, analysis, and critical evaluation of different methodologies and
+implementations.
+6. Select appropriate strategies to successfully plan and execute a computing and informatics project.
+7. Present a reflective integrated discussion of the conclusion of the research, development, and practice activity and its
+implications for the future.
+Submission Format:
+Proposal: You are required to use the project proposal template provided for you on Brightspace. Please submit an
+electronic copy uploaded onto Brightspace through Turnitin as a PDF. It can be revisited and reuploaded but must be
+finalised by the start of the project.
+Online Ethics Checklist: Please submit your online ethics checklist and make sure it is approved by your supervisor. It
+can be revisited and reuploaded on Brightspace after revisions but must be approved by the start of the project. Submit
+an electronic copy uploaded onto Brightspace as a PDF.
+First Progress Review: You are required to complete the Progress Review Form with your supervisor. The first progress
+review will be completed through Brightspace assessment under “First Progress Review (Feedback Only)”.
+Second Progress Review: You are required to use the project dissertation template provided for you on Brightspace for
+this submission. You should populate the Draft Project Report as much as possible covering all your work so far.
+Submit an electronic copy uploaded onto Brightspace through Turnitin as a PDF. Please ensure that you allow enough
+time for the submission which can be a lengthy process.
+Dissertation Submission: You are required to use the project dissertation template provided for you on Brightspace.
+Submit an electronic copy uploaded onto Brightspace through Turnitin as a PDF. Please ensure that you allow enough
+time for the Turnitin submission which can be a lengthy process. No hard copy submission is required.
+Video Submission: You are required to upload your video presentation in the Video Presentation submission box on
+Brightspace.
+The maximum word count limit of 6,000 words applies to the Main Body of the Project Report. State the word count for the
+Main Body of your Project Report after the final section of the Main Body. Your artefact is expected to be no more than 5,000
+words or the equivalent of effort.
+Any additional files that you want to submit such as all source codes, software demonstrations, etc. can be submitted in the
+corresponding LARGE FILE separate box that is clearly identified in the assessment area in Brightspace.
+Jun 2025 - v2 **
+Page 3 of 5
+APPROVED_L7_COMP7024_2024-25_sub_brief
+How will this be assessed?
+1.  Criteria
+The assessment criteria listed below will be used when marking the dissertation, in conjunction with the University's Generic
+Marking Guidelines. For each criterion, markers will take into account the quality and structure of the writing.
+1. Definition of the problem
+(ILO 1 and 2)
+Context
+Problem definition (problem statement)
+Aim(s) and Objectives.
+Research Questions
+10 Marks
+2. Review of literature and related work
+(ILO 1, 2, and 3)
+Depth and relevance to the problem
+Quality of the sources
+Critical evaluation
+20 Marks
+3. Planning and Methodology
+(ILO 3, 4 and 6)
+Planning (project methodology/ approach)
+Justification of processes and methods
+Execution of plans/methods
+10 Marks
+4. Artefact (solution to the problem)
+(ILO2, 3 and 4)
+Solving the problem (relevant, actionable)
+Quality of artefact
+Scope of the artefact (comprehensiveness)
+Justification of choices
+Novelty/difficulty of choices
+30 Marks
+5. Evaluation of Artefact
+(ILO 4 and 5)
+Design of an appropriate evaluation of the artefact
+Execution of evaluation
+Critical analysis of evaluation results
+10 Marks
+6. Conclusion and Reflection
+(ILO7)
+Appraisal of achievement of objectives
+Reflection and lessons learned (process and artefact)
+Discussion of future work
+10 Marks
+7. Project Report
+(ILO 1, 2, 3, 4, 5, 6 and 7
+Documentation structure
+Scholarship and referencing
+Coherence and clarity
+10 Marks
+A detailed marking criterion will be available on Brightspace.
+2. Process
+All projects are double marked. The first marker is normally your supervisor. The second marker is another academic. Both
+markers assess your project independently. Only once the project has been read and marked by both assessors independently
+do they get together to discuss your project and agree on a final mark. A sample of work, normally including all Firsts and
+Fails, as well as a selection of other work, will be externally moderated by both the external examiner and the quality
+manager. You will not be able to receive the mark until after the meeting of the Assessment Board. Dates of the Assessment
+Board for your programme are available from your Programme Support Office (PSO) and are published on Brightspace.
+3. Feedback Method
+Detailed feedback and your mark will be uploaded onto Brightspace normally within the period specified in the University
+Regulations.
+Jun 2025 - v2 **
+Page 4 of 5
+APPROVED_L7_COMP7024_2024-25_sub_brief
+Questions about the assessment:
+Questions about the brief will be addressed via email to the project coordinator, on the L7 Individual Masters Project team
+channel on Microsoft Teams, and in project lectures.
+Academic Integrity
+The work you submit must be your own. Any attempt to gain an unfair advantage in your assessment by  cheating,
+deception or fraud is considered an academic offence. The 'Assessment help and support' section of the unit (found under
+'Assessment' in the content area) provides more guidance on avoiding academic offences, including  any guidance on what
+will or will not be considered an academic offence in this specific assessment.
+Help and support
+The 'Assessment help and support' section of the unit (found under 'Assessment' in the content area) provides information
+and guidance, including specific information on support for this assessment. It provides help with our policies on deadline
+extensions and information on support available in the university, including academic skills support and additional
+learning support for students with disabilities.
+Disclaimer
+The information provided in this assignment brief is correct at time of publication. In the unlikely event that any changes are
+deemed necessary, they will be communicated clearly via e-mail and via the VLE and a new version of this coursework brief
+will be circulated.
+Date Issued: 03/02/2025
+Jun 2025 - v2 **
+Page 5 of 5
+APPROVED_L7_COMP7024_2024-25_sub_brief

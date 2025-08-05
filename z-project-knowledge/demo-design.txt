@@ -1,0 +1,947 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Heart, 
+  Plus, 
+  Edit3, 
+  Activity, 
+  Calendar, 
+  BarChart3, 
+  Settings, 
+  LogOut, 
+  Scale, 
+  Clock, 
+  Target,
+  AlertCircle,
+  CheckCircle,
+  TrendingUp,
+  Bell,
+  Search,
+  Home,
+  BookOpen,
+  Camera,
+  Award,
+  Smile,
+  Info,
+  ChevronRight,
+  Star,
+  MapPin
+} from 'lucide-react';
+
+const PetNutritionApp = () => {
+  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [showAddPet, setShowAddPet] = useState(false);
+  const [user, setUser] = useState({
+    name: 'Emma Thompson',
+    location: 'San Francisco, CA',
+    memberSince: 'March 2024',
+    email: 'emma.thompson@email.com'
+  });
+
+  // Sample pet data for a pet owner
+  const [pets, setPets] = useState([
+    {
+      id: 1,
+      name: 'Buddy',
+      species: 'Dog',
+      breed: 'Golden Retriever',
+      age: 3,
+      weight: 28.5,
+      idealWeight: 27.0,
+      activity: 'High',
+      healthStatus: 'Healthy',
+      lastWeighed: '2024-06-20',
+      photo: '🐕',
+      personality: 'Energetic and friendly'
+    },
+    {
+      id: 2,
+      name: 'Whiskers',
+      species: 'Cat',
+      breed: 'Maine Coon',
+      age: 5,
+      weight: 5.8,
+      idealWeight: 5.5,
+      activity: 'Medium',
+      healthStatus: 'Slightly Overweight',
+      lastWeighed: '2024-06-18',
+      photo: '🐱',
+      personality: 'Calm and loving'
+    },
+    {
+      id: 3,
+      name: 'Charlie',
+      species: 'Dog',
+      breed: 'French Bulldog',
+      age: 2,
+      weight: 11.2,
+      idealWeight: 11.0,
+      activity: 'Low',
+      healthStatus: 'Healthy',
+      lastWeighed: '2024-06-22',
+      photo: '🐕',
+      personality: 'Laid-back and cuddly'
+    }
+  ]);
+
+  const sampleDietPlan = {
+    dailyCalories: 1100,
+    mealsPerDay: 3,
+    recommendations: [
+      {
+        time: '7:00 AM',
+        meal: 'Breakfast',
+        food: 'High-Quality Dry Kibble',
+        portion: '1 cup (85g)',
+        calories: 340,
+        tips: 'Mix with a little warm water for better digestion'
+      },
+      {
+        time: '1:00 PM',
+        meal: 'Lunch',
+        food: 'Lean Protein + Vegetables',
+        portion: '1/2 cup (60g)',
+        calories: 220,
+        tips: 'Great time for training treats!'
+      },
+      {
+        time: '6:00 PM',
+        meal: 'Dinner',
+        food: 'Premium Wet Food',
+        portion: '1 can (150g)',
+        calories: 380,
+        tips: 'Let food reach room temperature before serving'
+      },
+      {
+        time: 'Throughout day',
+        meal: 'Healthy Treats',
+        food: 'Training Treats & Vegetables',
+        portion: '1/4 cup (20g)',
+        calories: 160,
+        tips: 'Use for training and bonding time'
+      }
+    ],
+    nutritionBreakdown: {
+      protein: '28%',
+      fat: '15%',
+      fiber: '4%',
+      moisture: '12%'
+    }
+  };
+
+  // Navigation Component
+  const Navigation = () => (
+    <div className="bg-gradient-to-b from-blue-600 to-blue-700 text-white h-screen w-64 fixed left-0 top-0 overflow-y-auto shadow-xl">
+      <div className="p-6">
+        <div className="flex items-center space-x-3 mb-8">
+          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
+            <Heart className="w-7 h-7 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold">PetNutri</h1>
+            <p className="text-blue-200 text-sm">Your Pet's Health Hub</p>
+          </div>
+        </div>
+
+        <nav className="space-y-2">
+          <NavItem 
+            icon={Home} 
+            label="My Dashboard" 
+            active={currentPage === 'dashboard'}
+            onClick={() => setCurrentPage('dashboard')}
+          />
+          <NavItem 
+            icon={Heart} 
+            label="My Pets" 
+            active={currentPage === 'pets'}
+            onClick={() => setCurrentPage('pets')}
+          />
+          <NavItem 
+            icon={Activity} 
+            label="Nutrition Plans" 
+            active={currentPage === 'nutrition'}
+            onClick={() => setCurrentPage('nutrition')}
+          />
+          <NavItem 
+            icon={BarChart3} 
+            label="Health Progress" 
+            active={currentPage === 'progress'}
+            onClick={() => setCurrentPage('progress')}
+          />
+          <NavItem 
+            icon={BookOpen} 
+            label="Learn & Tips" 
+            active={currentPage === 'education'}
+            onClick={() => setCurrentPage('education')}
+          />
+          <NavItem 
+            icon={Settings} 
+            label="Account Settings" 
+            active={currentPage === 'settings'}
+            onClick={() => setCurrentPage('settings')}
+          />
+        </nav>
+
+        <div className="mt-8 pt-8 border-t border-blue-500">
+          <div className="bg-blue-500 bg-opacity-50 rounded-lg p-4 mb-4">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                <span className="text-blue-600 font-bold text-lg">E</span>
+              </div>
+              <div>
+                <p className="font-semibold">{user.name}</p>
+                <p className="text-blue-200 text-sm flex items-center">
+                  <MapPin className="w-3 h-3 mr-1" />
+                  {user.location}
+                </p>
+              </div>
+            </div>
+            <p className="text-blue-200 text-xs">Member since {user.memberSince}</p>
+          </div>
+          <button className="flex items-center space-x-2 text-blue-200 hover:text-white transition-colors">
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">Sign Out</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const NavItem = ({ icon: Icon, label, active, onClick }) => (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
+        active ? 'bg-white text-blue-600 shadow-md' : 'text-blue-100 hover:bg-blue-500 hover:text-white'
+      }`}
+    >
+      <Icon className="w-5 h-5" />
+      <span className="font-medium">{label}</span>
+    </button>
+  );
+
+  // Header Component
+  const Header = ({ title, subtitle }) => (
+    <div className="bg-white shadow-sm border-b">
+      <div className="px-6 py-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
+            {subtitle && <p className="text-gray-600 mt-1">{subtitle}</p>}
+          </div>
+          <div className="flex items-center space-x-4">
+            <button className="relative p-3 text-gray-600 hover:text-gray-900 bg-gray-100 rounded-full">
+              <Bell className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">2</span>
+            </button>
+            <div className="text-right">
+              <p className="text-sm font-medium text-gray-900">Welcome back!</p>
+              <p className="text-xs text-gray-500">{new Date().toLocaleDateString()}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Dashboard Page
+  const Dashboard = () => (
+    <div className="space-y-6">
+      <Header title="My Pet Dashboard" subtitle="Keep track of your furry family members' health and nutrition" />
+      
+      <div className="px-6">
+        {/* Welcome Banner */}
+        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl text-white p-6 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-2xl font-bold mb-2">Hello, {user.name}! 👋</h3>
+              <p className="text-blue-100 mb-4">You have {pets.length} beautiful pets in your care</p>
+              <div className="flex space-x-4">
+                <div className="bg-white bg-opacity-20 rounded-lg px-4 py-2">
+                  <span className="text-sm">This week: All pets healthy!</span>
+                </div>
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <div className="text-6xl">🐕🐱</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <StatsCard
+            title="My Pets"
+            value={pets.length.toString()}
+            subtitle="Furry family members"
+            icon={Heart}
+            color="pink"
+          />
+          <StatsCard
+            title="On Track"
+            value={pets.filter(p => p.healthStatus === 'Healthy').length.toString()}
+            subtitle="Pets maintaining healthy weight"
+            icon={CheckCircle}
+            color="green"
+          />
+          <StatsCard
+            title="Streak"
+            value="12 days"
+            subtitle="Consistent feeding schedule"
+            icon={Award}
+            color="yellow"
+          />
+        </div>
+
+        {/* My Pets Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-lg">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">My Pets</h3>
+                <button
+                  onClick={() => setShowAddPet(true)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add Pet</span>
+                </button>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                {pets.map(pet => (
+                  <PetOverviewCard key={pet.id} pet={pet} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                <ActivityItem
+                  pet="Buddy"
+                  action="Fed breakfast - 1 cup kibble"
+                  time="2 hours ago"
+                  type="feeding"
+                />
+                <ActivityItem
+                  pet="Whiskers"
+                  action="Weight check: 5.8kg"
+                  time="Yesterday"
+                  type="health"
+                />
+                <ActivityItem
+                  pet="Charlie"
+                  action="Completed daily walk"
+                  time="Yesterday"
+                  type="activity"
+                />
+                <ActivityItem
+                  pet="Buddy"
+                  action="Updated diet plan"
+                  time="3 days ago"
+                  type="nutrition"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="bg-white rounded-xl shadow-lg">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <QuickActionCard
+                icon={Scale}
+                title="Log Weight"
+                description="Record your pet's weight"
+                color="blue"
+                onClick={() => setCurrentPage('progress')}
+              />
+              <QuickActionCard
+                icon={Activity}
+                title="View Diet Plan"
+                description="Check nutrition recommendations"
+                color="green"
+                onClick={() => setCurrentPage('nutrition')}
+              />
+              <QuickActionCard
+                icon={BookOpen}
+                title="Pet Care Tips"
+                description="Learn about pet nutrition"
+                color="purple"
+                onClick={() => setCurrentPage('education')}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const StatsCard = ({ title, value, subtitle, icon: Icon, color }) => (
+    <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-gray-600 text-sm font-medium">{title}</p>
+          <p className="text-3xl font-bold text-gray-900 mt-1">{value}</p>
+          <p className="text-gray-500 text-sm mt-1">{subtitle}</p>
+        </div>
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center bg-${color}-100`}>
+          <Icon className={`w-6 h-6 text-${color}-600`} />
+        </div>
+      </div>
+    </div>
+  );
+
+  const PetOverviewCard = ({ pet }) => (
+    <div 
+      className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+      onClick={() => {
+        setSelectedPet(pet);
+        setCurrentPage('pets');
+      }}
+    >
+      <div className="text-3xl">{pet.photo}</div>
+      <div className="flex-1">
+        <div className="flex items-center justify-between">
+          <h4 className="font-semibold text-gray-900">{pet.name}</h4>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+        </div>
+        <p className="text-sm text-gray-600">{pet.breed} • {pet.age} years old</p>
+        <div className="flex items-center space-x-4 mt-2">
+          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+            pet.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
+            pet.healthStatus.includes('Overweight') ? 'bg-yellow-100 text-yellow-800' :
+            'bg-blue-100 text-blue-800'
+          }`}>
+            {pet.healthStatus}
+          </span>
+          <span className="text-xs text-gray-500">{pet.weight}kg</span>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ActivityItem = ({ pet, action, time, type }) => {
+    const getIcon = () => {
+      switch(type) {
+        case 'feeding': return '🍽️';
+        case 'health': return '⚖️';
+        case 'activity': return '🚶';
+        case 'nutrition': return '📊';
+        default: return '📝';
+      }
+    };
+
+    return (
+      <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+        <span className="text-lg">{getIcon()}</span>
+        <div className="flex-1">
+          <p className="text-sm font-medium text-gray-900">{pet}</p>
+          <p className="text-sm text-gray-600">{action}</p>
+        </div>
+        <span className="text-xs text-gray-500">{time}</span>
+      </div>
+    );
+  };
+
+  const QuickActionCard = ({ icon: Icon, title, description, color, onClick }) => (
+    <button
+      onClick={onClick}
+      className="text-left p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow bg-white"
+    >
+      <div className={`w-10 h-10 rounded-lg bg-${color}-100 flex items-center justify-center mb-3`}>
+        <Icon className={`w-5 h-5 text-${color}-600`} />
+      </div>
+      <h4 className="font-semibold text-gray-900 mb-1">{title}</h4>
+      <p className="text-sm text-gray-600">{description}</p>
+    </button>
+  );
+
+  // My Pets Page
+  const MyPetsPage = () => (
+    <div className="space-y-6">
+      <Header title="My Pets" subtitle="Manage your beloved companions' profiles and information" />
+      
+      <div className="px-6">
+        {/* Search and Add */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+            <div className="relative">
+              <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search your pets..."
+                className="pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full md:w-80"
+              />
+            </div>
+            <button
+              onClick={() => setShowAddPet(true)}
+              className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              <span>Add New Pet</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Pets Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {pets.map(pet => (
+            <div key={pet.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-4xl">{pet.photo}</span>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">{pet.name}</h3>
+                      <p className="text-gray-600">{pet.breed}</p>
+                    </div>
+                  </div>
+                  <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                    <Edit3 className="w-5 h-5" />
+                  </button>
+                </div>
+                
+                <div className="space-y-3 mb-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-500">Age:</span>
+                      <span className="font-medium">{pet.age} years</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-500">Weight:</span>
+                      <span className="font-medium">{pet.weight}kg</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-500">Activity:</span>
+                      <span className="font-medium">{pet.activity}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-500">Goal:</span>
+                      <span className="font-medium">{pet.idealWeight}kg</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Personality:</span> {pet.personality}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${
+                    pet.healthStatus === 'Healthy' ? 'bg-green-100 text-green-800' :
+                    pet.healthStatus.includes('Overweight') ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {pet.healthStatus}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setSelectedPet(pet);
+                      setCurrentPage('nutrition');
+                    }}
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center space-x-1"
+                  >
+                    <span>View Diet Plan</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Nutrition Plans Page
+  const NutritionPlans = () => (
+    <div className="space-y-6">
+      <Header 
+        title="Nutrition Plans" 
+        subtitle={selectedPet ? `Personalized nutrition for ${selectedPet.name}` : "Customized feeding recommendations for your pets"} 
+      />
+      
+      <div className="px-6">
+        {selectedPet ? (
+          <div className="space-y-6">
+            {/* Pet Header */}
+            <div className="bg-gradient-to-r from-green-400 to-blue-500 rounded-xl text-white p-6">
+              <div className="flex items-center space-x-4">
+                <span className="text-5xl">{selectedPet.photo}</span>
+                <div className="flex-1">
+                  <h3 className="text-3xl font-bold">{selectedPet.name}'s Nutrition Plan</h3>
+                  <p className="text-green-100 mt-1">
+                    {selectedPet.breed} • {selectedPet.age} years • Current: {selectedPet.weight}kg • Goal: {selectedPet.idealWeight}kg
+                  </p>
+                </div>
+                <button className="px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-semibold">
+                  Update Plan
+                </button>
+              </div>
+            </div>
+
+            {/* Nutrition Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+                <Target className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+                <p className="text-gray-600 text-sm font-medium">Daily Calories</p>
+                <p className="text-2xl font-bold text-gray-900">{sampleDietPlan.dailyCalories}</p>
+                <p className="text-xs text-gray-500 mt-1">Perfect for {selectedPet.name}</p>
+              </div>
+              <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+                <Clock className="w-8 h-8 text-green-600 mx-auto mb-3" />
+                <p className="text-gray-600 text-sm font-medium">Meals per Day</p>
+                <p className="text-2xl font-bold text-gray-900">{sampleDietPlan.mealsPerDay}</p>
+                <p className="text-xs text-gray-500 mt-1">Optimal timing</p>
+              </div>
+              <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+                <Scale className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+                <p className="text-gray-600 text-sm font-medium">Target Weight</p>
+                <p className="text-2xl font-bold text-gray-900">{selectedPet.idealWeight}kg</p>
+                <p className="text-xs text-gray-500 mt-1">Healthy goal</p>
+              </div>
+              <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+                <Activity className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
+                <p className="text-gray-600 text-sm font-medium">Activity Level</p>
+                <p className="text-2xl font-bold text-gray-900">{selectedPet.activity}</p>
+                <p className="text-xs text-gray-500 mt-1">Energy needs</p>
+              </div>
+            </div>
+
+            {/* Daily Feeding Schedule */}
+            <div className="bg-white rounded-xl shadow-lg">
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h3 className="text-xl font-semibold text-gray-900">Daily Feeding Schedule</h3>
+                <p className="text-gray-600 text-sm">Customized meal plan for {selectedPet.name}</p>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  {sampleDietPlan.recommendations.map((meal, index) => (
+                    <div key={index} className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <Clock className="w-5 h-5 text-blue-600" />
+                            <span className="font-semibold text-gray-900">{meal.time}</span>
+                            <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{meal.meal}</span>
+                          </div>
+                          <h4 className="font-medium text-gray-900 mb-1">{meal.food}</h4>
+                          <p className="text-sm text-gray-600 mb-2">{meal.tips}</p>
+                        </div>
+                        <div className="text-right ml-4">
+                          <p className="font-semibold text-lg text-gray-900">{meal.portion}</p>
+                          <p className="text-sm text-gray-600">{meal.calories} calories</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Nutrition Facts */}
+            <div className="bg-white rounded-xl shadow-lg">
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h3 className="text-xl font-semibold text-gray-900">Nutrition Breakdown</h3>
+                <p className="text-gray-600 text-sm">Balanced nutrients for optimal health</p>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {Object.entries(sampleDietPlan.nutritionBreakdown).map(([nutrient, value]) => (
+                    <div key={nutrient} className="text-center p-4 bg-gray-50 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium capitalize mb-2">{nutrient}</p>
+                      <p className="text-3xl font-bold text-gray-900">{value}</p>
+                      <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full" 
+                          style={{width: value}}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <div className="bg-white rounded-xl shadow-lg p-12">
+              <Heart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-2xl font-semibold text-gray-900 mb-3">Choose Your Pet</h3>
+              <p className="text-gray-600 mb-6">Select one of your pets to view their personalized nutrition plan</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                {pets.map(pet => (
+                  <button
+                    key={pet.id}
+                    onClick={() => setSelectedPet(pet)}
+                    className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all"
+                  >
+                    <span className="text-3xl block mb-2">{pet.photo}</span>
+                    <p className="font-semibold text-gray-900">{pet.name}</p>
+                    <p className="text-sm text-gray-600">{pet.breed}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Add Pet Modal
+  const AddPetModal = () => {
+    if (!showAddPet) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-semibold text-gray-900">Add New Family Member</h3>
+              <button
+                onClick={() => setShowAddPet(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-gray-600 text-sm mt-1">Tell us about your new pet so we can create the perfect nutrition plan</p>
+          </div>
+          
+          <div className="p-6">
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Pet's Name *</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="What's your pet's name?"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Species *</label>
+                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option>Choose your pet type</option>
+                    <option>Dog 🐕</option>
+                    <option>Cat 🐱</option>
+                    <option>Rabbit 🐰</option>
+                    <option>Bird 🐦</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Breed</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="e.g., Golden Retriever, Persian Cat"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Age *</label>
+                  <input
+                    type="number"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Age in years"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Current Weight (kg) *</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Current weight"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Activity Level *</label>
+                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option>How active is your pet?</option>
+                    <option>Low - Mostly indoors, minimal exercise</option>
+                    <option>Medium - Regular walks, some playtime</option>
+                    <option>High - Very active, lots of exercise</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Personality & Notes</label>
+                <textarea
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows="3"
+                  placeholder="Tell us about your pet's personality, any health conditions, or special needs..."
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end space-x-3">
+            <button
+              onClick={() => setShowAddPet(false)}
+              className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                // Add pet logic here
+                setShowAddPet(false);
+              }}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Add My Pet
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Progress Tracking Page
+  const ProgressPage = () => (
+    <div className="space-y-6">
+      <Header title="Health Progress" subtitle="Track your pets' health journey and achievements" />
+      
+      <div className="px-6">
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <h3 className="text-lg font-semibold mb-4">Select Pet to View Progress</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {pets.map(pet => (
+              <button
+                key={pet.id}
+                className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
+              >
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">{pet.photo}</span>
+                  <div>
+                    <p className="font-semibold">{pet.name}</p>
+                    <p className="text-sm text-gray-600">{pet.weight}kg • {pet.healthStatus}</p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white rounded-xl shadow-lg">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold">Weight Tracking</h3>
+            </div>
+            <div className="p-6">
+              <div className="h-64 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
+                <div className="text-center">
+                  <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-600">Weight progress chart</p>
+                  <p className="text-sm text-gray-500">Visual tracking over time</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold">Health Milestones</h3>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                  <div>
+                    <p className="font-medium text-green-800">Buddy reached ideal weight!</p>
+                    <p className="text-sm text-green-600">June 15, 2024</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                  <Star className="w-6 h-6 text-blue-600" />
+                  <div>
+                    <p className="font-medium text-blue-800">30-day feeding streak</p>
+                    <p className="text-sm text-blue-600">Consistent nutrition plan</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Education Page
+  const EducationPage = () => (
+    <div className="space-y-6">
+      <Header title="Learn & Tips" subtitle="Expert advice and tips for your pet's nutrition and health" />
+      
+      <div className="px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <BookOpen className="w-10 h-10 text-blue-600 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Nutrition Basics</h3>
+            <p className="text-gray-600 mb-4">Learn the fundamentals of pet nutrition and healthy feeding practices.</p>
+            <button className="text-blue-600 hover:text-blue-800 font-medium">Read More →</button>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <Activity className="w-10 h-10 text-green-600 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Exercise & Diet</h3>
+            <p className="text-gray-600 mb-4">Understand how activity levels affect your pet's nutritional needs.</p>
+            <button className="text-green-600 hover:text-green-800 font-medium">Read More →</button>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <Heart className="w-10 h-10 text-red-600 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Health Signs</h3>
+            <p className="text-gray-600 mb-4">Recognize signs of good nutrition and when to consult a vet.</p>
+            <button className="text-red-600 hover:text-red-800 font-medium">Read More →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Main App Layout
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      <Navigation />
+      <div className="ml-64">
+        {currentPage === 'dashboard' && <Dashboard />}
+        {currentPage === 'pets' && <MyPetsPage />}
+        {currentPage === 'nutrition' && <NutritionPlans />}
+        {currentPage === 'progress' && <ProgressPage />}
+        {currentPage === 'education' && <EducationPage />}
+        {currentPage === 'settings' && (
+          <div className="p-6">
+            <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+              <Settings className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Account Settings</h2>
+              <p className="text-gray-600 mb-6">Manage your profile, notifications, and app preferences</p>
+              <p className="text-sm text-gray-500">Coming soon...</p>
+            </div>
+          </div>
+        )}
+      </div>
+      <AddPetModal />
+    </div>
+  );
+};
+
+export default PetNutritionApp;

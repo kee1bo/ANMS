@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Photo Upload Testing</title>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="assets/css/design-tokens.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/photo-upload-enhanced.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background-secondary);
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-header h1 {
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+            font-size: 2rem;
+        }
+
+        .test-header p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin: 0;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .test-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-500);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            background: var(--primary-600);
+            transform: translateY(-1px);
+        }
+
+        .test-btn.secondary {
+            background: var(--gray-500);
+        }
+
+        .test-btn.secondary:hover {
+            background: var(--gray-600);
+        }
+
+        .test-btn.success {
+            background: var(--success-500);
+        }
+
+        .test-btn.success:hover {
+            background: var(--success-600);
+        }
+
+        .test-btn.warning {
+            background: var(--warning-500);
+        }
+
+        .test-btn.warning:hover {
+            background: var(--warning-600);
+        }
+
+        .upload-container {
+            margin-bottom: 3rem;
+        }
+
+        .test-results {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        .test-results h3 {
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+        }
+
+        .test-log {
+            background: var(--gray-50);
+            border: 1px solid var(--border-primary);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success-500);
+        }
+
+        .notification.error {
+            background: var(--error-500);
+        }
+
+        .notification.info {
+            background: var(--info-500);
+        }
+
+        .notification.warning {
+            background: var(--warning-500);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--background-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-primary);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .test-controls {
+                flex-direction: column;
+            }
+
+            .test-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>📸 Enhanced Photo Upload Testing</h1>
+            <p>Comprehensive testing suite for drag & drop photo upload with editing capabilities</p>
+        </div>
+
+        <div class="test-controls">
+            <button class="test-btn" onclick="initializeUpload()">Initialize Upload</button>
+            <button class="test-btn secondary" onclick="loadSamplePhotos()">Load Sample Photos</button>
+            <button class="test-btn success" onclick="testFileValidation()">Test Validation</button>
+            <button class="test-btn warning" onclick="testLargeFiles()">Test Large Files</button>
+            <button class="test-btn secondary" onclick="testMultipleFiles()">Test Multiple Files</button>
+            <button class="test-btn secondary" onclick="resetUpload()">Reset Upload</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="files-selected">0</div>
+                <div class="stat-label">Files Selected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="files-uploaded">0</div>
+                <div class="stat-label">Files Uploaded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-size">0 MB</div>
+                <div class="stat-label">Total Size</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="upload-time">0s</div>
+                <div class="stat-label">Upload Time</div>
+            </div>
+        </div>
+
+        <div class="upload-container" id="upload-container">
+            <!-- Photo upload component will be inserted here -->
+        </div>
+
+        <div class="test-results">
+            <h3>Test Results & Logs</h3>
+            <div class="test-log" id="test-log">
+                Ready for photo upload testing...\n
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Dependencies -->
+    <script src="assets/js/components/photo-upload-enhanced.js"></script>
+
+    <script>
+        // Global variables
+        let photoUpload = null;
+        let testLog = document.getElementById('test-log');
+        let uploadStartTime = null;
+        let stats = {
+            filesSelected: 0,
+            filesUploaded: 0,
+            totalSize: 0,
+            uploadTime: 0
+        };
+
+        // Logging function
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            testLog.textContent += logEntry;
+            testLog.scrollTop = testLog.scrollHeight;
+            
+            console.log(logEntry);
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Hide notification after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('files-selected').textContent = stats.filesSelected;
+            document.getElementById('files-uploaded').textContent = stats.filesUploaded;
+            document.getElementById('total-size').textContent = `${(stats.totalSize / (1024 * 1024)).toFixed(2)} MB`;
+            document.getElementById('upload-time').textContent = `${stats.uploadTime.toFixed(1)}s`;
+        }
+
+        // Initialize photo upload component
+        function initializeUpload() {
+            log('Initializing photo upload component...');
+            
+            const container = document.getElementById('upload-container');
+            container.innerHTML = '';
+            
+            photoUpload = new PhotoUploadEnhanced(container, {
+                maxFileSize: 10 * 1024 * 1024, // 10MB
+                allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+                maxFiles: 10,
+                enableCrop: true,
+                enableResize: true,
+                thumbnailSize: 150,
+                compressionQuality: 0.8
+            });
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            log('Photo upload component initialized successfully');
+            showNotification('Photo upload component ready', 'success');
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            if (!photoUpload) return;
+
+            photoUpload.on('fileRemoved', (event) => {
+                log(`File removed: index ${event.index}`);
+                stats.filesSelected = Math.max(0, stats.filesSelected - 1);
+                updateStats();
+            });
+
+            photoUpload.on('filesCleared', () => {
+                log('All files cleared');
+                stats.filesSelected = 0;
+                stats.totalSize = 0;
+                updateStats();
+            });
+
+            photoUpload.on('uploadStart', (event) => {
+                log(`Upload started for: ${event.fileData.name}`);
+                if (!uploadStartTime) {
+                    uploadStartTime = Date.now();
+                }
+            });
+
+            photoUpload.on('uploadComplete', (event) => {
+                const endTime = Date.now();
+                stats.uploadTime = uploadStartTime ? (endTime - uploadStartTime) / 1000 : 0;
+                stats.filesUploaded += event.successful;
+                
+                log(`Upload complete: ${event.successful} successful, ${event.failed} failed`);
+                updateStats();
+                
+                if (event.successful > 0) {
+                    showNotification(`${event.successful} photo(s) uploaded successfully!`, 'success');
+                }
+                
+                if (event.failed > 0) {
+                    showNotification(`${event.failed} photo(s) failed to upload`, 'error');
+                }
+                
+                uploadStartTime = null;
+            });
+
+            photoUpload.on('uploadCancelled', () => {
+                log('Upload cancelled by user');
+                showNotification('Upload cancelled', 'info');
+                uploadStartTime = null;
+            });
+
+            photoUpload.on('photoEdited', (event) => {
+                log(`Photo edited: ${event.fileData.name}`);
+                showNotification('Photo edited successfully', 'success');
+            });
+
+            photoUpload.on('deletePhoto', (event) => {
+                log(`Photo delete requested: ${event.photo.name || 'Untitled'}`);
+                // Simulate photo deletion
+                setTimeout(() => {
+                    showNotification('Photo deleted successfully', 'success');
+                }, 500);
+            });
+
+            photoUpload.on('error', (event) => {
+                log(`Error: ${event.message}`, 'error');
+                showNotification(event.message, 'error');
+            });
+
+            photoUpload.on('errors', (event) => {
+                event.errors.forEach(error => {
+                    log(`Validation error: ${error}`, 'error');
+                });
+                showNotification(`${event.errors.length} validation error(s)`, 'error');
+            });
+
+            photoUpload.on('success', (event) => {
+                log(`Success: ${event.message}`, 'success');
+                showNotification(event.message, 'success');
+            });
+
+            // Monitor file selection
+            const fileInput = photoUpload.container.querySelector('#file-input');
+            if (fileInput) {
+                const originalHandler = fileInput.onchange;
+                fileInput.addEventListener('change', (e) => {
+                    const files = Array.from(e.target.files);
+                    stats.filesSelected += files.length;
+                    stats.totalSize += files.reduce((sum, file) => sum + file.size, 0);
+                    updateStats();
+                    
+                    log(`${files.length} file(s) selected`);
+                });
+            }
+        }
+
+        // Load sample photos
+        function loadSamplePhotos() {
+            if (!photoUpload) {
+                showNotification('Please initialize upload component first', 'warning');
+                return;
+            }
+            
+            log('Loading sample photos...');
+            
+            // Create sample photo data
+            const samplePhotos = [
+                {
+                    id: 1,
+                    name: 'buddy-portrait.jpg',
+                    url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop',
+                    thumbnail: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=150&h=150&fit=crop',
+                    size: 245760,
+                    width: 400,
+                    height: 400,
+                    uploadedAt: new Date(Date.now() - 86400000).toISOString() // 1 day ago
+                },
+                {
+                    id: 2,
+                    name: 'luna-playing.jpg',
+                    url: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
+                    thumbnail: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=150&h=150&fit=crop',
+                    size: 198432,
+                    width: 400,
+                    height: 400,
+                    uploadedAt: new Date(Date.now() - 172800000).toISOString() // 2 days ago
+                },
+                {
+                    id: 3,
+                    name: 'max-sleeping.jpg',
+                    url: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
+                    thumbnail: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=150&h=150&fit=crop',
+                    size: 312576,
+                    width: 400,
+                    height: 400,
+                    uploadedAt: new Date(Date.now() - 259200000).toISOString() // 3 days ago
+                }
+            ];
+            
+            photoUpload.loadUploadedPhotos(samplePhotos);
+            
+            log(`Loaded ${samplePhotos.length} sample photos`);
+            showNotification('Sample photos loaded', 'success');
+        }
+
+        // Test file validation
+        function testFileValidation() {
+            if (!photoUpload) {
+                showNotification('Please initialize upload component first', 'warning');
+                return;
+            }
+            
+            log('Testing file validation...');
+            
+            // Create test files with various issues
+            const testCases = [
+                {
+                    name: 'valid-image.jpg',
+                    type: 'image/jpeg',
+                    size: 1024 * 1024, // 1MB
+                    expected: 'valid'
+                },
+                {
+                    name: 'too-large.jpg',
+                    type: 'image/jpeg',
+                    size: 15 * 1024 * 1024, // 15MB (over 10MB limit)
+                    expected: 'invalid - too large'
+                },
+                {
+                    name: 'invalid-type.txt',
+                    type: 'text/plain',
+                    size: 1024,
+                    expected: 'invalid - wrong type'
+                },
+                {
+                    name: 'valid-png.png',
+                    type: 'image/png',
+                    size: 2 * 1024 * 1024, // 2MB
+                    expected: 'valid'
+                }
+            ];
+            
+            testCases.forEach(testCase => {
+                const mockFile = new File([''], testCase.name, {
+                    type: testCase.type,
+                    size: testCase.size
+                });
+                
+                const validation = photoUpload.validateFile(mockFile);
+                const result = validation.valid ? 'valid' : `invalid - ${validation.error}`;
+                
+                log(`Test: ${testCase.name} - Expected: ${testCase.expected}, Got: ${result}`);
+                
+                if (result.includes(testCase.expected.split(' - ')[0])) {
+                    log(`✅ Validation test passed for ${testCase.name}`);
+                } else {
+                    log(`❌ Validation test failed for ${testCase.name}`, 'error');
+                }
+            });
+            
+            showNotification('File validation tests completed', 'info');
+        }
+
+        // Test large files
+        function testLargeFiles() {
+            log('Testing large file handling...');
+            
+            // This would test how the component handles large files
+            // In a real scenario, you'd create actual large files or mock them
+            
+            const largeFileSizes = [
+                { size: 5 * 1024 * 1024, name: '5MB-image.jpg' },
+                { size: 10 * 1024 * 1024, name: '10MB-image.jpg' },
+                { size: 15 * 1024 * 1024, name: '15MB-image.jpg' }
+            ];
+            
+            largeFileSizes.forEach(fileInfo => {
+                const mockFile = new File([''], fileInfo.name, {
+                    type: 'image/jpeg',
+                    size: fileInfo.size
+                });
+                
+                if (photoUpload) {
+                    const validation = photoUpload.validateFile(mockFile);
+                    log(`Large file test: ${fileInfo.name} (${(fileInfo.size / (1024 * 1024)).toFixed(1)}MB) - ${validation.valid ? 'Valid' : validation.error}`);
+                }
+            });
+            
+            showNotification('Large file tests completed', 'info');
+        }
+
+        // Test multiple files
+        function testMultipleFiles() {
+            log('Testing multiple file selection...');
+            
+            // Simulate selecting multiple files at once
+            const multipleFiles = [];
+            for (let i = 1; i <= 12; i++) {
+                multipleFiles.push(new File([''], `test-image-${i}.jpg`, {
+                    type: 'image/jpeg',
+                    size: Math.random() * 2 * 1024 * 1024 // Random size up to 2MB
+                }));
+            }
+            
+            log(`Testing with ${multipleFiles.length} files (max allowed: ${photoUpload?.options.maxFiles || 'unknown'})`);
+            
+            if (photoUpload) {
+                // Test validation for multiple files
+                let validCount = 0;
+                let invalidCount = 0;
+                
+                multipleFiles.forEach((file, index) => {
+                    const validation = photoUpload.validateFile(file);
+                    if (validation.valid) {
+                        validCount++;
+                    } else {
+                        invalidCount++;
+                        log(`File ${index + 1} invalid: ${validation.error}`);
+                    }
+                });
+                
+                log(`Multiple file test results: ${validCount} valid, ${invalidCount} invalid`);
+            }
+            
+            showNotification('Multiple file tests completed', 'info');
+        }
+
+        // Reset upload component
+        function resetUpload() {
+            if (photoUpload) {
+                photoUpload.reset();
+                log('Upload component reset');
+                showNotification('Upload component reset', 'info');
+            }
+            
+            // Reset stats
+            stats = {
+                filesSelected: 0,
+                filesUploaded: 0,
+                totalSize: 0,
+                uploadTime: 0
+            };
+            updateStats();
+        }
+
+        // Performance testing
+        function runPerformanceTests() {
+            log('Running performance tests...');
+            
+            const startTime = performance.now();
+            
+            // Test component initialization time
+            const initStart = performance.now();
+            initializeUpload();
+            const initTime = performance.now() - initStart;
+            
+            log(`Component initialization time: ${initTime.toFixed(2)}ms`);
+            
+            // Test file validation performance
+            const validationStart = performance.now();
+            for (let i = 0; i < 100; i++) {
+                const mockFile = new File([''], `test-${i}.jpg`, {
+                    type: 'image/jpeg',
+                    size: 1024 * 1024
+                });
+                if (photoUpload) {
+                    photoUpload.validateFile(mockFile);
+                }
+            }
+            const validationTime = performance.now() - validationStart;
+            
+            log(`100 file validations time: ${validationTime.toFixed(2)}ms (avg: ${(validationTime / 100).toFixed(4)}ms per file)`);
+            
+            const totalTime = performance.now() - startTime;
+            log(`Total performance test time: ${totalTime.toFixed(2)}ms`);
+            
+            showNotification('Performance tests completed', 'success');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            log('Enhanced Photo Upload Testing Page Loaded');
+            log('Click "Initialize Upload" to start testing');
+            
+            updateStats();
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    switch (e.key) {
+                        case 'i':
+                            e.preventDefault();
+                            initializeUpload();
+                            break;
+                        case 'l':
+                            e.preventDefault();
+                            loadSamplePhotos();
+                            break;
+                        case 't':
+                            e.preventDefault();
+                            testFileValidation();
+                            break;
+                        case 'r':
+                            e.preventDefault();
+                            resetUpload();
+                            break;
+                        case 'p':
+                            e.preventDefault();
+                            runPerformanceTests();
+                            break;
+                    }
+                }
+            });
+            
+            log('Keyboard shortcuts enabled:');
+            log('  Ctrl+I: Initialize Upload');
+            log('  Ctrl+L: Load Sample Photos');
+            log('  Ctrl+T: Test Validation');
+            log('  Ctrl+R: Reset Upload');
+            log('  Ctrl+P: Performance Tests');
+        });
+
+        // Add drag and drop testing for the entire page
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (!photoUpload) {
+                showNotification('Initialize upload component first', 'warning');
+            }
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (!photoUpload) {
+                showNotification('Initialize upload component first', 'warning');
+                return;
+            }
+            
+            const files = Array.from(e.dataTransfer.files);
+            log(`${files.length} file(s) dropped on page`);
+        });
+    </script>
+</body>
+</html>

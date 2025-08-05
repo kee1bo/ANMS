@@ -1,0 +1,47 @@
+## 3. Planning and Methodology
+
+### 3.1 Research Philosophy and Design
+
+This research adopts a pragmatist philosophy recognizing that ANMS value lies in practical application and real-world impact. The methodology employs design science research principles combined with user-centered design to create, evaluate, and refine a technological artifact addressing identified problems in animal nutrition management.
+
+The research employs a mixed-methods approach combining multiple components. Requirements analysis uses interviews and surveys to define user needs, collecting qualitative and quantitative data for thematic and statistical analysis. System development employs agile methodology to build functional ANMS, creating artifacts for technical evaluation. Formative evaluation utilizes usability testing to refine design, gathering mixed data for iterative improvement. Summative evaluation conducts controlled testing to assess effectiveness, collecting quantitative data for comparative analysis.
+
+### 3.2 Development Methodology
+
+The project employs modified Agile Scrum methodology adapted for academic constraints and single-developer context. Sprint planning involves 1-day duration for backlog prioritization and goal setting, producing sprint plans. Development encompasses 8-day periods for feature implementation and testing, delivering working increments. Review and testing spans 4 days for integration testing and stakeholder feedback, validating features. Retrospective requires 1 day for process evaluation and next sprint planning, generating improvement plans.
+
+Development phases include Foundation during weeks 1-2 for requirements gathering and architecture design, delivering system design documents with stakeholder approval success criteria. Database phase spans weeks 3-4 for schema implementation and data population, producing functional databases with query performance under 2 seconds success criteria. Backend development occurs during weeks 5-6 for algorithm development and API creation, delivering working algorithms and REST APIs with 95% accuracy validation success criteria. Frontend implementation happens during weeks 7-8 for UI implementation and responsive design, producing complete user interfaces with 80% usability score success criteria. Integration phase spans weeks 9-10 for system integration and optimization, delivering integrated ANMS with all features functional success criteria. Validation occurs during weeks 11-12 for user testing and refinement, producing production-ready systems meeting acceptance criteria.
+
+### 3.3 Technology Stack and Architecture
+
+Technology selection follows specific rationale for each component. PHP 8.2+ provides mature, cost-effective, rapid development with extensive libraries and community support, though requiring performance optimization consideration. SQLite offers proven reliability and JSON support with ACID compliance and optimization tools, though requiring scaling strategy consideration. Modern HTML5, CSS3, and JavaScript ES6+ enable responsive frameworks and accessibility with rapid UI development and mobile-first approaches, though requiring custom styling for branding. The combination provides interactive capabilities and API integration with broad browser support, though necessitating compatibility testing.
+
+The system architecture employs a three-tier design separating presentation, application, and data layers. The presentation layer handles user interface rendering and client-side interactions through responsive web pages and JavaScript applications. The application layer manages business logic and API endpoints through PHP-based server processing and RESTful API design. The data layer provides persistent storage and data management through SQLite database with file storage fallback mechanisms.
+
+### 3.4 Algorithm Development Strategy
+
+The ANMS algorithm combines rule-based foundations with ML enhancement following a layered approach. Input validation layer ensures data quality assurance through type checking and range validation, verified by automated testing. Safety rules layer implements hard constraints using AAFCO guidelines and species limits, validated through expert review. Rule-based core layer performs primary calculations using veterinary formulas, verified through mathematical validation. ML enhancement layer provides personalization through preference learning and optimization, validated through A/B testing. Output validation layer conducts result verification through reasonableness checks, validated through clinical case studies.
+
+Implementation follows a structured protocol beginning with rule-based foundation including AAFCO nutritional standards implementation, species-specific requirement tables, life stage adjustment formulas, and health condition modification rules. ML enhancement integration incorporates user preference learning algorithms, historical outcome analysis, collaborative filtering for recommendations, and anomaly detection for health alerts. The validation framework includes expert review by qualified veterinarians, test case validation against clinical scenarios, performance benchmarking for accuracy and speed, and safety verification through edge case testing.
+
+### 3.5 Testing and Evaluation Framework
+
+The comprehensive testing strategy covers multiple categories with specific coverage requirements. Unit testing achieves 80% code coverage using PHPUnit and Jest tools with continuous frequency, requiring all tests to pass as acceptance criteria. Integration testing covers critical user paths using custom scripts with daily build frequency, requiring end-to-end functionality as acceptance criteria. Performance testing addresses load scenarios using JMeter and GTmetrix tools with weekly frequency, requiring under 2-second response times and 10,000 user capacity as acceptance criteria. Security testing ensures OWASP compliance using security scanners with sprint completion frequency, requiring zero critical vulnerabilities as acceptance criteria. Usability testing covers core workflows through user observation with bi-weekly frequency, requiring 85% task success as acceptance criteria.
+
+User experience evaluation employs both quantitative and qualitative assessment methods. Quantitative metrics include task completion rates and error frequencies, time-to-completion measurements, system performance under realistic usage conditions, and user satisfaction scores using SUS methodology. Qualitative assessment incorporates think-aloud protocol during usability sessions, post-task interviews and feedback collection, observational studies of natural usage patterns, and expert heuristic evaluation.
+
+### 3.6 Data Collection and Analysis Plan
+
+Data collection encompasses multiple sources and methods. Usage analytics from system logs use automated tracking with real-time frequency for behavior analysis purposes. Performance metrics from server monitoring employ continuous monitoring with real-time frequency for system optimization purposes. User feedback from surveys and interviews utilizes structured collection with weekly/monthly frequency for improvement guidance purposes. Health outcomes from user reports use structured forms with daily/weekly frequency for impact assessment purposes.
+
+Analysis methodology combines quantitative and qualitative approaches. Quantitative analysis includes descriptive statistics for user demographics and usage patterns, inferential statistics for hypothesis testing and outcome comparison, time series analysis for trend identification, and regression analysis for factor identification. Qualitative analysis employs thematic analysis of interview transcripts and open-ended feedback, content analysis of user-generated documentation, grounded theory approach for novel insight generation, and triangulation across multiple data sources.
+
+### 3.7 Ethical Considerations and Risk Management
+
+The research ethics protocol includes university ethics submission, informed consent procedures for all participants, data protection and privacy safeguards, and right to withdraw without penalty. Data protection measures implement GDPR compliance, encryption for sensitive information, access control and audit trails, and data retention and deletion policies.
+
+Professional boundary management ensures clear system capability communication, veterinary referral mechanisms, disclaimer and limitation statements, and professional oversight integration. Algorithmic ethics incorporates bias detection and mitigation protocols, transparency in decision-making processes, fairness across diverse user populations, and accountability frameworks for recommendations.
+
+Risk assessment addresses technical complexity with medium probability and high impact, mitigated through incremental development and regular testing with feature reduction contingency plans. Timeline constraints present high probability and medium impact, addressed through agile methodology and scope prioritization with milestone adjustment contingency plans. User adoption challenges show medium probability and high impact, mitigated through user-centered design and stakeholder engagement with simplified interface contingency plans.
+
+**Word Count: 1,156 words**

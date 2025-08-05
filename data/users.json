@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "first_name": "Test",
+        "last_name": "User",
+        "email": "test@example.com",
+        "password_hash": "$2y$10$XxOK8Um3E3uEGEkTq0V6kuPdNu.5Y09YGoWgo\/ZGRg5vlyvJ9E8Hi",
+        "created_at": "2025-07-29 18:52:54",
+        "last_login": "2025-07-30 08:21:27",
+        "status": "active"
+    },
+    {
+        "id": 2,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john@example.com",
+        "password_hash": "$2y$10$46GkwW9KXYgOXN7SSqsb8OlTHH7el9bLsp0Cs805HF0xV6M0ldQrG",
+        "created_at": "2025-07-29 18:56:52",
+        "last_login": "2025-07-29 18:57:37",
+        "status": "active"
+    },
+    {
+        "id": 3,
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "email": "jane@example.com",
+        "password_hash": "$2y$10$GpjbLoS73ny6hciluwRzIOpLzTjc549KT4bvx8XrH94lYWeWzfDkS",
+        "created_at": "2025-07-29 20:01:56",
+        "last_login": "2025-07-29 20:06:26",
+        "status": "active"
+    },
+    {
+        "id": 4,
+        "first_name": "Alice",
+        "last_name": "Johnson",
+        "email": "alice@example.com",
+        "password_hash": "$2y$10$9NjBdBFc.ayapkf4J6WOne\/Br5voas5wX85nguF6uMFUryUDD6T46",
+        "created_at": "2025-07-29 20:13:24",
+        "last_login": null,
+        "status": "active"
+    },
+    {
+        "id": 5,
+        "first_name": "Bob",
+        "last_name": "Wilson",
+        "email": "bob@example.com",
+        "password_hash": "$2y$10$2EgGMH7acjFPOGBzdLBTpuaOnw2WxFP0quGhJVI4EayarwAFx1rjC",
+        "created_at": "2025-07-29 20:16:29",
+        "last_login": null,
+        "status": "active"
+    },
+    {
+        "id": 6,
+        "first_name": "New",
+        "last_name": "User",
+        "email": "newuser@example.com",
+        "password_hash": "$2y$10$mZXeGb2Byc3hMQnKlLYmC.HVZCMVycnUjSVfasXZp9Vj7BRybHcLS",
+        "created_at": "2025-07-29 20:37:35",
+        "last_login": null,
+        "status": "active"
+    },
+    {
+        "id": 7,
+        "first_name": "sai",
+        "last_name": "Vikas",
+        "email": "vikasvikki2522@gmail.com",
+        "password_hash": "$2y$10$GJhX8UGn8pmZQNCLActYCu4STrsZ4aDcI\/BOaDUxxJS3k8JqveoB2",
+        "created_at": "2025-07-29 20:42:04",
+        "last_login": "2025-07-30 05:26:55",
+        "status": "active"
+    }
+]

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANMS - Enhanced Meal Planner Test</title>
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="assets/css/meal-planner.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-utensils"></i> Enhanced Meal Planner</h1>
+            <p>Advanced meal planning with dietary restrictions, portion calculations, and smart recommendations</p>
+        </div>
+
+        <!-- Pet Selection for Testing -->
+        <div class="test-controls">
+            <h3>Test Pet Selection</h3>
+            <div class="pet-selection-grid">
+                <button class="btn btn-outline test-pet-btn" onclick="loadTestPet('dog')">
+                    <i class="fas fa-dog"></i> Test Dog (Golden Retriever, 25kg, 3 years)
+                </button>
+                <button class="btn btn-outline test-pet-btn" onclick="loadTestPet('cat')">
+                    <i class="fas fa-cat"></i> Test Cat (Persian, 4.5kg, 2 years)
+                </button>
+                <button class="btn btn-outline test-pet-btn" onclick="loadTestPet('puppy')">
+                    <i class="fas fa-dog"></i> Test Puppy (Labrador, 8kg, 6 months)
+                </button>
+            </div>
+        </div>
+
+        <!-- Meal Planner Container -->
+        <div id="nutrition-tab" class="meal-planner-container">
+            <div class="welcome-message">
+                <h3><i class="fas fa-paw"></i> Welcome to the Enhanced Meal Planner</h3>
+                <p>Select a test pet above to start planning meals with advanced features:</p>
+                <ul>
+                    <li><strong>Dietary Restrictions:</strong> Filter foods based on specific dietary needs</li>
+                    <li><strong>Smart Recommendations:</strong> AI-powered meal suggestions based on nutrition requirements</li>
+                    <li><strong>Portion Calculator:</strong> Precise portion calculations for optimal nutrition</li>
+                    <li><strong>Drag & Drop Planning:</strong> Intuitive weekly meal planning interface</li>
+                    <li><strong>Nutrition Tracking:</strong> Real-time nutrition analysis and targets</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Feature Showcase -->
+        <div class="feature-showcase">
+            <h3><i class="fas fa-star"></i> Enhanced Features</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Dietary Restrictions</h4>
+                    <p>Filter foods based on grain-free, low-fat, high-protein, weight management, and sensitive stomach requirements.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h4>Smart Recommendations</h4>
+                    <p>AI-powered food recommendations based on your pet's age, weight, activity level, and nutritional needs.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h4>Portion Calculator</h4>
+                    <p>Precise portion calculations with visual aids and feeding tips for optimal nutrition delivery.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <h4>Weekly Planning</h4>
+                    <p>Drag-and-drop interface for creating comprehensive weekly meal plans with nutrition tracking.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h4>Nutrition Analysis</h4>
+                    <p>Real-time nutrition analysis with daily targets and macronutrient breakdown visualization.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-share"></i>
+                    </div>
+                    <h4>Vet Collaboration</h4>
+                    <p>Export and share meal plans with veterinarians for professional review and recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/api-client.js"></script>
+    <script src="assets/js/components/meal-planner.js"></script>
+    
+    <script>
+        // Test pet data
+        const testPets = {
+            dog: {
+                id: 1,
+                name: 'Buddy',
+                species: 'dog',
+                breed: 'Golden Retriever',
+                weight: 25,
+                age: 3,
+                activity_level: 'medium'
+            },
+            cat: {
+                id: 2,
+                name: 'Whiskers',
+                species: 'cat',
+                breed: 'Persian',
+                weight: 4.5,
+                age: 2,
+                activity_level: 'low'
+            },
+            puppy: {
+                id: 3,
+                name: 'Max',
+                species: 'dog',
+                breed: 'Labrador',
+                weight: 8,
+                age: 0.5,
+                activity_level: 'high'
+            }
+        };
+
+        function loadTestPet(petType) {
+            const pet = testPets[petType];
+            if (!pet) return;
+
+            // Simulate loading pet data
+            window.mealPlanner.currentPet = pet;
+            window.mealPlanner.renderMealPlanInterface();
+            
+            // Show success message
+            const notification = document.createElement('div');
+            notification.className = 'notification success';
+            notification.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${pet.name} (${pet.species}) for meal planning`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Initialize meal planner when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.mealPlanner) {
+                window.mealPlanner = new MealPlanner();
+            }
+        });
+    </script>
+    
+    <style>
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            border-radius: 12px;
+        }
+        
+        .page-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+        
+        .page-header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .test-controls {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-controls h3 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+        }
+        
+        .pet-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .test-pet-btn {
+            padding: 15px 20px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .test-pet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.2);
+        }
+        
+        .test-pet-btn i {
+            font-size: 1.5rem;
+            color: #4ecdc4;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            padding: 60px 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .welcome-message h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .welcome-message p {
+            color: #6c757d;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .welcome-message ul {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #495057;
+        }
+        
+        .welcome-message li {
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+        
+        .feature-showcase {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-showcase h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+        }
+        
+        .feature-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card p {
+            color: #6c757d;
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .pet-selection-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-message {
+                padding: 40px 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>"

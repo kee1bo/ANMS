@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Data Manager Testing</title>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="assets/css/design-tokens.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/pet-data-manager.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background-secondary);
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-header h1 {
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+            font-size: 2rem;
+        }
+
+        .test-header p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin: 0;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .test-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-500);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            background: var(--primary-600);
+            transform: translateY(-1px);
+        }
+
+        .test-btn.secondary {
+            background: var(--gray-500);
+        }
+
+        .test-btn.secondary:hover {
+            background: var(--gray-600);
+        }
+
+        .test-btn.success {
+            background: var(--success-500);
+        }
+
+        .test-btn.success:hover {
+            background: var(--success-600);
+        }
+
+        .test-btn.warning {
+            background: var(--warning-500);
+        }
+
+        .test-btn.warning:hover {
+            background: var(--warning-600);
+        }
+
+        .manager-container {
+            margin-bottom: 3rem;
+        }
+
+        .test-results {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        .test-results h3 {
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+        }
+
+        .test-log {
+            background: var(--gray-50);
+            border: 1px solid var(--border-primary);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success-500);
+        }
+
+        .notification.error {
+            background: var(--error-500);
+        }
+
+        .notification.info {
+            background: var(--info-500);
+        }
+
+        .notification.warning {
+            background: var(--warning-500);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--background-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-primary);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .test-controls {
+                flex-direction: column;
+            }
+
+            .test-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🗂️ Pet Data Manager Testing</h1>
+            <p>Comprehensive testing suite for pet data management, export, and bulk operations</p>
+        </div>
+
+        <div class="test-controls">
+            <button class="test-btn" onclick="initializeManager()">Initialize Manager</button>
+            <button class="test-btn secondary" onclick="addMockPets()">Add Mock Pets</button>
+            <button class="test-btn success" onclick="testExportFeatures()">Test Export</button>
+            <button class="test-btn warning" onclick="testImportFeatures()">Test Import</button>
+            <button class="test-btn secondary" onclick="testBulkOperations()">Test Bulk Ops</button>
+            <button class="test-btn secondary" onclick="testFiltering()">Test Filtering</button>
+            <button class="test-btn secondary" onclick="resetManager()">Reset Manager</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="total-pets">0</div>
+                <div class="stat-label">Total Pets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="selected-pets">0</div>
+                <div class="stat-label">Selected Pets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="exports-count">0</div>
+                <div class="stat-label">Exports</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="imports-count">0</div>
+                <div class="stat-label">Imports</div>
+            </div>
+        </div>
+
+        <div class="manager-container" id="manager-container">
+            <!-- Pet data manager will be inserted here -->
+        </div>
+
+        <div class="test-results">
+            <h3>Test Results & Logs</h3>
+            <div class="test-log" id="test-log">
+                Ready for pet data manager testing...\n
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Dependencies -->
+    <script src="assets/js/pet-data-export.js"></script>
+    <script src="assets/js/components/pet-data-manager.js"></script>
+
+    <script>
+        // Global variables
+        let petDataManager = null;
+        let testLog = document.getElementById('test-log');
+        let stats = {
+            totalPets: 0,
+            selectedPets: 0,
+            exportsCount: 0,
+            importsCount: 0
+        };
+
+        // Mock API client for testing
+        class MockAPIClient {
+            constructor() {
+                this.pets = [];
+                this.nextId = 1;
+            }
+
+            async get(endpoint) {
+                await this.delay(200); // Simulate network delay
+                
+                if (endpoint === '/pets') {
+                    return { data: { pets: this.pets } };
+                }
+                
+                const petIdMatch = endpoint.match(/\/pets\/(\d+)$/);
+                if (petIdMatch) {
+                    const petId = parseInt(petIdMatch[1]);
+                    const pet = this.pets.find(p => p.id === petId);
+                    if (pet) {
+                        return { data: { pet } };
+                    }
+                    throw new Error('Pet not found');
+                }
+                
+                throw new Error(`Endpoint not implemented: ${endpoint}`);
+            }
+
+            async post(endpoint, data) {
+                await this.delay(300);
+                
+                if (endpoint === '/pets') {
+                    const newPet = {
+                        id: this.nextId++,
+                        ...data,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    };
+                    this.pets.push(newPet);
+                    return { data: { pet: newPet } };
+                }
+                
+                throw new Error(`Endpoint not implemented: ${endpoint}`);
+            }
+
+            async put(endpoint, data) {
+                await this.delay(250);
+                
+                const petIdMatch = endpoint.match(/\/pets\/(\d+)$/);
+                if (petIdMatch) {
+                    const petId = parseInt(petIdMatch[1]);
+                    const petIndex = this.pets.findIndex(p => p.id === petId);
+                    if (petIndex !== -1) {
+                        this.pets[petIndex] = {
+                            ...this.pets[petIndex],
+                            ...data,
+                            updatedAt: new Date().toISOString()
+                        };
+                        return { data: { pet: this.pets[petIndex] } };
+                    }
+                    throw new Error('Pet not found');
+                }
+                
+                throw new Error(`Endpoint not implemented: ${endpoint}`);
+            }
+
+            async delete(endpoint) {
+                await this.delay(200);
+                
+                const petIdMatch = endpoint.match(/\/pets\/(\d+)$/);
+                if (petIdMatch) {
+                    const petId = parseInt(petIdMatch[1]);
+                    const petIndex = this.pets.findIndex(p => p.id === petId);
+                    if (petIndex !== -1) {
+                        this.pets.splice(petIndex, 1);
+                        return { data: { success: true } };
+                    }
+                    throw new Error('Pet not found');
+                }
+                
+                throw new Error(`Endpoint not implemented: ${endpoint}`);
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+
+        // Logging function
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            testLog.textContent += logEntry;
+            testLog.scrollTop = testLog.scrollHeight;
+            
+            console.log(logEntry);
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Hide notification after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('total-pets').textContent = stats.totalPets;
+            document.getElementById('selected-pets').textContent = stats.selectedPets;
+            document.getElementById('exports-count').textContent = stats.exportsCount;
+            document.getElementById('imports-count').textContent = stats.importsCount;
+        }
+
+        // Initialize pet data manager
+        function initializeManager() {
+            log('Initializing pet data manager...');
+            
+            const container = document.getElementById('manager-container');
+            container.innerHTML = '';
+            
+            const mockApiClient = new MockAPIClient();
+            
+            petDataManager = new PetDataManager(container, {
+                apiClient: mockApiClient,
+                enableBulkOperations: true,
+                enableExport: true,
+                enableImport: true,
+                enableSharing: true
+            });
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            log('Pet data manager initialized successfully');
+            showNotification('Pet data manager ready', 'success');
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            if (!petDataManager) return;
+
+            petDataManager.on('addPet', () => {
+                log('Add pet requested');
+                showNotification('Add pet functionality would open here', 'info');
+            });
+
+            petDataManager.on('editPet', (event) => {
+                log(`Edit pet requested: ID ${event.petId}`);
+                showNotification(`Edit pet ${event.petId} functionality would open here`, 'info');
+            });
+
+            petDataManager.on('viewPet', (event) => {
+                log(`View pet requested: ID ${event.petId}`);
+                showNotification(`View pet ${event.petId} functionality would open here`, 'info');
+            });
+
+            petDataManager.on('petDeleted', (event) => {
+                log(`Pet deleted: ${event.pet.name} (ID: ${event.petId})`);
+                stats.totalPets = Math.max(0, stats.totalPets - 1);
+                updateStats();
+            });
+
+            petDataManager.on('error', (event) => {
+                log(`Error: ${event.message}`, 'error');
+                showNotification(event.message, 'error');
+            });
+
+            petDataManager.on('success', (event) => {
+                log(`Success: ${event.message}`, 'success');
+                showNotification(event.message, 'success');
+            });
+
+            // Monitor selection changes
+            const originalUpdateSelectionUI = petDataManager.updateSelectionUI;
+            petDataManager.updateSelectionUI = function() {
+                originalUpdateSelectionUI.call(this);
+                stats.selectedPets = this.selectedPets.size;
+                updateStats();
+            };
+        }
+
+        // Add mock pets for testing
+        function addMockPets() {
+            if (!petDataManager) {
+                showNotification('Please initialize manager first', 'warning');
+                return;
+            }
+            
+            log('Adding mock pets...');
+            
+            const mockPets = [
+                {
+                    name: 'Buddy',
+                    species: 'dog',
+                    breed: 'Golden Retriever',
+                    age: 5,
+                    gender: 'male',
+                    photoUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=150&h=150&fit=crop',
+                    currentWeight: 30,
+                    idealWeight: 28,
+                    activityLevel: 'high',
+                    healthConditions: ['Hip Dysplasia'],
+                    allergies: ['Chicken']
+                },
+                {
+                    name: 'Luna',
+                    species: 'cat',
+                    breed: 'Persian',
+                    age: 3,
+                    gender: 'female',
+                    photoUrl: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=150&h=150&fit=crop',
+                    currentWeight: 4.2,
+                    idealWeight: 4.0,
+                    activityLevel: 'moderate',
+                    healthConditions: ['Dental Disease'],
+                    allergies: ['Fish']
+                },
+                {
+                    name: 'Max',
+                    species: 'dog',
+                    breed: 'Labrador Retriever',
+                    age: 2,
+                    gender: 'male',
+                    photoUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=150&h=150&fit=crop',
+                    currentWeight: 25,
+                    idealWeight: 24,
+                    activityLevel: 'high',
+                    healthConditions: [],
+                    allergies: []
+                },
+                {
+                    name: 'Whiskers',
+                    species: 'cat',
+                    breed: 'Siamese',
+                    age: 7,
+                    gender: 'male',
+                    photoUrl: 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?w=150&h=150&fit=crop',
+                    currentWeight: 5.1,
+                    idealWeight: 4.8,
+                    activityLevel: 'low',
+                    healthConditions: ['Arthritis'],
+                    allergies: ['Dairy']
+                },
+                {
+                    name: 'Nibbles',
+                    species: 'rabbit',
+                    breed: 'Holland Lop',
+                    age: 2,
+                    gender: 'female',
+                    photoUrl: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=150&h=150&fit=crop',
+                    currentWeight: 1.8,
+                    idealWeight: 1.9,
+                    activityLevel: 'moderate',
+                    healthConditions: ['Dental Problems'],
+                    allergies: []
+                }
+            ];
+
+            // Add pets to mock API
+            const apiClient = petDataManager.options.apiClient;
+            mockPets.forEach(pet => {
+                const newPet = {
+                    id: apiClient.nextId++,
+                    ...pet,
+                    createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                apiClient.pets.push(newPet);
+            });
+
+            // Refresh the manager
+            petDataManager.loadPets();
+            
+            stats.totalPets = apiClient.pets.length;
+            updateStats();
+            
+            log(`Added ${mockPets.length} mock pets`);
+            showNotification(`${mockPets.length} mock pets added`, 'success');
+        }
+
+        // Test export features
+        function testExportFeatures() {
+            if (!petDataManager) {
+                showNotification('Please initialize manager first', 'warning');
+                return;
+            }
+            
+            log('Testing export features...');
+            
+            const pets = petDataManager.getPets();
+            if (pets.length === 0) {
+                showNotification('Add some pets first to test export', 'warning');
+                return;
+            }
+
+            // Test different export formats
+            const formats = ['pdf', 'csv', 'json', 'xml'];
+            
+            formats.forEach((format, index) => {
+                setTimeout(async () => {
+                    try {
+                        log(`Testing ${format.toUpperCase()} export...`);
+                        
+                        const exporter = new PetDataExporter(petDataManager.options.apiClient);
+                        const result = await exporter.exportPetData(pets[0].id, format, {
+                            excludeEmptyFields: true,
+                            excludeInternalIds: false
+                        });
+                        
+                        log(`✅ ${format.toUpperCase()} export successful: ${result.filename}`);
+                        stats.exportsCount++;
+                        updateStats();
+                        
+                    } catch (error) {
+                        log(`❌ ${format.toUpperCase()} export failed: ${error.message}`, 'error');
+                    }
+                }, index * 1000);
+            });
+            
+            showNotification('Testing export formats...', 'info');
+        }
+
+        // Test import features
+        function testImportFeatures() {
+            if (!petDataManager) {
+                showNotification('Please initialize manager first', 'warning');
+                return;
+            }
+            
+            log('Testing import features...');
+            
+            // Create mock import data
+            const mockJSONData = {
+                exportInfo: {
+                    exportDate: new Date().toISOString(),
+                    exportFormat: 'json',
+                    version: '1.0'
+                },
+                pets: [
+                    {
+                        name: 'Imported Pet 1',
+                        species: 'dog',
+                        breed: 'Beagle',
+                        age: 4,
+                        gender: 'female',
+                        currentWeight: 15,
+                        idealWeight: 14
+                    },
+                    {
+                        name: 'Imported Pet 2',
+                        species: 'cat',
+                        breed: 'Maine Coon',
+                        age: 6,
+                        gender: 'male',
+                        currentWeight: 6.5,
+                        idealWeight: 6.0
+                    }
+                ]
+            };
+
+            const mockCSVData = `Name,Species,Breed,Gender,Age,Current Weight (kg),Ideal Weight (kg)
+Imported Pet 3,rabbit,Dutch,female,1,2.1,2.0
+Imported Pet 4,bird,Canary,male,2,0.02,0.02`;
+
+            // Test JSON import
+            setTimeout(async () => {
+                try {
+                    log('Testing JSON import...');
+                    
+                    const jsonBlob = new Blob([JSON.stringify(mockJSONData)], { type: 'application/json' });
+                    const jsonFile = new File([jsonBlob], 'test-import.json', { type: 'application/json' });
+                    
+                    const importer = new PetDataImporter(petDataManager.options.apiClient);
+                    const result = await importer.importPetData(jsonFile, 'json', {
+                        checkDuplicates: true,
+                        skipDuplicates: true
+                    });
+                    
+                    log(`✅ JSON import successful: ${result.imported} pets imported`);
+                    stats.importsCount++;
+                    updateStats();
+                    
+                    // Refresh manager to show imported pets
+                    petDataManager.loadPets();
+                    
+                } catch (error) {
+                    log(`❌ JSON import failed: ${error.message}`, 'error');
+                }
+            }, 1000);
+
+            // Test CSV import
+            setTimeout(async () => {
+                try {
+                    log('Testing CSV import...');
+                    
+                    const csvBlob = new Blob([mockCSVData], { type: 'text/csv' });
+                    const csvFile = new File([csvBlob], 'test-import.csv', { type: 'text/csv' });
+                    
+                    const importer = new PetDataImporter(petDataManager.options.apiClient);
+                    const result = await importer.importPetData(csvFile, 'csv', {
+                        checkDuplicates: true,
+                        skipDuplicates: true
+                    });
+                    
+                    log(`✅ CSV import successful: ${result.imported} pets imported`);
+                    stats.importsCount++;
+                    updateStats();
+                    
+                    // Refresh manager to show imported pets
+                    petDataManager.loadPets();
+                    
+                } catch (error) {
+                    log(`❌ CSV import failed: ${error.message}`, 'error');
+                }
+            }, 2000);
+            
+            showNotification('Testing import formats...', 'info');
+        }
+
+        // Test bulk operations
+        function testBulkOperations() {
+            if (!petDataManager) {
+                showNotification('Please initialize manager first', 'warning');
+                return;
+            }
+            
+            log('Testing bulk operations...');
+            
+            const pets = petDataManager.getPets();
+            if (pets.length < 2) {
+                showNotification('Add at least 2 pets to test bulk operations', 'warning');
+                return;
+            }
+
+            // Select first two pets
+            pets.slice(0, 2).forEach(pet => {
+                petDataManager.selectedPets.add(pet.id);
+            });
+            
+            petDataManager.updateSelectionUI();
+            petDataManager.renderPets();
+            
+            log(`Selected ${petDataManager.selectedPets.size} pets for bulk operations`);
+            
+            // Test bulk export
+            setTimeout(() => {
+                log('Testing bulk export...');
+                try {
+                    const selectedPets = petDataManager.getSelectedPets();
+                    log(`Bulk export would process ${selectedPets.length} pets`);
+                    showNotification(`Bulk export ready for ${selectedPets.length} pets`, 'success');
+                } catch (error) {
+                    log(`Bulk export test failed: ${error.message}`, 'error');
+                }
+            }, 1000);
+            
+            showNotification('Bulk operations test started', 'info');
+        }
+
+        // Test filtering
+        function testFiltering() {
+            if (!petDataManager) {
+                showNotification('Please initialize manager first', 'warning');
+                return;
+            }
+            
+            log('Testing filtering functionality...');
+            
+            const pets = petDataManager.getPets();
+            if (pets.length === 0) {
+                showNotification('Add some pets first to test filtering', 'warning');
+                return;
+            }
+
+            // Test species filter
+            setTimeout(() => {
+                log('Testing species filter: dogs only');
+                petDataManager.setFilter('species', 'dog');
+                const filteredPets = petDataManager.getFilteredPets();
+                log(`Species filter result: ${filteredPets.length} dogs found`);
+            }, 500);
+
+            // Test search filter
+            setTimeout(() => {
+                log('Testing search filter: "Max"');
+                petDataManager.setFilter('search', 'Max');
+                const filteredPets = petDataManager.getFilteredPets();
+                log(`Search filter result: ${filteredPets.length} pets matching "Max"`);
+            }, 1500);
+
+            // Clear filters
+            setTimeout(() => {
+                log('Clearing all filters');
+                petDataManager.setFilter('species', '');
+                petDataManager.setFilter('search', '');
+                const filteredPets = petDataManager.getFilteredPets();
+                log(`All filters cleared: ${filteredPets.length} pets shown`);
+            }, 2500);
+            
+            showNotification('Testing filters...', 'info');
+        }
+
+        // Reset manager
+        function resetManager() {
+            if (petDataManager) {
+                petDataManager.destroy();
+                petDataManager = null;
+            }
+            
+            const container = document.getElementById('manager-container');
+            container.innerHTML = '';
+            
+            // Reset stats
+            stats = {
+                totalPets: 0,
+                selectedPets: 0,
+                exportsCount: 0,
+                importsCount: 0
+            };
+            updateStats();
+            
+            log('Pet data manager reset');
+            showNotification('Manager reset', 'info');
+        }
+
+        // Performance testing
+        function runPerformanceTests() {
+            log('Running performance tests...');
+            
+            const startTime = performance.now();
+            
+            // Test manager initialization time
+            const initStart = performance.now();
+            initializeManager();
+            const initTime = performance.now() - initStart;
+            
+            log(`Manager initialization time: ${initTime.toFixed(2)}ms`);
+            
+            // Test large dataset rendering
+            setTimeout(() => {
+                const renderStart = performance.now();
+                
+                // Add many mock pets
+                const apiClient = petDataManager.options.apiClient;
+                for (let i = 0; i < 100; i++) {
+                    apiClient.pets.push({
+                        id: apiClient.nextId++,
+                        name: `Test Pet ${i + 1}`,
+                        species: ['dog', 'cat', 'rabbit', 'bird'][i % 4],
+                        breed: 'Test Breed',
+                        age: Math.floor(Math.random() * 15) + 1,
+                        gender: ['male', 'female'][i % 2],
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    });
+                }
+                
+                petDataManager.loadPets().then(() => {
+                    const renderTime = performance.now() - renderStart;
+                    log(`Large dataset rendering time (100 pets): ${renderTime.toFixed(2)}ms`);
+                    
+                    const totalTime = performance.now() - startTime;
+                    log(`Total performance test time: ${totalTime.toFixed(2)}ms`);
+                    
+                    showNotification('Performance tests completed', 'success');
+                });
+            }, 1000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            log('Pet Data Manager Testing Page Loaded');
+            log('Click "Initialize Manager" to start testing');
+            
+            updateStats();
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    switch (e.key) {
+                        case 'i':
+                            e.preventDefault();
+                            initializeManager();
+                            break;
+                        case 'm':
+                            e.preventDefault();
+                            addMockPets();
+                            break;
+                        case 'e':
+                            e.preventDefault();
+                            testExportFeatures();
+                            break;
+                        case 'u':
+                            e.preventDefault();
+                            testImportFeatures();
+                            break;
+                        case 'b':
+                            e.preventDefault();
+                            testBulkOperations();
+                            break;
+                        case 'f':
+                            e.preventDefault();
+                            testFiltering();
+                            break;
+                        case 'r':
+                            e.preventDefault();
+                            resetManager();
+                            break;
+                        case 'p':
+                            e.preventDefault();
+                            runPerformanceTests();
+                            break;
+                    }
+                }
+            });
+            
+            log('Keyboard shortcuts enabled:');
+            log('  Ctrl+I: Initialize Manager');
+            log('  Ctrl+M: Add Mock Pets');
+            log('  Ctrl+E: Test Export');
+            log('  Ctrl+U: Test Import');
+            log('  Ctrl+B: Test Bulk Operations');
+            log('  Ctrl+F: Test Filtering');
+            log('  Ctrl+R: Reset Manager');
+            log('  Ctrl+P: Performance Tests');
+        });
+    </script>
+</body>
+</html>

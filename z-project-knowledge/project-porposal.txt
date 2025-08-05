@@ -1,0 +1,167 @@
+Individual Masters Project Proposal
+Academic Year 2024–25
+Degree Title: MSc Information Technology
+Student’s Name: Malik Zia ul islam
+Supervisor’s Name: Benjamin
+Project Title/Area: Animal Nutrition Management System: A Comprehensive Diet Planner for Animal Health
+Section 1: Project Overview
+1.1 Problem definition .
+Many animal caregivers, such as pet owners, veterinarians and animal shelter staff, have difficulty creating the best nutrition plan for the animals they care for. Animal nutritional requirements are very complex and vary widely depending on the species, breed, age and health status. Caregivers are not informed in the area of animal nutrition, and the current solutions are too generic, not personalised, or need specialised knowledge in the area of animal nutrition. This in turn results into poor nutrient use, potential health problems, and unwanted expenditure on foodstuffs in need.
+1.2 Project description.
+The objective of this project is to construct a web-based Animal Nutrition Management System (ANMS) that generates personalised diet plans for animals with respect to scientific nutritional guidelines. Backend development will be handled with PHP, use of MySQL to manage the database, and HTML, CSS and JavaScript to make up the frontend interface. Thus, the ANMS will comprise comprehensive nutritional databases and algorithmic nutritional planning to generate customised feeding recommendations, meal schedules and devices providing animal wellbeing through appropriate nutrition.
+1.3 Background:
+Overall animal health and well-being depend on animal nutrition. It is reported that various forms of malnutrition and improper feeding practices are significant in many instances as reasons for health problems in domestic and captive animals. Current digital solutions in animal nutrition management are limited in scope, often focusing on specific animal types or providing only general guidelines without personalization.
+The intersection of technology and animal healthcare presents an opportunity to create data-driven solutions that can improve feeding practices. Existing literature in veterinary nutrition, combined with advancements in web technologies, provides a foundation for developing a comprehensive system that can address the nutritional needs of various animal species in a personalized manner.
+1.4 Research Questions:
+    1. How can a web-based system be designed to accurately translate multifaceted animal data (species, age, weight, health status) into personalized and actionable nutritional plans?
+    2. What is the most effective way to structure and implement a rule-based algorithm, grounded in established veterinary nutritional science, to ensure the generated diet plans are both scientifically valid and practical for non-expert users?
+
+1.5 Aims and Objectives:
+Aim: To develop a comprehensive web-based system that enables users to create, manage, and monitor personalized nutrition plans for animals based on scientific nutritional guidelines.
+Objectives:
+Objectives
+Specific
+Measurable
+Achievable
+Relevant
+Time-bound
+Design and implement a relational database
+Develop a database to store and manage animal profiles, nutritional requirements, and food composition data.
+Database successfully stores and retrieves animal data, nutritional info, and food composition within 2 seconds.
+With PHP and MySQL, it is feasible to design and implement the relational database with current resources.
+Essential for supporting personalized nutrition plans and tracking animal health.
+Completed within 1 months.
+Develop algorithms for personalized diet plans
+Create algorithms that generate tailored diet plans based on species, age, weight, and health conditions.
+Algorithms must generate accurate diet plans based on test cases (≥90% accuracy).
+Using current knowledge of nutritional science and algorithmic approaches, this is achievable.
+Directly impacts the system's ability to provide personalized nutrition advice.
+Developed within 2 months
+Create a user-friendly interface	
+Design an intuitive web interface for data entry, viewing recommendations, and tracking progress.
+User feedback should indicate ≥80% satisfaction with ease of use (through usability testing).
+With existing knowledge of HTML, CSS, and JavaScript, creating this interface is feasible.
+Critical for ensuring adoption and consistent use by animal caregivers.
+Completed within 2 months.
+Implement a monitoring and reporting system	
+Create a system for tracking the health metrics and nutritional progress of animals over time.
+Ability to generate weekly health reports for ≥80% of the animal profiles in the system.
+The tracking system can be implemented within the project timeframe with available tools.
+Vital for ensuring ongoing support and improving animal health through dietary adjustments.
+Completed within 3 months.
+Evaluate the system's effectiveness	
+Conduct user testing and gather feedback from animal care professionals to assess the system’s impact on diet planning.
+≥70% of users report improved confidence in diet planning for their animals.
+User testing and feedback can be collected effectively within the scope of the project.
+Ensures that the system meets user needs and improves animal care practices.
+Evaluation to be completed within 3 months.
+
+Section 2: Artefact
+2.1 What is the artefact that you intend to produce?
+The primary artefact will be a fully functional web-based Animal Nutrition Management System with the following components:
+    1. Backend System (PHP/MySQL): 
+        ◦ User authentication and profile management system
+        ◦ Animal profile database with species-specific attributes
+        ◦ Comprehensive nutrient and food item databases
+        ◦ Algorithm-driven diet plan generation module
+        ◦ Monitoring and tracking data storage
+    2. Frontend Interface (HTML/CSS/JavaScript): 
+        ◦ Responsive user dashboard for managing multiple animal profiles
+        ◦ Intuitive data input forms for animal characteristics
+        ◦ Visual representation of diet plans and nutritional information
+        ◦ Interactive calendar for meal scheduling
+        ◦ Graphical reports for health and nutrition tracking
+The ANMS will feature CRUD (Create, Read, Update, Delete) operations throughout the system, allowing users to manage all aspects of their animals' nutritional profiles and plans.
+In the Animal Nutrition Management System, the algorithm-driven diet planning will calculate the nutrient needs based on such key animal variables as species, age, weight, activity level and health status. The user will input these factors, and the system will look that into an extensive nutritional database, providing scientifically established nutrient necessities for several animals. 
+Rule based decision making will be utilised such that a Diet can be generated to meet the needs of an animal according to the established guidelines of the veterinary nutrition. Nutrient intake recommendations are compared to each animal’ s profile adjust for allergy’s or medical condition. 
+It will come up with personalized diet plans and suggest specific food items as well as portion sizes. Further, it can use AI services to qualitatively learn over time from user input and health tracking data to become more tailored to diet suggestions by what they have seen about health outcomes. It ensures continuous, dynamic improvement in dietary recommendations and further expansion of the tool.
+2.2 How is your artefact actionable?
+It identifies how the Animal Nutrition Management System provides tangible and tangible benefits through several avenues of the improvement funnel. The users are able to get a diet plan that is as particular to each animal as possible at the same time that, from the data on the health of these animals, the system is able to fine-tune the proposed feeding plan over time. In this way, offering the explanation about the nutritional concepts along with the suggestions of what is right feeding, the platform also plays an informative role, which prepares the user for making better decision making not only for their child but in all feeding situations. It also serves as the useful application for veterinarians and nutritionists who can use it to give detailed diet information and regularly following-up to their clients. Furthermore, with the user’s permission, the aggregation of the nutritional information of the animals ensures open-ended contributions to features within animal health and nutritional sciences that may be useful to enhance practices of other users who are not immediate clients of the application but would benefit from such statistics and significant pattern detection on various animals’ populations.
+Section 3: Evaluation
+3.1 How are you going to evaluate your project artefact?
+The project's success will be evaluated through a multi-faceted approach combining user testing, performance benchmarking, and expert review. This ensures the artefact is not only functional but also effective, usable, and accurate.
+1. User Testing: A cohort of target users (e.g., pet owners) will be recruited to test the system. They will be given a set of defined scenarios to complete, such as:
+    • Scenario A (Profile Creation): "Create a complete profile for a 5-year-old, 15kg, healthy male Golden Retriever with a moderately active lifestyle." 
+    • Scenario B (Diet Generation): "Generate a balanced daily diet plan for the animal created in Scenario A." 
+    • Scenario C (Health Monitoring): "Log a weekly weight of 15.2kg and add a note that the dog has been experiencing mild skin irritation."
+2. Performance Benchmarks: The system's technical performance will be measured against predefined benchmarks to ensure it is robust and responsive.
+    • Diet Generation Speed: A diet plan must be generated in under 5 seconds from the point of user submission.
+    • Database Query Time: All database lookups for nutritional information must complete in under 500ms.
+3. Expert Review: The core diet-generation algorithm will undergo an expert review. A qualified veterinarian or animal nutritionist will be presented with several case profiles. They will be asked to evaluate the accuracy and appropriateness of the diet plans generated by the system for these cases. The goal is to achieve at least 90% agreement between the system's recommendations and the expert's judgment.
+3.2 How does this project relate to your MSc Programme and your degree title outcomes?
+The highlighted areas of specificity of the Animal Nutrition Management System as regards offering the major flows of practical added value are the following ones. The users of IM also receive the plain and the tailored diets for their animals based on the results and the tracking system which helps in the alteration of the recommendations depending on further health results. Thus, a role of the educational character in addition to the feeding advices as the fundamental principles of the nutrition and offers on their application in different circumstances are defined in plain words. It also has the role of another professional appliance where the clients – veterinarians and nutritionists can suggest to use the application to help the clients with the needed diet and constant examination of the animals. With the proper user permission granted they allow the features of nasal facility and the anonymized aggregation of the nutritional data for the promotion of encouragement of researches which might be good for the animal health and nutrition among the users and the circle of people and animals in different populations by studying the patterns found in nasal facility.
+3.3 What are the risks in this project and how are you going to manage them?
+There are several risks that this project has in its way forward which are as follows: To decrease the level of technical complexity, there will be a step-by-step approach with clear objectives to increment the existing amount of needed functional capabilities. Experts will manage this issue of data accuracy through feeding data and information on nutrition from reliable sources that also undergo a peer review. To reduce the algorithm reliability risks, it will be possible to first run the nutritional formulas identified and include disclaimers on the system to avoid any misunderstanding of its capabilities. These will be addressed through multi-rounds of usability tests and ongoing betterment of the interfaces. Scope creep will not be allowed to affect the project through effective planning and change control processes. Regarding ethical and legal issues related to nutrition recommendations, measures would be taken to display in a clear and well visible way, if there will be any special reference to such contingencies themselves, and also and possibly in terms of service.
+Section 4: References
+Ahlawat, R. and Biswas, S.N. (2022) 'A comprehensive review of pet nutritional management systems in the digital era', Journal of Veterinary Informatics, 16(3), pp. 128-142.
+Berger, A., Khatri, P. and Wong, J. (2023) 'Modern web development with PHP 8: frameworks, best practices, and performance optimization', International Journal of Web Engineering, 8(2), pp. 187-203.
+Chen, Y., Wilson, T. and Ahmed, S. (2021) 'Algorithmic approaches to personalized nutrition planning: a systematic review', Digital Health Technologies, 5(1), pp. 45-67.
+Dogra, V. and Singh, M. (2022) 'CRUD operations in web applications: optimization strategies for modern database systems', Journal of Web Architecture, 14(4), pp. 312-328.
+Fraser, D. and Anderson, K.L. (2023) 'Digital tools for monitoring animal health and welfare: opportunities and challenges', Animal Welfare Science, 18(2), pp. 175-191.
+Gómez-López, J., Martínez-Fernández, A. and Sánchez-Pérez, M. (2021) 'User experience design for veterinary applications: best practices and design patterns', Journal of Veterinary Informatics, 15(4), pp. 387-402.
+Johnson, R.K., Thompson, L. and Williams, P. (2022) 'Ethical considerations in animal nutrition software: balancing automation with professional oversight', Journal of Veterinary Ethics, 9(3), pp. 215-231.
+∙  Section 5: Academic Practice and Ethics
+5.1 Have you made yourself familiar with, and understand, the University guidance on referencing and plagiarism?
+Yes
+5.2 Do you acknowledge that this project proposal is your own work and that it does not contravene any academic offence as specified in the University’s regulations?
+Yes
+Section 6: Proposed Plan (attach Gantt chart below)
+
+Week
+Phase
+Activities
+Deliverables
+1-2
+Requirements Analysis
+    • - Stakeholder interviews 
+    • Requirements gathering 
+    • System scope definition
+    •  Literature review on animal nutrition
+    • -Project requirements document 
+    • System specifications
+    •  Functional requirements list
+3-4
+Database Design
+    • - Database schema design
+    •  Nutrient database structure 
+    • Food item database structure 
+    • Entity-relationship modeling
+    • Database schema documentation 
+    • Entity-relationship diagrams Data dictionary
+5-6
+System Architecture
+    • - Backend architecture design 
+    • Frontend wireframing 
+    • Technology stack finalization
+    • System architecture document 
+    • Technology stack document
+7-8
+Core Development
+    • - User authentication system 
+    • Database implementation 
+    • Basic CRUD operations Animal profile management
+    • - Functional user authentication
+    •  Working database 
+    • Basic CRUD functionality
+9-10
+Algorithm Development
+    • - Nutritional requirement algorithms Diet plan generation logic Meal scheduling system Initial expert review
+    • - Functional algorithms Expert review feedback Diet planning capability
+11
+Frontend Development
+    • - User interface implementation 
+    • Dashboard development Form creation Responsive design
+    • - Working user interface Functional forms Responsive application
+12
+Testing & Evaluation
+    • - Functionality testing 
+    • User acceptance testing 
+    • - Test results document 
+13
+Documentation & Finalization
+    • Technical documentation 
+    • Final system review 
+    • Preparation for submission
+    • - Complete documentation 
+    • Final system version Project submission package
+

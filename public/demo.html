@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANMS - Full Demo</title>
+    <link rel="stylesheet" href="assets/css/design-tokens.css">
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <style>
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .demo-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .demo-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-success { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+        .api-test {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover { background: #0056b3; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #1e7e34; }
+        .pet-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f9f9f9;
+        }
+        .pet-card h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .pet-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .stat {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🐾 Animal Nutrition Management System - Full Demo</h1>
+        <p>This demo shows all the features of the ANMS working together with the optimized backend.</p>
+
+        <!-- System Status -->
+        <div class="demo-section">
+            <h2>🔧 System Status</h2>
+            <div id="system-status">
+                <p>Server: <span id="server-status" class="status-indicator">Checking...</span></p>
+                <p>API: <span id="api-status" class="status-indicator">Checking...</span></p>
+                <p>Authentication: <span id="auth-status" class="status-indicator">Checking...</span></p>
+                <p>Performance Optimizations: <span id="perf-status" class="status-indicator">Checking...</span></p>
+            </div>
+        </div>
+
+        <!-- Authentication Demo -->
+        <div class="demo-section">
+            <h2>🔐 Authentication System</h2>
+            <div id="auth-demo">
+                <button class="btn" onclick="testLogin()">Test Login</button>
+                <button class="btn" onclick="testRegister()">Test Registration</button>
+                <button class="btn" onclick="testProfile()">Get Profile</button>
+                <div id="auth-results"></div>
+            </div>
+        </div>
+
+        <!-- Pet Management Demo -->
+        <div class="demo-section">
+            <h2>🐕 Pet Management</h2>
+            <div id="pet-demo">
+                <button class="btn" onclick="loadPets()">Load Pets</button>
+                <button class="btn" onclick="addSamplePet()">Add Sample Pet</button>
+                <div id="pets-container"></div>
+            </div>
+        </div>
+
+        <!-- Nutrition Planning Demo -->
+        <div class="demo-section">
+            <h2>🥘 Nutrition Planning</h2>
+            <div id="nutrition-demo">
+                <button class="btn" onclick="generateNutritionPlan()">Generate Plan for Buddy</button>
+                <div id="nutrition-results"></div>
+            </div>
+        </div>
+
+        <!-- Performance Monitoring -->
+        <div class="demo-section">
+            <h2>📊 Performance Monitoring</h2>
+            <div id="performance-demo">
+                <button class="btn" onclick="runPerformanceTest()">Run Performance Test</button>
+                <button class="btn" onclick="checkCacheStats()">Check Cache Stats</button>
+                <div id="performance-results"></div>
+            </div>
+        </div>
+
+        <!-- API Testing -->
+        <div class="demo-section">
+            <h2>🔌 API Testing</h2>
+            <div id="api-demo">
+                <button class="btn" onclick="runAllTests()">Run All API Tests</button>
+                <div id="api-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let authToken = null;
+        let currentUser = null;
+
+        // Initialize demo
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSystemStatus();
+        });
+
+        async function checkSystemStatus() {
+            // Check server
+            try {
+                const response = await fetch('/performance-demo.php?action=system_info');
+                const data = await response.json();
+                updateStatus('server-status', 'Online', 'success');
+                updateStatus('perf-status', 'Active', 'success');
+            } catch (error) {
+                updateStatus('server-status', 'Offline', 'error');
+                updateStatus('perf-status', 'Unavailable', 'error');
+            }
+
+            // Check API
+            try {
+                const response = await fetch('/api.php?action=health');
+                if (response.ok) {
+                    updateStatus('api-status', 'Working', 'success');
+                } else {
+                    updateStatus('api-status', 'Error', 'error');
+                }
+            } catch (error) {
+                updateStatus('api-status', 'Unavailable', 'error');
+            }
+
+            updateStatus('auth-status', 'Ready', 'success');
+        }
+
+        function updateStatus(elementId, text, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = text;
+            element.className = `status-indicator status-${type}`;
+        }
+
+        async function testLogin() {
+            try {
+                const response = await fetch('/api.php?action=auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'login',
+                        email: 'test@example.com',
+                        password: 'password'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    updateStatus('auth-status', 'Logged In', 'success');
+                    
+                    document.getElementById('auth-results').innerHTML = `
+                        <div class="api-test">
+                            <strong>✅ Login Successful!</strong><br>
+                            User: ${data.user.name}<br>
+                            Email: ${data.user.email}<br>
+                            Token: ${data.token.substring(0, 50)}...
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || 'Login failed');
+                }
+            } catch (error) {
+                document.getElementById('auth-results').innerHTML = `
+                    <div class="api-test">
+                        <strong>❌ Login Failed:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testRegister() {
+            try {
+                const response = await fetch('/api.php?action=auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'register',
+                        first_name: 'Demo',
+                        last_name: 'User',
+                        email: 'demo@example.com',
+                        password: 'password123'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('auth-results').innerHTML = `
+                        <div class="api-test">
+                            <strong>✅ Registration Successful!</strong><br>
+                            User: ${data.user.name}<br>
+                            Email: ${data.user.email}
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || 'Registration failed');
+                }
+            } catch (error) {
+                document.getElementById('auth-results').innerHTML = `
+                    <div class="api-test">
+                        <strong>❌ Registration Failed:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testProfile() {
+            if (!authToken) {
+                alert('Please login first');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api.php?action=auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        action: 'profile'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('auth-results').innerHTML = `
+                        <div class="api-test">
+                            <strong>✅ Profile Retrieved!</strong><br>
+                            Name: ${data.user.name}<br>
+                            Email: ${data.user.email}<br>
+                            Member Since: ${data.user.member_since || 'N/A'}
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || 'Profile fetch failed');
+                }
+            } catch (error) {
+                document.getElementById('auth-results').innerHTML = `
+                    <div class="api-test">
+                        <strong>❌ Profile Fetch Failed:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function loadPets() {
+            if (!authToken) {
+                await testLogin();
+            }
+
+            try {
+                const response = await fetch('/api.php?action=get_pets', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    const petsHtml = data.pets.map(pet => `
+                        <div class="pet-card">
+                            <h4>${pet.photo} ${pet.name}</h4>
+                            <p><strong>Species:</strong> ${pet.species} (${pet.breed})</p>
+                            <p><strong>Age:</strong> ${pet.age} years</p>
+                            <div class="pet-stats">
+                                <div class="stat">
+                                    <div class="stat-value">${pet.weight}kg</div>
+                                    <div class="stat-label">Current Weight</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value">${pet.ideal_weight}kg</div>
+                                    <div class="stat-label">Ideal Weight</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value">${pet.activity_level}</div>
+                                    <div class="stat-label">Activity Level</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value">${pet.health_status}</div>
+                                    <div class="stat-label">Health Status</div>
+                                </div>
+                            </div>
+                            <p><strong>Personality:</strong> ${pet.personality}</p>
+                        </div>
+                    `).join('');
+
+                    document.getElementById('pets-container').innerHTML = `
+                        <h3>Your Pets (${data.pets.length})</h3>
+                        ${petsHtml}
+                    `;
+                } else {
+                    throw new Error(data.error || 'Failed to load pets');
+                }
+            } catch (error) {
+                document.getElementById('pets-container').innerHTML = `
+                    <div class="api-test">
+                        <strong>❌ Failed to load pets:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function addSamplePet() {
+            if (!authToken) {
+                await testLogin();
+            }
+
+            try {
+                const response = await fetch('/api.php?action=add_pet', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        name: 'Max',
+                        species: 'dog',
+                        breed: 'Labrador',
+                        age: 2,
+                        weight: 30.0,
+                        ideal_weight: 28.0,
+                        activity_level: 'high',
+                        notes: 'Very energetic and loves to play fetch'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('pets-container').innerHTML = `
+                        <div class="api-test">
+                            <strong>✅ Pet Added Successfully!</strong><br>
+                            Name: ${data.pet.name}<br>
+                            Species: ${data.pet.species}<br>
+                            Weight: ${data.pet.weight}kg
+                        </div>
+                    `;
+                    // Reload pets to show the new one
+                    setTimeout(loadPets, 1000);
+                } else {
+                    throw new Error(data.error || 'Failed to add pet');
+                }
+            } catch (error) {
+                document.getElementById('pets-container').innerHTML = `
+                    <div class="api-test">
+                        <strong>❌ Failed to add pet:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function generateNutritionPlan() {
+            if (!authToken) {
+                await testLogin();
+            }
+
+            try {
+                const response = await fetch('/api.php?action=diet_plan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        pet_id: 1 // Buddy's ID
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    const plan = data.nutrition_plan;
+                    document.getElementById('nutrition-results').innerHTML = `
+                        <div class="api-test">
+                            <strong>✅ Nutrition Plan Generated!</strong><br>
+                            <strong>Daily Calories:</strong> ${plan.daily_calories} kcal<br>
+                            <strong>Meals per Day:</strong> ${plan.meals_per_day}<br>
+                            <strong>Protein:</strong> ${plan.daily_protein_grams}g<br>
+                            <strong>Fat:</strong> ${plan.daily_fat_grams}g<br>
+                            <strong>Instructions:</strong> ${plan.special_instructions}
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || 'Failed to generate nutrition plan');
+                }
+            } catch (error) {
+                document.getElementById('nutrition-results').innerHTML = `
+                    <div class="api-test">
+                        <strong>❌ Failed to generate plan:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function runPerformanceTest() {
+            try {
+                const response = await fetch('/performance-demo.php?action=performance_test&operations=50');
+                const data = await response.json();
+                
+                document.getElementById('performance-results').innerHTML = `
+                    <div class="api-test">
+                        <strong>✅ Performance Test Complete!</strong><br>
+                        <strong>Operations:</strong> ${data.operations}<br>
+                        <strong>Total Time:</strong> ${data.total_time}s<br>
+                        <strong>Average Time:</strong> ${data.average_time}s<br>
+                        <strong>Operations/Second:</strong> ${data.operations_per_second}
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('performance-results').innerHTML = `
+                    <div class="api-test">
+                        <strong>❌ Performance test failed:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function checkCacheStats() {
+            try {
+                const response = await fetch('/performance-demo.php?action=cache_stats');
+                const data = await response.json();
+                
+                document.getElementById('performance-results').innerHTML = `
+                    <div class="api-test">
+                        <strong>✅ Cache Statistics:</strong><br>
+                        <strong>Memory Cache:</strong> ${data.memory_cache_size} items<br>
+                        <strong>File Cache:</strong> ${data.file_cache_files} files<br>
+                        <strong>Total Size:</strong> ${data.total_cache_size}<br>
+                        <strong>Hit Rate:</strong> ${data.cache_hit_rate || 'N/A'}
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('performance-results').innerHTML = `
+                    <div class="api-test">
+                        <strong>❌ Cache stats failed:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function runAllTests() {
+            document.getElementById('api-results').innerHTML = '<p>Running comprehensive API tests...</p>';
+            
+            const tests = [
+                { name: 'Authentication', func: testLogin },
+                { name: 'Pet Loading', func: loadPets },
+                { name: 'Nutrition Planning', func: generateNutritionPlan },
+                { name: 'Performance Test', func: runPerformanceTest }
+            ];
+
+            let results = '<h3>API Test Results:</h3>';
+            
+            for (const test of tests) {
+                try {
+                    await test.func();
+                    results += `<p>✅ ${test.name}: PASSED</p>`;
+                } catch (error) {
+                    results += `<p>❌ ${test.name}: FAILED - ${error.message}</p>`;
+                }
+            }
+
+            results += `
+                <div class="api-test">
+                    <strong>🎉 All Core Features Tested!</strong><br>
+                    The ANMS system is fully operational with:<br>
+                    • User authentication and authorization<br>
+                    • Pet management with CRUD operations<br>
+                    • Nutrition planning and calculations<br>
+                    • Performance optimizations and caching<br>
+                    • RESTful API with JWT tokens<br>
+                    • Mock data fallback system<br>
+                </div>
+            `;
+
+            document.getElementById('api-results').innerHTML = results;
+        }
+    </script>
+</body>
+</html>

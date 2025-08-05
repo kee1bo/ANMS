@@ -1,0 +1,10 @@
+[Sat Jul  5 18:05:06 2025] PHP 8.3.6 Development Server (http://localhost:8004) started
+[Sat Jul  5 18:06:36 2025] 127.0.0.1:35092 Accepted
+[Sat Jul  5 18:06:36 2025] 127.0.0.1:35092 [200]: GET /?action=login
+[Sat Jul  5 18:06:36 2025] 127.0.0.1:35092 Closing
+[Sat Jul  5 18:06:46 2025] 127.0.0.1:33328 Accepted
+[Sat Jul  5 18:06:46 2025] 127.0.0.1:33328 [302]: POST /api.php?action=auth
+[Sat Jul  5 18:06:46 2025] 127.0.0.1:33328 Closing
+[Sat Jul  5 18:07:19 2025] 127.0.0.1:46166 Accepted
+[Sat Jul  5 18:07:19 2025] 127.0.0.1:46166 [200]: POST /api.php?action=add_pet
+[Sat Jul  5 18:07:19 2025] 127.0.0.1:46166 Closing

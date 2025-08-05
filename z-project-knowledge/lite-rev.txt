@@ -1,0 +1,248 @@
+Animal Nutrition Management System: A Comprehensive Diet Planner for Animal Health
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chapter 1: Introduction
+1.1 Problem Definition
+1.1.1 The Complexity of Nutritional Requirements
+1.1.2 Knowledge Gaps Among Caregivers
+1.1.3 Limitations of Current Solutions
+1.1.4 Consequences of Suboptimal Nutrition
+1.2 Aims and Objectives
+1.2.1 Primary Aim
+1.2.2 Specific Objectives
+1.3 Research Questions
+1.4 Success Criteria
+1.4.1 Technical Performance Criteria
+1.4.2 User Experience Criteria
+1.4.3 Functional Criteria
+1.5 Scope and Limitations
+1.5.1 Project Scope
+1.5.2 Project Limitations
+Chapter 2: Literature Review
+2.1 Introduction
+2.1.1 Review Objectives
+2.1.2 Search Methodology
+2.2 Current Landscape of Animal Nutrition Management
+2.2.1 Traditional Approaches and Their Limitations
+2.2.2 The Digital Transformation in Animal Nutrition
+2.2.3 Emerging Technologies and Market Trends
+2.3 Technological Foundations for Animal Nutrition Systems
+2.3.1 Web Architecture Considerations
+2.3.2 Database Design for Comprehensive Nutritional Data
+2.3.3 Challenges in Data Quality and Standardisation
+2.4 Algorithmic Approaches to Personalised Nutrition
+2.4.1 Rule-Based Systems
+2.4.2 Machine Learning and Artificial Intelligence
+2.4.3 Hybrid Approaches
+2.5 User Experience (UX) Design for Animal Care Applications
+2.5.1 User-Centred Design Principles
+2.5.2 Interface Design for Veterinary Software
+2.5.3 Current Trends in Digital Interfaces for Animal Care
+2.6 Monitoring and Feedback Systems
+2.6.1 Digital Health Monitoring Technologies
+2.6.2 Precision Feeding and Real-time Adjustments
+2.6.3 Data Integration and Processing
+2.7 Artificial Intelligence Applications in Veterinary Medicine
+2.7.1 Current AI Applications in Veterinary Practice
+2.7.2 Machine Learning for Nutrition Optimisation
+2.7.3 Challenges and Limitations of AI
+2.8 Precision Nutrition Technologies
+2.8.1 Precision Feeding Systems
+2.8.2 Technology Integration
+2.8.3 Benefits and Challenges
+2.9 Ethical Considerations and Regulatory Frameworks
+2.9.1 Data Privacy and Security
+2.9.2 Algorithm Transparency and Bias
+2.9.3 Professional Oversight and Liability
+2.10 Research Gaps and Future Directions
+2.10.1 Identified Gaps in the Literature
+2.10.2 Opportunities for Future Research
+2.10.3 Technological Convergence
+2.11 Summary
+References
+
+
+Chapter 1: Introduction
+1.1 Problem Definition
+Meeting the nutritional needs of animals is a global challenge of considerable scale, impacting millions of creatures in homes, shelters, and farms. The core of the problem lies in the sheer complexity of tailoring diets to the unique requirements of different species, breeds, and individuals—a task that often proves overwhelming for their caregivers.
+1.1.1 The Complexity of Nutritional Requirements
+Animal nutrition science has moved far beyond a 'one-size-fits-all' philosophy. We now understand that an animal's dietary needs are incredibly specific, shaped by everything from its species and breed to its age, lifestyle, and health history (Verschoor et al., 2023). This has paved the way for precision nutrition, a field dedicated to matching nutrient supply with an individual's specific needs to improve its health, increase farm profitability, and reduce environmental waste. Such a targeted approach, however, hinges on sophisticated, information-driven systems (Joseph and Hall, 2025).
+The complexity doesn't stop at calorie counts. An animal's nutritional requirements are in constant flux, shifting with growth, reproduction, and illness (Elsevier, 2024). Adding another layer to this challenge are the metabolic differences between breeds and the unique genetic variations that dictate how efficiently an animal can even use the nutrients it consumes.
+1.1.2 Knowledge Gaps Among Caregivers
+A significant gap in knowledge exists among the very people responsible for feeding animals. This includes not only pet owners and shelter staff but also some veterinary professionals who may not have had specialized nutritional training. The American Veterinary Medical Association (AVMA, 2024) has noted that the veterinary field's turn toward artificial intelligence to boost efficiency and improve patient outcomes is itself an indicator of the shortfalls in traditional methods.
+Caregivers are often caught between the rapid evolution of nutritional science and a dizzying array of commercial feed options, making confident decisions difficult. For the livestock sector, these pressures are fueling a major technological pivot towards more sustainable, efficient, and health-focused nutritional strategies (Benison Media, 2024).
+1.1.3 Limitations of Current Solutions
+For all their promise, existing digital tools for animal nutrition often miss the mark. A review in Frontiers in Veterinary Science found that many platforms offer only generic recommendations based on population averages, failing to cater to the individual (Akinsulie et al., 2024). Their main weaknesses include a reliance on static data instead of real-time health monitoring, a high degree of complexity that makes them inaccessible to the average user, and a frequent disconnect between diet planning and health tracking components.
+1.1.4 Consequences of Suboptimal Nutrition
+The fallout from poor nutrition extends well beyond the individual animal. In livestock, for instance, inadequate feeding leads directly to wasted feed, a larger environmental footprint, and poorer health (Zuidhof, 2019). These inefficiencies exert immense pressure on the global animal nutrition market—a sector valued at USD 24.26 billion in 2023 and facing relentless demand for greater sustainability and productivity (Newstrail, 2025).
+1.2 Aims and Objectives
+1.2.1 Primary Aim
+This project's central goal is to build a comprehensive, web-based Animal Nutrition Management System (ANMS). This system is designed to empower users to create, manage, and track personalized nutrition plans that are grounded in scientific guidelines, ultimately leading to better animal health and more confident decision-making by caregivers.
+1.2.2 Specific Objectives
+    • Database Development: To build a relational database capable of managing animal profiles, nutritional data, and food composition information, ensuring data retrieval takes less than two seconds. 
+    • Algorithm Design: To create algorithms that generate tailored diet plans based on an animal's species, age, weight, and health, achieving at least 95% accuracy against veterinary guidelines. 
+    • User Interface: To design an intuitive web interface for easy data entry, plan review, and progress tracking, targeting a user satisfaction score of 80% or higher. 
+    • Monitoring and Reporting: To implement a system for tracking health metrics over time, with the ability to auto-generate weekly health reports for 80% of active profiles. 
+    • System Validation: To conduct user testing with animal care professionals, aiming for at least 70% of users to report improved confidence in their diet planning. 
+1.3 Research Questions
+This project sets out to answer four key questions:
+    1. How can web technology be best used to create a personalized animal nutrition tool that is both scientifically reliable and easy for caregivers to use?
+    2. Which algorithms are most effective for creating customized diets that account for multiple factors like species, age, weight, and health status?
+    3. What design principles are crucial for ensuring that a diverse group of caregivers will adopt and continue to use such a tool?
+    4. What kind of feedback framework is needed to allow nutritional plans to be adjusted dynamically based on an animal's real-world health outcomes?
+1.4 Success Criteria
+The project's success will be judged on a mix of technical, user-focused, and functional benchmarks.
+1.4.1 Technical Performance Criteria
+    • Database operations must complete in under 2 seconds.
+    • Algorithm accuracy must meet or exceed 95% when tested against veterinary standards.
+    • The system must maintain ≥99% uptime during testing.
+    • It must be fully functional on all major browsers and mobile devices.
+1.4.2 User Experience Criteria
+    • A user satisfaction score of at least 80% in usability assessments.
+    • A task completion rate of 90% or higher for the system's main features.
+    • A 70% or greater improvement in user confidence according to post-use surveys.
+1.4.3 Functional Criteria
+    • The system must reliably generate personalized diet plans for different animal species.
+    • It must automate the creation of weekly health summaries for registered animals.
+    • It must effectively use monitoring data to inform its algorithmic recommendations.
+1.5 Scope and Limitations
+1.5.1 Project Scope
+The project encompasses the end-to-end development of a web application using PHP, MySQL, HTML, CSS, and JavaScript. The work includes creating diet planning algorithms for domestic animals, building nutritional and health monitoring tools, and designing a user interface for caregivers and veterinary professionals.
+1.5.2 Project Limitations
+    • The initial work will be confined to common domestic animal species.
+    • There will be no integration with external Internet of Things (IoT) devices in this phase.
+    • Advanced AI/ML features will be foundational, with pathways for future expansion.
+    • Regulatory adherence is limited to general data protection standards.
+
+
+Chapter 2: Literature Review
+2.1 Introduction
+To build an effective Animal Nutrition Management System, one must draw upon a wide range of disciplines, including animal science, web technology, algorithm design, user experience, and ethics. This review of existing literature and practical applications will establish the intellectual groundwork for the proposed Animal Nutrition Management System (ANMS).
+2.1.1 Review Objectives
+This review has several key aims: to evaluate current digital tools in animal nutrition, investigate suitable technologies for personalized systems, assess different algorithmic approaches, examine UX principles for caregiver apps, explore the ethical landscape of health AI, and ultimately, pinpoint where opportunities for innovation lie.
+2.1.2 Search Methodology
+Inclusion was limited to recent, relevant, peer-reviewed publications in English. Conference abstracts, non-academic articles, and studies focused solely on humans were excluded.
+2.2 Current Landscape of Animal Nutrition Management
+2.2.1 Traditional Approaches and Their Limitations
+Historically, animal feeding has been guided by manual calculations and broad guidelines based on population averages. These conventional methods are often inflexible, ignoring shifts in ingredient prices and availability, which can create cost inefficiencies (Feed Strategy, 2024). A review in Animal Feed Science and Technology points out that such techniques are simply not equipped to handle the specific needs of different breeds or life stages, potentially harming an animal's health and productivity (PMC, 2024). The root of the problem is the sheer complexity of nutritional science, where needs are shaped by everything from genetics to environment (Feed Strategy, 2024).
+2.2.2 The Digital Transformation in Animal Nutrition
+The animal nutrition sector is in the midst of a digital revolution. Driven by new technology and a growing demand for precision, the market is projected to surge from USD 25.82 billion in 2024 to USD 42.48 billion by 2032 (Newstrail, 2025). Today's digital tools range from simple calculators to database-driven planners and highly advanced analytical platforms requiring professional expertise. Modern feed formulation, in particular, now increasingly relies on computational models and AI to analyze massive datasets, refining feeding strategies by factoring in animal physiology, genetics, and environmental data (PMC, 2024).
+2.2.3 Emerging Technologies and Market Trends
+The livestock industry is undergoing a technological overhaul, pushed by the need for more sustainable, efficient, and health-driven nutrition (Benison Media, 2024). Among the most important trends is the fusion of IoT sensors with AI algorithms, which opens the door to real-time monitoring and predictive analytics. Devices like smart collars and ear tags can now track an animal's eating habits, movement, and vital signs, sending a constant stream of data to a central system for analysis (Market Research Intellect, 2024).
+2.3 Technological Foundations for Animal Nutrition Systems
+2.3.1 Web Architecture Considerations
+Modern web frameworks provide the tools to build responsive, data-intensive applications that can handle complex logic and large datasets. For an application with needs similar to those in healthcare—user management, data security, complex relationships—the combination of a PHP-based system and a MySQL database is a well-established and effective choice. Guiding principles for this development include a scalable architecture, responsive design for all devices, strong security measures, and an API-first approach to ensure future extensibility.
+2.3.2 Database Design for Comprehensive Nutritional Data
+Any nutrition management system is only as good as its data. The National Animal Nutrition Program's database serves as a strong model, offering detailed nutrient profiles for feed ingredients in an accessible format (National Animal Nutrition Program, 2024). A robust database for the ANMS would need to store comprehensive animal profiles, specific nutritional requirements, detailed food composition tables, and long-term health metrics like weight and body condition. Data quality and standardization are non-negotiable, with the FAIR Guiding Principles (Findable, Accessible, Interoperable, and Reusable) being the recognized standard for maximizing data's scientific value.
+2.3.3 Challenges in Data Quality and Standardisation
+The literature is clear about a major roadblock: inconsistent food composition data. Existing databases often have gaps in coverage, rely on old information, are updated too infrequently, and lack common standards. These weaknesses directly compromise the accuracy of any diet plan a system generates. Integrating data from different sources is another huge challenge. The dairy industry is a case in point, as it contends with a lack of standardization, interoperability failures between systems, and proprietary data formats that prevent information from flowing freely.
+2.4 Algorithmic Approaches to Personalised Nutrition
+2.4.1 Rule-Based Systems
+A common strategy for personalization is the use of rule-based systems. These platforms operate on a set of predefined rules drawn from expert knowledge and established veterinary guidelines. In essence, they codify a nutritionist's expertise to provide tailored advice. Their main advantages, as identified in the literature, are transparency (the logic is traceable), validity (the rules are based on accepted science), and maintainability (guidelines can be updated).
+2.4.2 Machine Learning and Artificial Intelligence
+At the same time, recent breakthroughs in AI are showing immense potential for this field. A review in Frontiers in Veterinary Science highlights how AI can improve animal well being through better diagnostics, predictive analytics, and personalized treatments (Akinsulie et al., 2024). As reported in the American Journal of Veterinary Research, AI applications have grown from medical imaging to predictive health, with machine learning (ML) algorithms being deployed to optimize feeding strategies (2025). In nutrition, ML can be used for everything from pattern recognition and predictive modeling to adaptive learning and anomaly detection.
+2.4.3 Hybrid Approaches
+It is possible that the most effective systems will be hybrid models that merge a reliable, rule-based foundation with the adaptive power of machine learning. This approach would balance the safety of established guidelines with the continuous improvement that data-driven learning allows. In precision livestock feeding, this is already happening, as mathematical models that predict nutrient needs are increasingly paired with AI and ML to unlock deeper insights from data (PMC, 2023).
+2.5 User Experience (UX) Design for Animal Care Applications
+2.5.1 User-Centred Design Principles
+An effective ANMS must be built for a wide range of users with different levels of technical and nutritional expertise. Research in healthcare UX strongly advocates for a User-Centered Design (UCD) process, where the needs and preferences of the end-user guide every stage of development. The VETGO mobile app, a case study in veterinary services, serves as an example of how crucial accessibility and convenience are for user adoption (ACM Digital Library, 2024). Key UCD principles include accessibility, clarity of information, efficiency of use, reliability, and providing helpful, contextual support.
+2.5.2 Interface Design for Veterinary Software
+User-friendliness is a critical adoption factor for any veterinary software. Veterinary staff, as one review of practice management software found, expect systems that minimize manual data entry and automate routine work (ProVet Cloud, 2024). Important design considerations include a logical information architecture, a clean and consistent visual style, intuitive workflows that fit how caregivers actually work, and seamless optimization for mobile devices.
+
+
+2.5.3 Current Trends in Digital Interfaces for Animal Care
+The pet care market, set to top 350 billion USD by 2027, is seeing a boom in digital tools that often parallel those in human medicine. Wearables and smart trackers are currently at the forefront of the pet digital health market, with devices like smart collars and harnesses able to remotely monitor an animal's vital signs (UX Studio Team, 2024). AI-powered gadgets, such as smart collars, are also gaining traction for tracking pet health and location, serving needs from healthcare to owner convenience.
+2.6 Monitoring and Feedback Systems
+2.6.1 Digital Health Monitoring Technologies
+A modern ANMS must integrate health monitoring. A wide array of digital technologies can be applied here, from wearable sensors and mobile apps to fully automated data collection systems (Akinsulie et al., 2024). These tools can track an animal's activity, weight, behavior, and even key physiological signs.
+2.6.2 Precision Feeding and Real-time Adjustments
+Automated monitoring and sensor technology make it possible to adjust feed rations in real time. This method, called precision feeding, aims to perfectly match nutrient supply to an individual animal's needs based on immediate feedback (Zuidhof, 2019). Research shows this approach can slash feed costs and reduce environmental waste while also improving animal health. Mathematical models process the incoming sensor data to make predictions, issue warnings, and formulate diets perfectly tailored to an animal's needs at any given time (Krishi Jagran, 2024).
+2.6.3 Data Integration and Processing
+Effective nutrition management depends on a solid framework for collecting, processing, and analyzing data. In precision farming, automated sensors gather key metrics, and algorithms are built directly into analytics platforms to make sense of it all (PMC, 2023). A successful monitoring system, therefore, must be a closed loop: it gathers data, analyzes it for trends, adjusts the nutritional plan based on the findings, and communicates the new recommendations clearly back to the caregiver.
+2.7 Artificial Intelligence Applications in Veterinary Medicine
+2.7.1 Current AI Applications in Veterinary Practice
+AI is steadily making its way into all corners of veterinary medicine. The AVMA (2024) reports that veterinarians are increasingly using AI to run their practices more efficiently and achieve better clinical results. A review in Frontiers in Veterinary Science catalogues a number of prominent applications, including analysis of diagnostic images, prediction of disease outbreaks, personalized treatment planning, and even AI-assisted clinical note-taking (Akinsulie et al., 2024).
+2.7.2 Machine Learning for Nutrition Optimisation
+AI and ML are reshaping animal nutrition by analyzing vast streams of data from sensors and other sources. AI algorithms can optimize feed formulas based on a multitude of factors, such as species, age, weight, and even environmental conditions (Benison Media, 2024). Specific applications of ML include using genetic algorithms to find the most cost-effective feed blends, building predictive models of animal performance, recognizing patterns between diet and health, and making real-time adjustments to feeding strategies.
+2.7.3 Challenges and Limitations of AI
+But the path to AI implementation in veterinary science is not without obstacles. As a review in ScienceDirect points out, data quality and availability are major hurdles. An AI system is only as good as its data, and obtaining large, high-quality datasets that properly represent a diversity of species is a difficult task (ScienceDirect, 2024). Other key challenges include the need for interpretable, "explainable AI" in a healthcare setting, the lack of standardized data models, and the absolute necessity of rigorous, expert-led validation for any AI-generated recommendations.
+2.8 Precision Nutrition Technologies
+2.8.1 Precision Feeding Systems
+Precision nutrition signifies a major shift from feeding populations to feeding individuals. The practice involves using real-time sensor feedback to perfectly match nutrient supply with an individual animal's needs (Zuidhof, 2019). The goal is to deliver the right amount of feed with the right composition at the right time (ScienceDirect, 2023). This is achieved through a combination of individual monitoring, mathematical modeling, automated delivery systems, and continuous feedback loops.
+2.8.2 Technology Integration
+These systems integrate a suite of technologies, including sensor networks for measurement, data processing systems for modeling and formulation, and robotic equipment for the precise delivery of feed (Krishi Jagran, 2024).
+2.8.3 Benefits and Challenges
+The benefits are well-documented. Precision feeding can cut nitrogen waste by up to 30% and improve feed efficiency, which in turn lowers costs and reduces environmental harm (Krishi Jagran, 2024). However, the challenges are also significant. They include high initial investment costs, technical complexity requiring specialized expertise, demanding data management requirements, and the difficulty of integrating all the different technological components.
+2.9 Ethical Considerations and Regulatory Frameworks
+2.9.1 Data Privacy and Security
+An ANMS, by its nature, handles sensitive information and must therefore have strong privacy protections. This means finding the right balance between data utility and privacy through tools like anonymization, secure storage, and strict access controls. Key principles to follow are data minimization, informed user consent, robust access control, and clear data retention policies.
+2.9.2 Algorithm Transparency and Bias
+The use of AI introduces critical questions about transparency and bias. In any healthcare context, the concept of "explainable AI" is paramount, as users need to be able to understand and trust algorithmic decisions. There are many potential sources of bias, from skewed training data and flawed model design to inadequate testing and unrepresentative user groups during development.
+2.9.3 Professional Oversight and Liability
+Automated recommendations must always be balanced with professional veterinary oversight. Any such system should be designed to augment professional judgment, not replace it. This requires expert validation of AI-generated advice, transparent communication of the system's limitations, clear liability frameworks, and a commitment to ongoing professional education.
+2.10 Research Gaps and Future Directions
+2.10.1 Identified Gaps in the Literature
+This review of the field reveals several key areas where research is still lacking. There is a shortage of work on comprehensive systems that can handle multiple species, a lack of long-term studies demonstrating the sustained benefits of digital nutrition management, and an insufficient understanding of what drives user adoption of these technologies. Furthermore, progress on creating standardized data models and interoperability frameworks has been limited.
+2.10.2 Opportunities for Future Research
+These gaps highlight clear opportunities for new research. There is a need for integrated platforms that can serve multiple species, for advanced ML techniques tailored to animal nutrition, for contributions to data standardization efforts, and for deep-dive research into the best UX design patterns for animal caregivers.
+2.10.3 Technological Convergence
+The literature also points to the immense potential in combining different emerging technologies. This includes integrating IoT sensor data with nutrition systems, using edge computing for faster local processing, applying blockchain to ensure data integrity in the food supply chain, and developing "digital twin" models of individual animals.
+2.11 Summary
+This literature review has sought to build a solid foundation for the ANMS project by weaving together insights from technology, algorithmics, design, and ethics. It confirms a clear need for new solutions that can overcome the limitations of today's tools. The key takeaways are the potential of hybrid algorithms, the absolute importance of user-centered design, and the necessity of strong ethical frameworks for any health-related AI. The research gaps identified here provide a clear roadmap for developing a novel system that can make a real contribution to animal nutrition technology. The following chapter will build on these findings to lay out a comprehensive methodology for the project.
+
+References
+    1. ACM Digital Library (2024) 'VETGO: A Mobile Application Designed for Pet Veterinary Services', Proceedings of the 2024 7th International Conference on Computers in Management and Business. Available at: https://dl.acm.org/doi/abs/10.1145/3647782.3647806 (Accessed: 9 June 2025).
+    2. Akinsulie, O.C., Idris, I., Aliyu, V.A., Shahzad, S., Banwo, O.G., Ogunleye, S.C., Olorunshola, M., Okedoyin, D.O., Ugwu, C., Oladapo, I.P., Gbadegoye, J.O., Akande, Q.A., Babawale, P., Rostami, S. and Soetan, K.O. (2024) 'The potential application of artificial intelligence in veterinary clinical practice and biomedical research', Frontiers in Veterinary Science, 11:1347550. Available at: https://www.frontiersin.org/journals/veterinary-science/articles/10.3389/fvets.2024.1347550/full (Accessed: 9 June 2025).
+    3. American Journal of Veterinary Research (2025) 'Demystifying artificial intelligence for veterinary professionals: practical applications and future potential', American Journal of Veterinary Research, 86(S1). Available at: https://avmajournals.avma.org/view/journals/ajvr/86/S1/ajvr.24.09.0275.xml (Accessed: 9 June 2025).
+    4. American Veterinary Medical Association (2024) 'Artificial intelligence poised to transform veterinary care', AVMA News. Available at: https://www.avma.org/news/artificial-intelligence-poised-transform-veterinary-care (Accessed: 9 June 2025).
+    5. Benison Media (2024) 'Future-Proofing Animal Nutrition: Trends in Feed Technology', Benison Media, 2 August. Available at: https://benisonmedia.com/future-proofing-animal-nutrition-trends-in-feed-technology/ (Accessed: 9 June 2025).
+    6. Elsevier (2024) 'Animal Feed Science and Technology', ScienceDirect. Available at: https://www.sciencedirect.com/journal/animal-feed-science-and-technology (Accessed: 9 June 2025).
+    7. Feed Strategy (2024) 'Possible downsides of precision animal nutrition to consider', Feed Strategy. Available at: https://www.feedstrategy.com/sustainability-in-feed-production/precision-nutrition/article/15543790/possible-downsides-of-precision-animal-nutrition-to-consider (Accessed: 9 June 2025).
+    8. Joseph, M. and Hall, S. (2025) 'Challenges and trends in animal nutrition and feed industry', Feed & Additive Magazine, 20 January. Available at: https://www.feedandadditive.com/challenges-and-trends-in-animal-nutrition-and-feed-industry/ (Accessed: 9 June 2025).
+    9. Krishi Jagran (2024) 'Precision Feeding: Optimizing Animal Nutrition Through Data Analytics & Precision Feeding Systems', Krishi Jagran. Available at: https://krishijagran.com/animal-husbandry/precision-feeding-optimizing-animal-nutrition-through-data-analytics-precision-feeding-systems/ (Accessed: 9 June 2025).
+    10. Market Research Intellect (2024) 'Feeding the Future- Automated Animal Feeding Systems Revolutionizing Agriculture', 17 July. Available at: https://www.marketresearchintellect.com/blog/feeding-the-future-innovations-in-animal-nutrition-technology/ (Accessed: 9 June 2025).
+    11. National Animal Nutrition Program (2024) 'About the Feed Composition Database', National Animal Nutrition Program. Available at: https://animalnutrition.org/about-feed-comp-db (Accessed: 9 June 2025).
+    12. Newstrail (2025) 'Animal Nutrition Market Outlook: Feed Innovations and Global Demand by 2032', Newstrail, 4 June. Available at: https://www.newstrail.com/animal-nutrition-market-outlook-feed-innovations-and-global-demand-by-2032/ (Accessed: 9 June 2025).
+    13. PMC (2023) 'Invited review: integration of technologies and systems for precision animal agriculture—a case study on precision dairy farming', PMC. Available at: https://pmc.ncbi.nlm.nih.gov/articles/PMC10370899/ (Accessed: 9 June 2025).
+    14. PMC (2024) 'Animal Feed Formulation—Connecting Technologies to Build a Resilient and Sustainable System', PMC. Available at: https://pmc.ncbi.nlm.nih.gov/articles/PMC11117273/ (Accessed: 9 June 2025).
+    15. ProVet Cloud (2024) 'Top 10 Veterinary Software Solutions: Your 2024 Comparison Guide', ProVet Cloud, 22 February. Available at: https://www.provet.cloud/blog/top-10-veterinary-software-solutions-2024 (Accessed: 9 June 2025).
+    16. ScienceDirect (2023) 'Review: Fundamentals, limitations and pitfalls on the development and application of precision nutrition techniques for precision livestock farming', ScienceDirect. Available at: https://www.sciencedirect.com/science/article/pii/S1751731123000599 (Accessed: 9 June 2025).
+    17. ScienceDirect (2024) 'Artificial intelligence in veterinary and animal science: applications, challenges, and future prospects', ScienceDirect. Available at: https://www.sciencedirect.com/science/article/abs/pii/S0168169925005010 (Accessed: 9 June 2025).
+    18. UX Studio Team (2024) 'Top 10 UX trends shaping digital healthcare in 2025', UX Studio. Available at: https://www.uxstudioteam.com/ux-blog/healthcare-ux (Accessed: 9 June 2025).
+    19. Verschoor, C.P., Lamers, F., Houwers, D.J. and Stockhofe-Zurwieden, N. (2023) 'Precision livestock farming in swine welfare: a review', Frontiers in Animal Science, 4:1230758. doi: 10.3389/fanim.2023.1230758.
+    20. Zuidhof, M.J. (2019) 'Precision livestock feeding: matching nutrient supply with nutrient requirements of individual animals', Poultry Science, 98(11), pp. 4562-4570. Available at: https://www.sciencedirect.com/science/article/pii/S1056617119323190 (Accessed: 9 June 2025).
+
+
