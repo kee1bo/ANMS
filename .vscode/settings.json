@@ -1,2 +1,4 @@
 {
+    "kiroAgent.configureMCP": "Enabled",
+    "chat.mcp.discovery.enabled": true
 }

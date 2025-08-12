@@ -1,0 +1,566 @@
+/**
+ * Health Conditions Component Styles
+ * Professional health management interface
+ */
+
+.health-conditions-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.health-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-title h3 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.header-title h3 i {
+    color: var(--red-500);
+    margin-right: 8px;
+}
+
+.conditions-count {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    background: var(--gray-100);
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+}
+
+/* Sections */
+.conditions-section {
+    margin-bottom: 40px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h4 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-header h4 i {
+    color: var(--orange-500);
+}
+
+.section-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle-section-btn {
+    background: none;
+    border: none;
+    color: var(--gray-500);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+}
+
+.toggle-section-btn:hover {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+/* Conditions List */
+.conditions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.conditions-list.collapsed {
+    display: none;
+}
+
+.condition-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    transition: all 0.2s ease;
+}
+
+.condition-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--gray-300);
+}
+
+.condition-card.status-resolved {
+    opacity: 0.8;
+    background: var(--gray-50);
+}
+
+.condition-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.condition-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.condition-title h5 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.severity-badge {
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.severity-badge.severity-mild {
+    background: var(--green-100);
+    color: var(--green-700);
+}
+
+.severity-badge.severity-moderate {
+    background: var(--orange-100);
+    color: var(--orange-700);
+}
+
+.severity-badge.severity-severe {
+    background: var(--red-100);
+    color: var(--red-700);
+}
+
+.condition-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.action-btn.danger:hover {
+    background: var(--red-50);
+    color: var(--red-600);
+}
+
+.condition-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.detail-item i {
+    width: 16px;
+    color: var(--gray-400);
+}
+
+/* Health Timeline */
+.health-timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.health-timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 25px;
+    padding-left: 25px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -23px;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: white;
+    z-index: 2;
+}
+
+.timeline-marker.active {
+    background: var(--red-500);
+}
+
+.timeline-marker.resolved {
+    background: var(--green-500);
+}
+
+.timeline-content {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 15px;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.timeline-header h6 {
+    margin: 0;
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.timeline-date {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+.timeline-description {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+/* No Conditions States */
+.no-conditions {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--gray-500);
+}
+
+.no-conditions i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--green-500);
+}
+
+.timeline-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--gray-500);
+}
+
+/* Loading and Empty States */
+.loading-state, .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.loading-state .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--gray-200);
+    border-top: 4px solid var(--red-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.empty-state .empty-icon {
+    font-size: 4rem;
+    color: var(--gray-300);
+    margin-bottom: 20px;
+}
+
+.empty-state h4 {
+    color: var(--gray-900);
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+}
+
+.empty-state p {
+    color: var(--gray-600);
+    margin: 0 0 30px 0;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius-xl);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.modal-header h4 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--gray-500);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+}
+
+/* Form Styles */
+.condition-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: var(--red-500);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    padding: 12px 15px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--red-500);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .health-conditions-container {
+        padding: 0 15px;
+    }
+    
+    .health-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .condition-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .condition-title {
+        justify-content: space-between;
+    }
+    
+    .condition-actions {
+        justify-content: center;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .modal-header,
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .timeline-item {
+        padding-left: 20px;
+    }
+    
+    .timeline-marker {
+        left: -18px;
+        width: 25px;
+        height: 25px;
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .condition-details {
+        gap: 6px;
+    }
+    
+    .detail-item {
+        font-size: 0.85rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.condition-card {
+    animation: fadeIn 0.3s ease;
+}
+
+.timeline-item {
+    animation: fadeIn 0.3s ease;
+}

@@ -1,153 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANMS - Animal Nutrition Management System</title>
-    
-    <!-- ONLY Essential CSS for Landing Page -->
-    <link rel="stylesheet" href="assets/css/design-tokens.css">
-    <link rel="stylesheet" href="assets/css/design-system.css">
-    <link rel="stylesheet" href="assets/css/modern-landing.css">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description"
+        content="A web-based system for creating personalized animal nutrition plans based on scientific guidelines. An MSc Information Technology research project by Malik Zia ul islam.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <!-- Simple Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <i class="fas fa-paw"></i>
-                <span>ANMS</span>
-            </div>
-            <div class="nav-menu">
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <button class="btn btn-primary" onclick="showLoginModal()">Login</button>
-                <button class="btn btn-outline" onclick="showRegisterModal()">Sign Up</button>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Professional Animal Nutrition Management</h1>
-            <p>Comprehensive nutrition planning, health tracking, and meal management for your pets</p>
-            <div class="hero-actions">
-                <button class="btn btn-primary btn-large" onclick="showRegisterModal()">
-                    <i class="fas fa-rocket"></i> Get Started Free
-                </button>
-                <button class="btn btn-outline btn-large" onclick="showLoginModal()">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-            </div>
-        </div>
-        <div class="hero-image">
-            <i class="fas fa-heart" style="font-size: 8rem; color: #4ecdc4; opacity: 0.8;"></i>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features">
+    <!-- Header -->
+    <header class="main-header">
         <div class="container">
-            <h2>Everything You Need for Pet Nutrition</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-calculator"></i>
-                    </div>
-                    <h3>Nutrition Calculator</h3>
-                    <p>Scientific nutrition calculations based on AAFCO standards for dogs and cats</p>
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <h3>Meal Planning</h3>
-                    <p>Create weekly meal plans with portion control and feeding schedules</p>
+                <div class="logo-text">
+                    <h1>ANMS</h1>
+                    <p>Animal Nutrition Management</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Health Tracking</h3>
-                    <p>Monitor weight, health metrics, and nutrition progress over time</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <h3>Food Database</h3>
-                    <p>Comprehensive database of pet foods with detailed nutritional information</p>
-                </div>
+            </a>
+            <nav class="main-nav">
+                <a href="#features">Features</a>
+                <a href="#research">Research</a>
+                <a href="#demo">Demo</a>
+            </nav>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="showLoginModal()">Access System</button>
+                <button class="btn btn-primary" onclick="showLoginModal()">Try Demo</button>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>Professional Pet Nutrition Made Simple</h2>
-                    <p>ANMS provides veterinary-grade nutrition management tools for pet owners, breeders, and animal care professionals.</p>
-                    <ul>
-                        <li><i class="fas fa-check"></i> AAFCO-compliant nutrition calculations</li>
-                        <li><i class="fas fa-check"></i> Species-specific meal planning</li>
-                        <li><i class="fas fa-check"></i> Health monitoring and analytics</li>
-                        <li><i class="fas fa-check"></i> Professional food database</li>
-                    </ul>
-                </div>
-                <div class="about-stats">
-                    <div class="stat">
-                        <div class="stat-number">1000+</div>
-                        <div class="stat-label">Happy Pet Owners</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">Food Brands</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Support</div>
-                    </div>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="section-badge">MSc Information Technology Research Project by Malik Zia ul islam</div>
+                <h1>Precision Nutrition for <span class="highlight">Optimal Animal Health</span></h1>
+                <p>A web-based system for creating personalized animal nutrition plans based on scientific guidelines.
+                    Developed to revolutionize animal care through data-driven health management.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="showLoginModal()">Explore Demo System</button>
+                    <a href="#research" class="btn btn-secondary">View Research Details</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2>Get Started Today</h2>
-            <p>Join thousands of pet owners who trust ANMS for their pet's nutrition</p>
-            <div class="contact-actions">
-                <button class="btn btn-primary btn-large" onclick="showRegisterModal()">
-                    <i class="fas fa-user-plus"></i> Create Free Account
-                </button>
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <span class="section-badge">Core Capabilities</span>
+                <h2>Research-Driven Features</h2>
+                <p>Built on academic research and scientific principles, offering comprehensive tools for professional
+                    animal nutrition management.</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            </svg>
+                        </div>
+                        <h3>Algorithm-Driven Diet Planning</h3>
+                        <p>Generates personalized nutrition plans based on species, age, weight, and health conditions
+                            with an accuracy of over 95% against veterinary guidelines.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2" />
+                                <path d="M7 7h10M7 12h10M7 17h10" />
+                            </svg>
+                        </div>
+                        <h3>Comprehensive Database</h3>
+                        <p>Manages detailed animal profiles, nutritional requirements, and food composition data with
+                            query performance under 2 seconds.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                        </div>
+                        <h3>Real-Time Health Monitoring</h3>
+                        <p>Track weight changes, activity levels, and health metrics with automated report generation
+                            for data-driven care.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Research Section -->
+        <section id="research" class="research">
+            <div class="container">
+                <div class="research-content">
+                    <div class="research-text">
+                        <span class="section-badge">Academic Foundation</span>
+                        <h2>MSc Information Technology Research</h2>
+                        <p>This system is the outcome of a dissertation project exploring the intersection of technology
+                            and animal healthcare, focusing on data-driven nutrition management solutions.</p>
+                        <div class="research-points">
+                            <div class="research-point">
+                                <svg class="research-point-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div>
+                                    <h4>Accurate & Personalized Plans</h4>
+                                    <p>How can a web system translate animal data into actionable nutritional plans?</p>
+                                </div>
+                            </div>
+                            <div class="research-point">
+                                <svg class="research-point-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div>
+                                    <h4>Rule-Based Algorithm</h4>
+                                    <p>What is the most effective way to implement a rule-based algorithm from
+                                        veterinary science?</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="research-image">
+                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=2670&auto=format&fit=crop"
+                            alt="A happy dog being fed.">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="demo" class="cta">
+            <div class="container">
+                <h2>Explore the Research System</h2>
+                <p>Access the fully functional demonstration system and experience how academic research translates into
+                    practical animal nutrition management solutions.</p>
+                <button class="btn btn-secondary" onclick="showLoginModal()">Access Demo (test@example.com /
+                    password)</button>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-brand">
-                    <i class="fas fa-paw"></i>
-                    <span>ANMS</span>
-                </div>
+                <p>&copy; 2025 ANMS Research Project by Malik Zia ul islam. All rights reserved.</p>
                 <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Support</a>
+                    <a href="#features">Features</a>
+                    <a href="#research">Research</a>
+                    <a href="#" onclick="showLoginModal()">Login</a>
                 </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Animal Nutrition Management System. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -163,117 +184,51 @@
                 <form id="login-form">
                     <div class="form-group">
                         <label for="login-email">Email</label>
-                        <input type="email" id="login-email" required>
+                        <input type="email" id="login-email" value="test@example.com" required>
                     </div>
                     <div class="form-group">
                         <label for="login-password">Password</label>
-                        <input type="password" id="login-password" required>
+                        <input type="password" id="login-password" value="password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
+                    <button type="submit" class="btn btn-primary btn-full">Login</button>
                 </form>
                 <div class="auth-footer">
-                    <p>Don't have an account? <a href="#" onclick="showRegisterModal()">Sign up</a></p>
+                    <p>Demo credentials: test@example.com / password</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Register Modal -->
-    <div id="register-modal" class="auth-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create ANMS Account</h3>
-                <button class="modal-close" onclick="hideAuthModals()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="register-form">
-                    <div class="form-group">
-                        <label for="register-name">Full Name</label>
-                        <input type="text" id="register-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-email">Email</label>
-                        <input type="email" id="register-email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-password">Password</label>
-                        <input type="password" id="register-password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-confirm">Confirm Password</label>
-                        <input type="password" id="register-confirm" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full">
-                        <i class="fas fa-user-plus"></i> Create Account
-                    </button>
-                </form>
-                <div class="auth-footer">
-                    <p>Already have an account? <a href="#" onclick="showLoginModal()">Login</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ONLY Essential JavaScript for Landing Page -->
     <script>
         // Simple modal functions
         function showLoginModal() {
-            hideAuthModals();
             document.getElementById('login-modal').style.display = 'flex';
         }
-        
-        function showRegisterModal() {
-            hideAuthModals();
-            document.getElementById('register-modal').style.display = 'flex';
-        }
-        
+
         function hideAuthModals() {
             document.getElementById('login-modal').style.display = 'none';
-            document.getElementById('register-modal').style.display = 'none';
         }
-        
+
         // Close modal when clicking outside
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.classList.contains('auth-modal')) {
                 hideAuthModals();
             }
         });
-        
+
         // Handle login form
-        document.getElementById('login-form').addEventListener('submit', function(e) {
+        document.getElementById('login-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            
+
             // Simple validation for demo
             if (email && password) {
                 // Redirect to dashboard after successful login
                 window.location.href = 'dashboard.php';
             }
         });
-        
-        // Handle register form
-        document.getElementById('register-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirm = document.getElementById('register-confirm').value;
-            
-            if (password !== confirm) {
-                alert('Passwords do not match');
-                return;
-            }
-            
-            // Simple validation for demo
-            if (name && email && password) {
-                // Redirect to dashboard after successful registration
-                window.location.href = 'dashboard.php';
-            }
-        });
-        
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -287,347 +242,9 @@
             });
         });
     </script>
-    
+
     <style>
-        /* Minimal CSS for Landing Page Only */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Navigation */
-        .navbar {
-            background: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-        
-        .nav-brand i {
-            color: #4ecdc4;
-        }
-        
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .nav-link {
-            text-decoration: none;
-            color: #6c757d;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            color: #4ecdc4;
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-            background: #4ecdc4;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #45b7aa;
-        }
-        
-        .btn-outline {
-            background: transparent;
-            color: #4ecdc4;
-            border: 2px solid #4ecdc4;
-        }
-        
-        .btn-outline:hover {
-            background: #4ecdc4;
-            color: white;
-        }
-        
-        .btn-large {
-            padding: 15px 30px;
-            font-size: 1.1rem;
-        }
-        
-        .btn-full {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 120px 0 80px;
-            display: flex;
-            align-items: center;
-            min-height: 100vh;
-        }
-        
-        .hero-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-        
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        .hero-actions {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .hero-image {
-            text-align: center;
-        }
-        
-        /* Sections */
-        section {
-            padding: 80px 0;
-        }
-        
-        .features {
-            background: #f8f9fa;
-        }
-        
-        .features h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 60px;
-            color: #2c3e50;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .feature-icon {
-            background: #4ecdc4;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 1.5rem;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-        
-        .feature-card p {
-            color: #6c757d;
-        }
-        
-        /* About Section */
-        .about-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-        
-        .about h2 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        
-        .about p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            color: #6c757d;
-        }
-        
-        .about ul {
-            list-style: none;
-        }
-        
-        .about li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            color: #6c757d;
-        }
-        
-        .about li i {
-            color: #4ecdc4;
-        }
-        
-        .about-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-        
-        .stat {
-            text-align: center;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
-        }
-        
-        .stat-number {
-            display: block;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #4ecdc4;
-        }
-        
-        .stat-label {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        
-        /* Contact Section */
-        .contact {
-            background: #f8f9fa;
-            text-align: center;
-        }
-        
-        .contact h2 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        
-        .contact p {
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-            color: #6c757d;
-        }
-        
-        /* Footer */
-        .footer {
-            background: #2c3e50;
-            color: white;
-            padding: 40px 0 20px;
-        }
-        
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        
-        .footer-brand i {
-            color: #4ecdc4;
-        }
-        
-        .footer-links {
-            display: flex;
-            gap: 30px;
-        }
-        
-        .footer-links a {
-            color: #bdc3c7;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-links a:hover {
-            color: #4ecdc4;
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #34495e;
-            color: #bdc3c7;
-            font-size: 0.9rem;
-        }
-        
-        /* Auth Modal Styles */
+        /* Auth Modal Styles for the restored design */
         .auth-modal {
             position: fixed;
             top: 0;
@@ -640,110 +257,87 @@
             justify-content: center;
             z-index: 1000;
         }
-        
+
         .auth-modal .modal-content {
             background: white;
-            border-radius: 12px;
+            border-radius: var(--radius-2xl);
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-2xl);
         }
-        
+
         .auth-modal .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #eee;
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--gray-200);
         }
-        
+
         .auth-modal .modal-header h3 {
             margin: 0;
-            color: #2c3e50;
+            color: var(--gray-900);
+            font-weight: 700;
         }
-        
+
         .auth-modal .modal-close {
             background: none;
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #999;
+            color: var(--gray-500);
+            padding: var(--space-2);
         }
-        
+
+        .auth-modal .modal-close:hover {
+            color: var(--gray-900);
+        }
+
         .auth-modal .modal-body {
-            padding: 20px;
+            padding: var(--space-6);
         }
-        
+
         .auth-modal .form-group {
-            margin-bottom: 15px;
+            margin-bottom: var(--space-4);
         }
-        
+
         .auth-modal .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: var(--space-2);
             font-weight: 600;
-            color: #2c3e50;
+            color: var(--gray-900);
         }
-        
+
         .auth-modal .form-group input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e8ed;
-            border-radius: 8px;
+            padding: 12px var(--space-4);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
             font-size: 1rem;
             box-sizing: border-box;
+            transition: border-color 0.2s ease;
         }
-        
+
         .auth-modal .form-group input:focus {
             outline: none;
-            border-color: #4ecdc4;
+            border-color: var(--blue-600);
         }
-        
+
         .auth-modal .btn-full {
             width: 100%;
-            margin-top: 10px;
+            margin-top: var(--space-4);
+            justify-content: center;
         }
-        
+
         .auth-modal .auth-footer {
             text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        
-        .auth-modal .auth-footer a {
-            color: #4ecdc4;
-            text-decoration: none;
-        }
-        
-        .auth-modal .auth-footer a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-menu {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .hero-actions {
-                justify-content: center;
-            }
+            margin-top: var(--space-6);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--gray-200);
+            color: var(--gray-600);
+            font-size: 0.875rem;
         }
     </style>
 </body>
+
 </html>

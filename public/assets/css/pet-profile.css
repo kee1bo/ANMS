@@ -1,0 +1,688 @@
+/**
+ * Pet Profile Display Component Styles
+ * Comprehensive styling for pet profile with tabbed interface
+ */
+
+.pet-profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Loading and Error States */
+.loading-state, .error-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.error-icon {
+    font-size: 3rem;
+    color: var(--red-500);
+    margin-bottom: 20px;
+}
+
+/* Profile Header */
+.pet-profile-header {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 30px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.pet-photo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.pet-main-photo {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.pet-main-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pet-main-photo:hover .photo-overlay {
+    opacity: 1;
+}
+
+.pet-photo-thumbnails {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.photo-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.photo-thumbnail:hover {
+    border-color: var(--blue-500);
+    transform: scale(1.05);
+}
+
+.pet-basic-info {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.pet-name-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.pet-name {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.pet-species-badge {
+    background: var(--blue-100);
+    color: var(--blue-700);
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.pet-quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+}
+
+.stat-item i {
+    font-size: 1.2rem;
+    color: var(--blue-500);
+    width: 20px;
+    text-align: center;
+}
+
+.stat-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.pet-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.pet-actions .dropdown {
+    position: relative;
+}
+
+/* Navigation Tabs */
+.pet-profile-tabs {
+    display: flex;
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 8px;
+    margin-bottom: 30px;
+    gap: 4px;
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 15px 20px;
+    border-radius: var(--radius-lg);
+    color: var(--gray-600);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-btn:hover {
+    color: var(--gray-900);
+    background: var(--gray-50);
+}
+
+.tab-btn.active {
+    background: var(--blue-600);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-btn i {
+    font-size: 1rem;
+}
+
+/* Tab Content */
+.pet-profile-tab-content {
+    min-height: 400px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Overview Tab */
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.info-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 25px;
+    border: 1px solid var(--gray-200);
+}
+
+.info-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-card h3 {
+    margin: 0 0 20px 0;
+    color: var(--gray-900);
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-card h3 i {
+    color: var(--blue-500);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-item label {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.info-item span {
+    font-size: 0.95rem;
+    color: var(--gray-900);
+    font-weight: 500;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.status-normal {
+    background: var(--green-100);
+    color: var(--green-700);
+}
+
+.status-badge.status-overweight,
+.status-badge.status-underweight {
+    background: var(--orange-100);
+    color: var(--orange-700);
+}
+
+.personality-section p {
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.emergency-contact p {
+    color: var(--gray-700);
+    margin: 0;
+}
+
+/* Health Tab */
+.health-overview {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 25px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.health-status-card h3 {
+    margin: 0 0 10px 0;
+    color: var(--gray-900);
+    font-size: 1.2rem;
+}
+
+.health-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.status-indicator.healthy {
+    background: var(--green-500);
+}
+
+.status-indicator.warning {
+    background: var(--orange-500);
+}
+
+.health-stats {
+    display: flex;
+    gap: 30px;
+}
+
+.health-stat {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--blue-600);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.health-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.health-section {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 25px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h4 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-header h4 i {
+    color: var(--blue-500);
+}
+
+.health-condition-item,
+.allergy-item {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.condition-header,
+.allergy-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.condition-header h5,
+.allergy-header h5 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 1rem;
+}
+
+.severity-badge {
+    padding: 2px 8px;
+    border-radius: var(--radius-md);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.severity-badge.severity-mild {
+    background: var(--green-100);
+    color: var(--green-700);
+}
+
+.severity-badge.severity-moderate {
+    background: var(--orange-100);
+    color: var(--orange-700);
+}
+
+.severity-badge.severity-severe {
+    background: var(--red-100);
+    color: var(--red-700);
+}
+
+.condition-notes,
+.allergy-reaction {
+    color: var(--gray-700);
+    font-size: 0.9rem;
+    margin: 8px 0;
+}
+
+.condition-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--gray-600);
+}
+
+.status-active {
+    color: var(--green-600);
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: var(--gray-500);
+}
+
+/* Photos Tab */
+.photos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.photos-header h3 {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 1.3rem;
+}
+
+.photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.photo-item {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.photo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.photo-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.photo-actions {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.primary-badge {
+    background: var(--green-100);
+    color: var(--green-700);
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Records Tab */
+.records-section {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 25px;
+}
+
+.records-section h3 {
+    margin: 0 0 20px 0;
+    color: var(--gray-900);
+    font-size: 1.3rem;
+}
+
+.activity-log {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.activity-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--blue-100);
+    color: var(--blue-600);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-description {
+    margin: 0 0 5px 0;
+    color: var(--gray-900);
+    font-weight: 500;
+}
+
+.activity-date {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+}
+
+/* Empty States */
+.empty-message {
+    text-align: center;
+    color: var(--gray-500);
+    font-style: italic;
+    padding: 40px 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pet-profile-container {
+        padding: 0 15px;
+    }
+    
+    .pet-profile-header {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        text-align: center;
+    }
+    
+    .pet-main-photo {
+        width: 250px;
+        height: 250px;
+        margin: 0 auto;
+    }
+    
+    .pet-quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pet-actions {
+        justify-content: center;
+    }
+    
+    .pet-profile-tabs {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .tab-btn {
+        justify-content: flex-start;
+    }
+    
+    .overview-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .health-overview {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .health-stats {
+        justify-content: center;
+    }
+    
+    .photos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    
+    .photo-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pet-name {
+        font-size: 2rem;
+    }
+    
+    .pet-quick-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .pet-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .pet-actions .btn {
+        width: 100%;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .photos-grid {
+        grid-template-columns: 1fr;
+    }
+}

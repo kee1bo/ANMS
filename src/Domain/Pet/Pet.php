@@ -5,481 +5,411 @@ declare(strict_types=1);
 namespace App\Domain\Pet;
 
 use DateTime;
-use JsonSerializable;
+use InvalidArgumentException;
 
-class Pet implements JsonSerializable
+/**
+ * Pet Domain Model
+ * Represents a pet with all its characteristics and business logic
+ */
+class Pet
 {
     private int $id;
     private int $userId;
     private string $name;
-    private PetSpecies $species;
+    private string $species;
     private ?string $breed;
-    private ?DateTime $dateOfBirth;
-    private PetGender $gender;
-    private bool $isNeutered;
-    private ?string $microchipId;
-    private ?float $currentWeight;
+    private ?string $gender;
+    private ?DateTime $birthDate;
+    private ?int $age;
+    private float $weight;
     private ?float $idealWeight;
-    private ActivityLevel $activityLevel;
+    private string $activityLevel;
     private ?int $bodyConditionScore;
+    private string $healthStatus;
+    private ?string $spayNeuterStatus;
+    private ?string $microchipId;
+    private ?string $personality;
+    private ?string $emergencyContact;
+    private array $photos;
     private array $healthConditions;
     private array $allergies;
-    private array $medications;
-    private array $personalityTraits;
-    private ?string $photoUrl;
-    private ?int $veterinarianId;
     private DateTime $createdAt;
     private DateTime $updatedAt;
-    private ?DateTime $deletedAt;
 
-    public function __construct(
-        int $userId,
-        string $name,
-        PetSpecies $species,
-        ?string $breed = null,
-        ?DateTime $dateOfBirth = null,
-        PetGender $gender = PetGender::UNKNOWN,
-        bool $isNeutered = false
-    ) {
-        $this->userId = $userId;
-        $this->name = $name;
-        $this->species = $species;
-        $this->breed = $breed;
-        $this->dateOfBirth = $dateOfBirth;
-        $this->gender = $gender;
-        $this->isNeutered = $isNeutered;
-        $this->activityLevel = ActivityLevel::MODERATE;
-        $this->healthConditions = [];
-        $this->allergies = [];
-        $this->medications = [];
-        $this->personalityTraits = [];
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
+    // Valid enum values
+    private const VALID_SPECIES = ['dog', 'cat', 'bird', 'rabbit', 'hamster', 'guinea_pig', 'other'];
+    private const VALID_GENDERS = ['male', 'female', 'unknown'];
+    private const VALID_ACTIVITY_LEVELS = ['low', 'medium', 'high'];
+    private const VALID_SPAY_NEUTER_STATUS = ['spayed', 'neutered', 'intact', 'unknown'];
+
+    public function __construct(array $data)
+    {
+        $this->validateAndSetData($data);
+    }
+
+    private function validateAndSetData(array $data): void
+    {
+        // Required fields
+        $this->setId($data['id'] ?? 0);
+        $this->setUserId($data['user_id'] ?? throw new InvalidArgumentException('User ID is required'));
+        $this->setName($data['name'] ?? throw new InvalidArgumentException('Pet name is required'));
+        $this->setSpecies($data['species'] ?? throw new InvalidArgumentException('Pet species is required'));
+        $this->setWeight($data['weight'] ?? throw new InvalidArgumentException('Pet weight is required'));
+        $this->setActivityLevel($data['activity_level'] ?? 'medium');
+        $this->setHealthStatus($data['health_status'] ?? 'healthy');
+
+        // Optional fields
+        $this->setBreed($data['breed'] ?? null);
+        $this->setGender($data['gender'] ?? null);
+        $this->setBirthDate($data['birth_date'] ?? null);
+        $this->setIdealWeight($data['ideal_weight'] ?? null);
+        $this->setBodyConditionScore($data['body_condition_score'] ?? null);
+        $this->setSpayNeuterStatus($data['spay_neuter_status'] ?? null);
+        $this->setMicrochipId($data['microchip_id'] ?? null);
+        $this->setPersonality($data['personality'] ?? null);
+        $this->setEmergencyContact($data['emergency_contact'] ?? null);
+
+        // Arrays
+        $this->photos = $data['photos'] ?? [];
+        $this->healthConditions = $data['health_conditions'] ?? [];
+        $this->allergies = $data['allergies'] ?? [];
+
+        // Timestamps
+        $this->setCreatedAt($data['created_at'] ?? date('Y-m-d H:i:s'));
+        $this->setUpdatedAt($data['updated_at'] ?? date('Y-m-d H:i:s'));
+
+        // Calculate age if birth date is provided
+        $this->calculateAge();
     }
 
     // Getters
-    public function getId(): int
+    public function getId(): int { return $this->id; }
+    public function getUserId(): int { return $this->userId; }
+    public function getName(): string { return $this->name; }
+    public function getSpecies(): string { return $this->species; }
+    public function getBreed(): ?string { return $this->breed; }
+    public function getGender(): ?string { return $this->gender; }
+    public function getBirthDate(): ?DateTime { return $this->birthDate; }
+    public function getAge(): ?int { return $this->age; }
+    public function getWeight(): float { return $this->weight; }
+    public function getIdealWeight(): ?float { return $this->idealWeight; }
+    public function getActivityLevel(): string { return $this->activityLevel; }
+    public function getBodyConditionScore(): ?int { return $this->bodyConditionScore; }
+    public function getHealthStatus(): string { return $this->healthStatus; }
+    public function getSpayNeuterStatus(): ?string { return $this->spayNeuterStatus; }
+    public function getMicrochipId(): ?string { return $this->microchipId; }
+    public function getPersonality(): ?string { return $this->personality; }
+    public function getEmergencyContact(): ?string { return $this->emergencyContact; }
+    public function getPhotos(): array { return $this->photos; }
+    public function getHealthConditions(): array { return $this->healthConditions; }
+    public function getAllergies(): array { return $this->allergies; }
+    public function getCreatedAt(): DateTime { return $this->createdAt; }
+    public function getUpdatedAt(): DateTime { return $this->updatedAt; }
+
+    // Setters with validation
+    private function setId(int $id): void
     {
-        return $this->id;
+        if ($id < 0) {
+            throw new InvalidArgumentException('Pet ID must be non-negative');
+        }
+        $this->id = $id;
     }
 
-    public function getUserId(): int
+    private function setUserId(int $userId): void
     {
-        return $this->userId;
+        if ($userId <= 0) {
+            throw new InvalidArgumentException('User ID must be positive');
+        }
+        $this->userId = $userId;
     }
 
-    public function getName(): string
+    private function setName(string $name): void
     {
-        return $this->name;
+        $name = trim($name);
+        if (empty($name)) {
+            throw new InvalidArgumentException('Pet name cannot be empty');
+        }
+        if (strlen($name) > 50) {
+            throw new InvalidArgumentException('Pet name must be less than 50 characters');
+        }
+        if (!preg_match('/^[a-zA-Z0-9\s\-\']+$/', $name)) {
+            throw new InvalidArgumentException('Pet name contains invalid characters');
+        }
+        $this->name = $name;
     }
 
-    public function getSpecies(): PetSpecies
+    private function setSpecies(string $species): void
     {
-        return $this->species;
+        $species = strtolower(trim($species));
+        if (!in_array($species, self::VALID_SPECIES)) {
+            throw new InvalidArgumentException('Invalid species. Must be one of: ' . implode(', ', self::VALID_SPECIES));
+        }
+        $this->species = $species;
     }
 
-    public function getBreed(): ?string
+    private function setBreed(?string $breed): void
     {
-        return $this->breed;
+        if ($breed !== null) {
+            $breed = trim($breed);
+            if (strlen($breed) > 100) {
+                throw new InvalidArgumentException('Breed name must be less than 100 characters');
+            }
+        }
+        $this->breed = $breed;
     }
 
-    public function getDateOfBirth(): ?DateTime
+    private function setGender(?string $gender): void
     {
-        return $this->dateOfBirth;
+        if ($gender !== null) {
+            $gender = strtolower(trim($gender));
+            if (!in_array($gender, self::VALID_GENDERS)) {
+                throw new InvalidArgumentException('Invalid gender. Must be one of: ' . implode(', ', self::VALID_GENDERS));
+            }
+        }
+        $this->gender = $gender;
     }
 
-    public function getGender(): PetGender
+    private function setBirthDate(?string $birthDate): void
     {
-        return $this->gender;
+        if ($birthDate !== null) {
+            try {
+                $date = new DateTime($birthDate);
+                $now = new DateTime();
+                if ($date > $now) {
+                    throw new InvalidArgumentException('Birth date cannot be in the future');
+                }
+                $this->birthDate = $date;
+            } catch (\Exception $e) {
+                throw new InvalidArgumentException('Invalid birth date format');
+            }
+        } else {
+            $this->birthDate = null;
+        }
     }
 
-    public function isNeutered(): bool
+    private function setWeight(float $weight): void
     {
-        return $this->isNeutered;
+        if ($weight <= 0) {
+            throw new InvalidArgumentException('Weight must be positive');
+        }
+        if ($weight > 200) {
+            throw new InvalidArgumentException('Weight must be less than 200kg');
+        }
+        $this->weight = round($weight, 1);
     }
 
-    public function getMicrochipId(): ?string
+    private function setIdealWeight(?float $idealWeight): void
     {
-        return $this->microchipId;
+        if ($idealWeight !== null) {
+            if ($idealWeight <= 0) {
+                throw new InvalidArgumentException('Ideal weight must be positive');
+            }
+            if ($idealWeight > 200) {
+                throw new InvalidArgumentException('Ideal weight must be less than 200kg');
+            }
+            $this->idealWeight = round($idealWeight, 1);
+        } else {
+            $this->idealWeight = null;
+        }
     }
 
-    public function getCurrentWeight(): ?float
+    private function setActivityLevel(string $activityLevel): void
     {
-        return $this->currentWeight;
+        $activityLevel = strtolower(trim($activityLevel));
+        if (!in_array($activityLevel, self::VALID_ACTIVITY_LEVELS)) {
+            throw new InvalidArgumentException('Invalid activity level. Must be one of: ' . implode(', ', self::VALID_ACTIVITY_LEVELS));
+        }
+        $this->activityLevel = $activityLevel;
     }
 
-    public function getIdealWeight(): ?float
+    private function setBodyConditionScore(?int $score): void
     {
-        return $this->idealWeight;
+        if ($score !== null) {
+            if ($score < 1 || $score > 9) {
+                throw new InvalidArgumentException('Body condition score must be between 1 and 9');
+            }
+        }
+        $this->bodyConditionScore = $score;
     }
 
-    public function getActivityLevel(): ActivityLevel
+    private function setHealthStatus(string $healthStatus): void
     {
-        return $this->activityLevel;
+        $this->healthStatus = trim($healthStatus);
     }
 
-    public function getBodyConditionScore(): ?int
+    private function setSpayNeuterStatus(?string $status): void
     {
-        return $this->bodyConditionScore;
+        if ($status !== null) {
+            $status = strtolower(trim($status));
+            if (!in_array($status, self::VALID_SPAY_NEUTER_STATUS)) {
+                throw new InvalidArgumentException('Invalid spay/neuter status. Must be one of: ' . implode(', ', self::VALID_SPAY_NEUTER_STATUS));
+            }
+        }
+        $this->spayNeuterStatus = $status;
     }
 
-    public function getHealthConditions(): array
+    private function setMicrochipId(?string $microchipId): void
     {
-        return $this->healthConditions;
+        if ($microchipId !== null) {
+            $microchipId = trim($microchipId);
+            if (strlen($microchipId) > 20) {
+                throw new InvalidArgumentException('Microchip ID must be less than 20 characters');
+            }
+        }
+        $this->microchipId = $microchipId;
     }
 
-    public function getAllergies(): array
+    private function setPersonality(?string $personality): void
     {
-        return $this->allergies;
+        if ($personality !== null) {
+            $personality = trim($personality);
+            if (strlen($personality) > 500) {
+                throw new InvalidArgumentException('Personality description must be less than 500 characters');
+            }
+        }
+        $this->personality = $personality;
     }
 
-    public function getMedications(): array
+    private function setEmergencyContact(?string $emergencyContact): void
     {
-        return $this->medications;
+        if ($emergencyContact !== null) {
+            $emergencyContact = trim($emergencyContact);
+            if (strlen($emergencyContact) > 200) {
+                throw new InvalidArgumentException('Emergency contact must be less than 200 characters');
+            }
+        }
+        $this->emergencyContact = $emergencyContact;
     }
 
-    public function getPersonalityTraits(): array
+    private function setCreatedAt(string $createdAt): void
     {
-        return $this->personalityTraits;
+        try {
+            $this->createdAt = new DateTime($createdAt);
+        } catch (\Exception $e) {
+            throw new InvalidArgumentException('Invalid created_at date format');
+        }
     }
 
-    public function getPhotoUrl(): ?string
+    private function setUpdatedAt(string $updatedAt): void
     {
-        return $this->photoUrl;
+        try {
+            $this->updatedAt = new DateTime($updatedAt);
+        } catch (\Exception $e) {
+            throw new InvalidArgumentException('Invalid updated_at date format');
+        }
     }
 
-    public function getVeterinarianId(): ?int
+    // Business logic methods
+    private function calculateAge(): void
     {
-        return $this->veterinarianId;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function getDeletedAt(): ?DateTime
-    {
-        return $this->deletedAt;
-    }
-
-    // Business Logic Methods
-    public function getAge(): ?int
-    {
-        if (!$this->dateOfBirth) {
-            return null;
+        if ($this->birthDate === null) {
+            $this->age = null;
+            return;
         }
 
-        return $this->dateOfBirth->diff(new DateTime())->y;
+        $now = new DateTime();
+        $interval = $this->birthDate->diff($now);
+        $this->age = $interval->y;
     }
 
-    public function getAgeInMonths(): ?int
+    public function getPrimaryPhoto(): ?array
     {
-        if (!$this->dateOfBirth) {
-            return null;
+        foreach ($this->photos as $photo) {
+            if ($photo['is_primary'] ?? false) {
+                return $photo;
+            }
         }
-
-        $diff = $this->dateOfBirth->diff(new DateTime());
-        return ($diff->y * 12) + $diff->m;
+        return $this->photos[0] ?? null;
     }
 
-    public function getLifeStage(): LifeStage
+    public function getHealthSummary(): array
     {
-        $ageInMonths = $this->getAgeInMonths();
-        if (!$ageInMonths) {
-            return LifeStage::ADULT;
-        }
-
-        return match ($this->species) {
-            PetSpecies::DOG => match (true) {
-                $ageInMonths < 12 => LifeStage::PUPPY,
-                $ageInMonths >= 84 => LifeStage::SENIOR, // 7 years
-                default => LifeStage::ADULT
-            },
-            PetSpecies::CAT => match (true) {
-                $ageInMonths < 12 => LifeStage::KITTEN,
-                $ageInMonths >= 84 => LifeStage::SENIOR, // 7 years
-                default => LifeStage::ADULT
-            },
-            default => LifeStage::ADULT
-        };
+        $activeConditions = array_filter($this->healthConditions, fn($condition) => $condition['is_active'] ?? true);
+        
+        return [
+            'active_conditions' => count($activeConditions),
+            'total_conditions' => count($this->healthConditions),
+            'allergies' => count($this->allergies),
+            'last_updated' => $this->updatedAt->format('Y-m-d H:i:s'),
+            'health_status' => $this->healthStatus
+        ];
     }
 
     public function isOverweight(): bool
     {
-        if (!$this->currentWeight || !$this->idealWeight) {
+        if ($this->idealWeight === null) {
             return false;
         }
-
-        return $this->currentWeight > ($this->idealWeight * 1.1);
+        return $this->weight > ($this->idealWeight * 1.15); // 15% over ideal weight
     }
 
     public function isUnderweight(): bool
     {
-        if (!$this->currentWeight || !$this->idealWeight) {
+        if ($this->idealWeight === null) {
             return false;
         }
-
-        return $this->currentWeight < ($this->idealWeight * 0.9);
+        return $this->weight < ($this->idealWeight * 0.85); // 15% under ideal weight
     }
 
-    public function getWeightStatus(): WeightStatus
+    public function getWeightStatus(): string
     {
-        if ($this->isUnderweight()) {
-            return WeightStatus::UNDERWEIGHT;
-        }
-        
         if ($this->isOverweight()) {
-            return WeightStatus::OVERWEIGHT;
+            return 'overweight';
         }
-        
-        return WeightStatus::IDEAL;
-    }
-
-    public function hasHealthCondition(string $condition): bool
-    {
-        return in_array($condition, $this->healthConditions, true);
-    }
-
-    public function hasAllergy(string $allergen): bool
-    {
-        return in_array($allergen, $this->allergies, true);
-    }
-
-    public function isOnMedication(string $medication): bool
-    {
-        foreach ($this->medications as $med) {
-            if (is_array($med) && isset($med['name']) && $med['name'] === $medication) {
-                return true;
-            }
-            if (is_string($med) && $med === $medication) {
-                return true;
-            }
+        if ($this->isUnderweight()) {
+            return 'underweight';
         }
-        return false;
+        return 'normal';
     }
 
-    // Update Methods
-    public function updateBasicInfo(
-        string $name,
-        ?string $breed = null,
-        ?DateTime $dateOfBirth = null,
-        PetGender $gender = null,
-        bool $isNeutered = null
-    ): void {
-        $this->name = $name;
-        if ($breed !== null) $this->breed = $breed;
-        if ($dateOfBirth !== null) $this->dateOfBirth = $dateOfBirth;
-        if ($gender !== null) $this->gender = $gender;
-        if ($isNeutered !== null) $this->isNeutered = $isNeutered;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function updateWeight(float $currentWeight, ?float $idealWeight = null): void
-    {
-        $this->currentWeight = $currentWeight;
-        if ($idealWeight !== null) {
-            $this->idealWeight = $idealWeight;
-        }
-        $this->updatedAt = new DateTime();
-    }
-
-    public function updateActivityLevel(ActivityLevel $activityLevel): void
-    {
-        $this->activityLevel = $activityLevel;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function updateBodyConditionScore(int $score): void
-    {
-        if ($score < 1 || $score > 9) {
-            throw new \InvalidArgumentException('Body condition score must be between 1 and 9');
-        }
-        
-        $this->bodyConditionScore = $score;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function setMicrochipId(string $microchipId): void
-    {
-        $this->microchipId = $microchipId;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function setPhotoUrl(string $photoUrl): void
-    {
-        $this->photoUrl = $photoUrl;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function assignVeterinarian(int $veterinarianId): void
-    {
-        $this->veterinarianId = $veterinarianId;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function updateHealthConditions(array $healthConditions): void
-    {
-        $this->healthConditions = $healthConditions;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function addHealthCondition(string $condition): void
-    {
-        if (!in_array($condition, $this->healthConditions, true)) {
-            $this->healthConditions[] = $condition;
-            $this->updatedAt = new DateTime();
-        }
-    }
-
-    public function removeHealthCondition(string $condition): void
-    {
-        $this->healthConditions = array_values(
-            array_filter($this->healthConditions, fn($c) => $c !== $condition)
-        );
-        $this->updatedAt = new DateTime();
-    }
-
-    public function updateAllergies(array $allergies): void
-    {
-        $this->allergies = $allergies;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function addAllergy(string $allergen): void
-    {
-        if (!in_array($allergen, $this->allergies, true)) {
-            $this->allergies[] = $allergen;
-            $this->updatedAt = new DateTime();
-        }
-    }
-
-    public function removeAllergy(string $allergen): void
-    {
-        $this->allergies = array_values(
-            array_filter($this->allergies, fn($a) => $a !== $allergen)
-        );
-        $this->updatedAt = new DateTime();
-    }
-
-    public function updateMedications(array $medications): void
-    {
-        $this->medications = $medications;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function updatePersonalityTraits(array $traits): void
-    {
-        $this->personalityTraits = $traits;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function softDelete(): void
-    {
-        $this->deletedAt = new DateTime();
-        $this->updatedAt = new DateTime();
-    }
-
-    public function restore(): void
-    {
-        $this->deletedAt = null;
-        $this->updatedAt = new DateTime();
-    }
-
-    public function isDeleted(): bool
-    {
-        return $this->deletedAt !== null;
-    }
-
-    public function jsonSerialize(): array
+    public function toArray(): array
     {
         return [
             'id' => $this->id,
-            'userId' => $this->userId,
+            'user_id' => $this->userId,
             'name' => $this->name,
-            'species' => $this->species->value,
+            'species' => $this->species,
             'breed' => $this->breed,
-            'dateOfBirth' => $this->dateOfBirth?->format('Y-m-d'),
-            'age' => $this->getAge(),
-            'ageInMonths' => $this->getAgeInMonths(),
-            'lifeStage' => $this->getLifeStage()->value,
-            'gender' => $this->gender->value,
-            'isNeutered' => $this->isNeutered,
-            'microchipId' => $this->microchipId,
-            'currentWeight' => $this->currentWeight,
-            'idealWeight' => $this->idealWeight,
-            'weightStatus' => $this->getWeightStatus()->value,
-            'activityLevel' => $this->activityLevel->value,
-            'bodyConditionScore' => $this->bodyConditionScore,
-            'healthConditions' => $this->healthConditions,
+            'gender' => $this->gender,
+            'birth_date' => $this->birthDate?->format('Y-m-d'),
+            'age' => $this->age,
+            'weight' => $this->weight,
+            'ideal_weight' => $this->idealWeight,
+            'activity_level' => $this->activityLevel,
+            'body_condition_score' => $this->bodyConditionScore,
+            'health_status' => $this->healthStatus,
+            'spay_neuter_status' => $this->spayNeuterStatus,
+            'microchip_id' => $this->microchipId,
+            'personality' => $this->personality,
+            'emergency_contact' => $this->emergencyContact,
+            'photos' => $this->photos,
+            'health_conditions' => $this->healthConditions,
             'allergies' => $this->allergies,
-            'medications' => $this->medications,
-            'personalityTraits' => $this->personalityTraits,
-            'photoUrl' => $this->photoUrl,
-            'veterinarianId' => $this->veterinarianId,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-            'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s')
+            'created_at' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updatedAt->format('Y-m-d H:i:s'),
+            'health_summary' => $this->getHealthSummary(),
+            'weight_status' => $this->getWeightStatus(),
+            'primary_photo' => $this->getPrimaryPhoto()
         ];
     }
 
-    public static function fromArray(array $data): self
+    public static function getValidSpecies(): array
     {
-        $pet = new self(
-            (int) $data['user_id'],
-            $data['name'],
-            PetSpecies::from($data['species']),
-            $data['breed'] ?? null,
-            isset($data['date_of_birth']) ? new DateTime($data['date_of_birth']) : null,
-            PetGender::from($data['gender'] ?? 'unknown'),
-            (bool) ($data['is_neutered'] ?? false)
-        );
+        return self::VALID_SPECIES;
+    }
 
-        if (isset($data['id'])) {
-            $pet->id = (int) $data['id'];
-        }
+    public static function getValidGenders(): array
+    {
+        return self::VALID_GENDERS;
+    }
 
-        $pet->microchipId = $data['microchip_id'] ?? null;
-        $pet->currentWeight = isset($data['current_weight']) ? (float) $data['current_weight'] : null;
-        $pet->idealWeight = isset($data['ideal_weight']) ? (float) $data['ideal_weight'] : null;
-        $pet->activityLevel = ActivityLevel::from($data['activity_level'] ?? 'moderate');
-        $pet->bodyConditionScore = isset($data['body_condition_score']) ? (int) $data['body_condition_score'] : null;
-        
-        $pet->healthConditions = isset($data['health_conditions']) 
-            ? (is_string($data['health_conditions']) ? json_decode($data['health_conditions'], true) : $data['health_conditions']) ?? []
-            : [];
-            
-        $pet->allergies = isset($data['allergies']) 
-            ? (is_string($data['allergies']) ? json_decode($data['allergies'], true) : $data['allergies']) ?? []
-            : [];
-            
-        $pet->medications = isset($data['medications']) 
-            ? (is_string($data['medications']) ? json_decode($data['medications'], true) : $data['medications']) ?? []
-            : [];
-            
-        $pet->personalityTraits = isset($data['personality_traits']) 
-            ? (is_string($data['personality_traits']) ? json_decode($data['personality_traits'], true) : $data['personality_traits']) ?? []
-            : [];
+    public static function getValidActivityLevels(): array
+    {
+        return self::VALID_ACTIVITY_LEVELS;
+    }
 
-        $pet->photoUrl = $data['photo_url'] ?? null;
-        $pet->veterinarianId = isset($data['veterinarian_id']) ? (int) $data['veterinarian_id'] : null;
-
-        if (isset($data['created_at'])) {
-            $pet->createdAt = new DateTime($data['created_at']);
-        }
-
-        if (isset($data['updated_at'])) {
-            $pet->updatedAt = new DateTime($data['updated_at']);
-        }
-
-        if (isset($data['deleted_at'])) {
-            $pet->deletedAt = new DateTime($data['deleted_at']);
-        }
-
-        return $pet;
+    public static function getValidSpayNeuterStatuses(): array
+    {
+        return self::VALID_SPAY_NEUTER_STATUS;
     }
 }

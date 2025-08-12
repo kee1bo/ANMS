@@ -1,619 +1,42 @@
-// Main Application JavaScript
+// Clean backup of essential modal functions
 class ANMSApp {
     constructor() {
         this.currentUser = null;
         this.pets = [];
+        this.currentPetsFilter = 'all';
         this.init();
     }
 
     init() {
-        // Initialize event listeners
         this.setupEventListeners();
-        
-        // Load initial data if user is logged in
         if (document.querySelector('.dashboard-container')) {
             this.loadDashboardData();
         }
     }
 
     setupEventListeners() {
-        // Tab switching for new sidebar navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const tabName = e.target.closest('.nav-link').dataset.tab;
-                if (tabName) {
-                    this.switchTab(tabName);
-                }
-            });
-        });
-
-        // Legacy tab switching for old navigation (fallback)
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const tabName = e.target.dataset.tab;
-                this.switchTab(tabName);
-            });
-        });
-
-        // Close modal when clicking outside
+        // Modal click-outside listener
         window.addEventListener('click', (e) => {
             const modal = document.getElementById('modal-overlay');
             if (e.target === modal) {
                 this.closeModal();
             }
         });
-    }
 
-    // Tab Management
-    switchTab(tabName) {
-        // Update active navigation link (new sidebar)
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-        });
-        const activeLink = document.querySelector(`[data-tab="${tabName}"]`);
-        if (activeLink) {
-            activeLink.classList.add('active');
-        }
-
-        // Update active tab content
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-        const activeContent = document.getElementById(`${tabName}-tab`);
-        if (activeContent) {
-            activeContent.classList.add('active');
-        }
-
-        // Update page title and subtitle
-        this.updatePageTitle(tabName);
-
-        // Load tab-specific data
-        this.loadTabData(tabName);
-    }
-
-    updatePageTitle(tabName) {
-        const pageTitle = document.getElementById('page-title');
-        const pageSubtitle = document.getElementById('page-subtitle');
-        
-        if (!pageTitle || !pageSubtitle) return;
-
-        const titles = {
-            dashboard: {
-                title: 'Dashboard',
-                subtitle: 'Welcome back! Here\'s what\'s happening with your pets.'
-            },
-            pets: {
-                title: 'My Pets',
-                subtitle: 'Manage your pet profiles and information.'
-            },
-            nutrition: {
-                title: 'Nutrition Plans',
-                subtitle: 'Create and manage custom nutrition plans for your pets.'
-            },
-            health: {
-                title: 'Health Records',
-                subtitle: 'Track your pets\' health data and medical records.'
-            },
-            reports: {
-                title: 'Reports',
-                subtitle: 'View detailed analytics and insights about your pets.'
-            },
-            settings: {
-                title: 'Settings',
-                subtitle: 'Manage your account and application preferences.'
-            }
-        };
-
-        const titleData = titles[tabName] || titles.dashboard;
-        pageTitle.textContent = titleData.title;
-        pageSubtitle.textContent = titleData.subtitle;
-    }
-
-    loadTabData(tabName) {
-        switch(tabName) {
-            case 'pets':
-                this.loadPets();
-                break;
-            case 'nutrition':
-                this.loadNutritionPlans();
-                break;
-            case 'health':
-                this.loadHealthRecords();
-                break;
-            case 'dashboard':
-                this.loadDashboardData();
-                break;
-        }
-    }
-
-    // Dashboard Data Loading
-    async loadDashboardData() {
-        try {
-            await this.loadPets();
-            this.updateDashboardStats();
-            this.loadRecentActivity();
-        } catch (error) {
-            console.error('Error loading dashboard data:', error);
-        }
-    }
-
-    async loadPets() {
-        try {
-            const response = await fetch('/api-bridge.php?action=get_pets', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
+        // Sidebar navigation links → switch tabs
+        const navLinks = document.querySelectorAll('.sidebar-nav .nav-link, .dashboard-sidebar .nav-link');
+        navLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const tabName = link.getAttribute('data-tab');
+                if (tabName) {
+                    this.switchToTab(tabName);
                 }
             });
+        });
 
-            const data = await response.json();
-            
-            if (data.success) {
-                this.pets = data.pets || [];
-                this.renderPets();
-                this.updateDashboardStats();
-            } else {
-                // Use mock data if API fails
-                this.pets = this.getMockPets();
-                this.renderPets();
-                this.updateDashboardStats();
-            }
-        } catch (error) {
-            console.error('Error loading pets:', error);
-            // Fallback to mock data
-            this.pets = this.getMockPets();
-            this.renderPets();
-            this.updateDashboardStats();
-        }
-    }
-
-    getMockPets() {
-        return [
-            {
-                id: 1,
-                name: 'Buddy',
-                species: 'Dog',
-                breed: 'Golden Retriever',
-                age: 3,
-                weight: 25.5,
-                ideal_weight: 24.0,
-                activity_level: 'Medium',
-                health_status: 'Healthy'
-            },
-            {
-                id: 2,
-                name: 'Whiskers',
-                species: 'Cat',
-                breed: 'Persian',
-                age: 2,
-                weight: 4.2,
-                ideal_weight: 4.0,
-                activity_level: 'Low',
-                health_status: 'Healthy'
-            }
-        ];
-    }
-
-    renderPets() {
-        const petsContainer = document.getElementById('pets-container');
-        if (!petsContainer) return;
-
-        if (this.pets.length === 0) {
-            petsContainer.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-paw" style="font-size: 48px; color: #cbd5e1; margin-bottom: 16px;"></i>
-                    <h3>No pets added yet</h3>
-                    <p>Add your first pet to get started with nutrition tracking</p>
-                    <button class="btn btn-primary" onclick="app.showAddPet()">
-                        <i class="fas fa-plus"></i> Add Your First Pet
-                    </button>
-                </div>
-            `;
-            return;
-        }
-
-        const petsHTML = this.pets.map(pet => `
-            <div class="pet-card">
-                <div class="pet-header">
-                    <div class="pet-avatar">
-                        ${pet.species === 'dog' ? '🐕' : pet.species === 'cat' ? '🐱' : '🐾'}
-                    </div>
-                    <div class="pet-actions">
-                        <button class="btn btn-sm btn-outline" onclick="app.editPet(${pet.id})" title="Edit Pet">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline" onclick="app.deletePet(${pet.id})" title="Delete Pet">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="pet-info">
-                    <h3 class="pet-name">${pet.name}</h3>
-                    <p class="pet-breed">${pet.breed || pet.species}</p>
-                    <div class="pet-details">
-                        <div class="pet-detail">
-                            <span class="detail-label">Age</span>
-                            <span class="detail-value">${pet.age} years</span>
-                        </div>
-                        <div class="pet-detail">
-                            <span class="detail-label">Weight</span>
-                            <span class="detail-value">${pet.weight || pet.current_weight} kg</span>
-                        </div>
-                        <div class="pet-detail">
-                            <span class="detail-label">Activity</span>
-                            <span class="detail-value">${pet.activity_level}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="pet-status">
-                    <span class="status-badge status-${(pet.health_status || 'healthy').toLowerCase()}">
-                        ${pet.health_status || 'Healthy'}
-                    </span>
-                </div>
-            </div>
-        `).join('');
-
-        petsContainer.innerHTML = petsHTML;
-    }
-
-    updateDashboardStats() {
-        const totalPetsEl = document.getElementById('total-pets');
-        const mealsToday = document.getElementById('meals-today');
-        const petsCountBadge = document.getElementById('pets-count');
-        
-        if (totalPetsEl) totalPetsEl.textContent = this.pets.length;
-        if (mealsToday) mealsToday.textContent = this.pets.length * 2; // 2 meals per pet
-        if (petsCountBadge) petsCountBadge.textContent = this.pets.length;
-    }
-
-    loadRecentActivity() {
-        const activityEl = document.getElementById('recent-activity');
-        if (!activityEl) return;
-
-        const activities = [
-            { icon: 'fas fa-utensils', text: 'Fed Buddy breakfast', time: '2 hours ago' },
-            { icon: 'fas fa-weight', text: 'Recorded Whiskers weight', time: '1 day ago' },
-            { icon: 'fas fa-plus', text: 'Added new pet profile', time: '3 days ago' }
-        ];
-
-        const activitiesHTML = activities.map(activity => `
-            <div class="activity-item">
-                <i class="${activity.icon}"></i>
-                <div class="activity-content">
-                    <span class="activity-text">${activity.text}</span>
-                    <span class="activity-time">${activity.time}</span>
-                </div>
-            </div>
-        `).join('');
-
-        activityEl.innerHTML = activitiesHTML;
-    }
-
-    // Authentication
-    showLogin() {
-        const modalBody = document.getElementById('modal-body');
-        modalBody.innerHTML = `
-            <h2>Sign In</h2>
-            <form onsubmit="app.handleLogin(event)">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" name="email" value="test@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" name="password" value="password" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
-                </div>
-                <p style="text-align: center; margin-top: 16px;">
-                    Don't have an account? <a href="#" onclick="app.showRegister()">Sign up</a>
-                </p>
-            </form>
-        `;
-        this.showModal();
-    }
-
-    showRegister() {
-        const modalBody = document.getElementById('modal-body');
-        modalBody.innerHTML = `
-            <h2>Create Account</h2>
-            <form onsubmit="app.handleRegister(event)">
-                <div class="form-group">
-                    <label class="form-label">First Name</label>
-                    <input type="text" class="form-input" name="first_name" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Last Name</label>
-                    <input type="text" class="form-input" name="last_name" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" name="password" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
-                </div>
-                <p style="text-align: center; margin-top: 16px;">
-                    Already have an account? <a href="#" onclick="app.showLogin()">Sign in</a>
-                </p>
-            </form>
-        `;
-        this.showModal();
-    }
-
-    async handleLogin(event) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        
-        try {
-            const response = await fetch('/api-bridge.php?action=auth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'login',
-                    email: formData.get('email'),
-                    password: formData.get('password')
-                })
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                localStorage.setItem('auth_token', data.token);
-                window.location.reload();
-            } else {
-                alert('Login failed: ' + (data.error || 'Unknown error'));
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Login failed. Please try again.');
-        }
-    }
-
-    async handleRegister(event) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        
-        try {
-            const response = await fetch('/api-bridge.php?action=auth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'register',
-                    first_name: formData.get('first_name'),
-                    last_name: formData.get('last_name'),
-                    email: formData.get('email'),
-                    password: formData.get('password')
-                })
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                localStorage.setItem('auth_token', data.token);
-                window.location.reload();
-            } else {
-                alert('Registration failed: ' + (data.error || 'Unknown error'));
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
-            alert('Registration failed. Please try again.');
-        }
-    }
-
-    async logout() {
-        try {
-            // Call logout API to clear server session
-            const response = await fetch('/api-bridge.php?action=auth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: JSON.stringify({
-                    action: 'logout'
-                })
-            });
-
-            const data = await response.json();
-            
-            // Clear client-side data regardless of API response
-            localStorage.removeItem('auth_token');
-            sessionStorage.clear();
-            
-            // Redirect to landing page
-            window.location.href = '/';
-            
-        } catch (error) {
-            console.error('Logout error:', error);
-            // Still clear client data and redirect on error
-            localStorage.removeItem('auth_token');
-            sessionStorage.clear();
-            window.location.href = '/';
-        }
-    }
-
-    getAuthToken() {
-        return localStorage.getItem('auth_token');
-    }
-
-    // Pet Management
-    showAddPet() {
-        const modalBody = document.getElementById('modal-body');
-        modalBody.innerHTML = `
-            <h2>Add New Pet</h2>
-            <form onsubmit="app.handleAddPet(event)" class="pet-form">
-                <div class="form-section">
-                    <h3>Basic Information</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Pet Name *</label>
-                            <input type="text" class="form-input" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Gender</label>
-                            <select class="form-select" name="gender">
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Species *</label>
-                            <select class="form-select" name="species" required>
-                                <option value="">Select Species</option>
-                                <option value="dog">Dog</option>
-                                <option value="cat">Cat</option>
-                                <option value="rabbit">Rabbit</option>
-                                <option value="bird">Bird</option>
-                                <option value="fish">Fish</option>
-                                <option value="reptile">Reptile</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Breed</label>
-                            <input type="text" class="form-input" name="breed" placeholder="e.g., Golden Retriever">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Physical Information</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Age (years) *</label>
-                            <input type="number" class="form-input" name="age" min="0" max="30" step="0.1" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Current Weight (kg) *</label>
-                            <input type="number" class="form-input" name="weight" step="0.1" min="0" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Ideal Weight (kg)</label>
-                            <input type="number" class="form-input" name="ideal_weight" step="0.1" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Body Condition Score (1-9)</label>
-                            <select class="form-select" name="body_condition_score">
-                                <option value="">Select Score</option>
-                                <option value="1">1 - Emaciated</option>
-                                <option value="2">2 - Very Thin</option>
-                                <option value="3">3 - Thin</option>
-                                <option value="4">4 - Underweight</option>
-                                <option value="5">5 - Ideal</option>
-                                <option value="6">6 - Slightly Overweight</option>
-                                <option value="7">7 - Overweight</option>
-                                <option value="8">8 - Obese</option>
-                                <option value="9">9 - Severely Obese</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Activity & Health</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Activity Level *</label>
-                            <select class="form-select" name="activity_level" required>
-                                <option value="">Select Activity Level</option>
-                                <option value="low">Low - Sedentary, minimal exercise</option>
-                                <option value="medium">Medium - Regular walks/play</option>
-                                <option value="high">High - Very active, lots of exercise</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Spayed/Neutered</label>
-                            <select class="form-select" name="spayed_neutered">
-                                <option value="">Select Status</option>
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                                <option value="unknown">Unknown</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Medical Conditions</label>
-                        <textarea class="form-textarea" name="medical_conditions" rows="2" placeholder="List any known medical conditions, allergies, or health concerns"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Current Medications</label>
-                        <textarea class="form-textarea" name="medications" rows="2" placeholder="List current medications and dosages"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Additional Notes</h3>
-                    <div class="form-group">
-                        <label class="form-label">Personality & Behavior</label>
-                        <textarea class="form-textarea" name="personality" rows="2" placeholder="Describe your pet's personality, behavior, and preferences"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Special Dietary Needs</label>
-                        <textarea class="form-textarea" name="dietary_notes" rows="2" placeholder="Any special dietary requirements, food allergies, or feeding preferences"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Add Pet</button>
-                </div>
-            </form>
-        `;
-        this.showModal();
-    }
-
-    async handleAddPet(event) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        
-        const petData = {
-            name: formData.get('name'),
-            species: formData.get('species'),
-            breed: formData.get('breed'),
-            age: parseInt(formData.get('age')),
-            weight: parseFloat(formData.get('weight')),
-            activity_level: formData.get('activity_level')
-        };
-
-        try {
-            const response = await fetch('/api-bridge.php?action=add_pet', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: JSON.stringify(petData)
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                this.closeModal();
-                await this.loadPets();
-                alert('Pet added successfully!');
-            } else {
-                alert('Failed to add pet: ' + (data.error || 'Unknown error'));
-            }
-        } catch (error) {
-            console.error('Add pet error:', error);
-            alert('Failed to add pet. Please try again.');
-        }
+        // Pets filters (if present)
+        this.attachPetsTabListeners();
     }
 
     // Modal Management
@@ -621,942 +44,1212 @@ class ANMSApp {
         const modal = document.getElementById('modal-overlay');
         modal.classList.add('show');
         modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
 
     closeModal() {
         const modal = document.getElementById('modal-overlay');
         modal.classList.remove('show');
         modal.style.display = 'none';
-    }
-
-    // Nutrition and Health (placeholder functions)
-    loadNutritionPlans() {
-        const nutritionContent = document.getElementById('nutrition-content');
-        if (nutritionContent) {
-            nutritionContent.innerHTML = '<p>Nutrition plans feature coming soon...</p>';
-        }
-    }
-
-    async loadHealthRecords() {
-        const healthContent = document.getElementById('health-content');
-        if (!healthContent) return;
-
-        // Get current user's pets for health tracking
-        await this.loadPets();
+        document.body.style.overflow = 'auto';
         
-        if (this.pets.length === 0) {
-            healthContent.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-heartbeat" style="font-size: 48px; color: #cbd5e1; margin-bottom: 16px;"></i>
-                    <h3>No pets to track</h3>
-                    <p>Add a pet first to start tracking their health</p>
-                    <button class="btn btn-primary" onclick="app.showAddPet()">
-                        <i class="fas fa-plus"></i> Add Your First Pet
-                    </button>
-                </div>
-            `;
+        const modalBody = document.getElementById('modal-body');
+        if (modalBody) {
+            modalBody.innerHTML = '';
+        }
+        
+        // Notify quick actions that modal was closed
+        document.dispatchEvent(new CustomEvent('modalClosed'));
+    }
+
+    // Clean Add Pet Modal
+    showAddPet() {
+        const modalBody = document.getElementById('modal-body');
+        if (!modalBody) {
+            console.error('Modal body not found');
             return;
         }
-
-        healthContent.innerHTML = `
-            <div class="health-dashboard">
-                <div class="health-header">
-                    <div class="health-actions">
-                        <select class="form-select" id="health-pet-selector" onchange="app.switchHealthPet(this.value)">
-                            <option value="">Select a pet to track</option>
-                            ${this.pets.map(pet => `<option value="${pet.id}">${pet.name}</option>`).join('')}
-                        </select>
-                        <button class="btn btn-primary" onclick="app.showAddHealthRecord()">
-                            <i class="fas fa-plus"></i> Add Health Record
-                        </button>
+        
+        modalBody.innerHTML = `
+            <div class="professional-modal-content professional-modal--wide">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fas fa-paw"></i>
+                        <h2>Add New Pet</h2>
                     </div>
+                    <button class="modal-close-btn" onclick="app.closeModal()"><i class="fas fa-times"></i></button>
                 </div>
                 
-                <div id="health-pet-content" class="health-pet-content">
-                    <div class="health-placeholder">
-                        <i class="fas fa-arrow-up"></i>
-                        <p>Select a pet above to view their health records</p>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    async switchHealthPet(petId) {
-        if (!petId) {
-            document.getElementById('health-pet-content').innerHTML = `
-                <div class="health-placeholder">
-                    <i class="fas fa-arrow-up"></i>
-                    <p>Select a pet above to view their health records</p>
-                </div>
-            `;
-            return;
-        }
-
-        const pet = this.pets.find(p => p.id == petId);
-        if (!pet) return;
-
-        const healthContent = document.getElementById('health-pet-content');
-        healthContent.innerHTML = `
-            <div class="health-overview">
-                <div class="pet-health-header">
-                    <div class="pet-info">
-                        <h3>${pet.name}'s Health Dashboard</h3>
-                        <p>${pet.species} • ${pet.breed} • ${pet.age} years old</p>
-                    </div>
-                    <div class="current-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Current Weight</span>
-                            <span class="stat-value">${pet.weight} kg</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Ideal Weight</span>
-                            <span class="stat-value">${pet.ideal_weight || 'Not set'} kg</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Body Condition</span>
-                            <span class="stat-value">${pet.body_condition_score ? pet.body_condition_score + '/9' : 'Not assessed'}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="health-tabs">
-                    <button class="health-tab active" onclick="app.switchHealthTab('weight', ${petId})">Weight Tracking</button>
-                    <button class="health-tab" onclick="app.switchHealthTab('records', ${petId})">Health Records</button>
-                    <button class="health-tab" onclick="app.switchHealthTab('medications', ${petId})">Medications</button>
-                    <button class="health-tab" onclick="app.switchHealthTab('activity', ${petId})">Activity Log</button>
-                </div>
-
-                <div id="health-tab-content" class="health-tab-content">
-                    ${this.renderWeightTracking(pet)}
-                </div>
-            </div>
-        `;
-    }
-
-    renderWeightTracking(pet) {
-        const weightHistory = pet.weight_history || [];
-        
-        return `
-            <div class="weight-tracking">
-                <div class="weight-actions">
-                    <button class="btn btn-primary" onclick="app.showAddWeightRecord(${pet.id})">
-                        <i class="fas fa-plus"></i> Log Weight
-                    </button>
-                    <button class="btn btn-outline" onclick="app.showWeightGoals(${pet.id})">
-                        <i class="fas fa-target"></i> Set Goals
-                    </button>
-                </div>
-
-                <div class="weight-chart-container">
-                    <div class="chart-header">
-                        <h4>Weight Trend</h4>
-                        <div class="chart-controls">
-                            <select class="form-select" onchange="app.updateWeightChart(${pet.id}, this.value)">
-                                <option value="30">Last 30 days</option>
-                                <option value="90">Last 3 months</option>
-                                <option value="365">Last year</option>
-                                <option value="all">All time</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="weight-chart" id="weight-chart-${pet.id}">
-                        ${this.renderWeightChart(weightHistory)}
-                    </div>
-                </div>
-
-                <div class="weight-history">
-                    <h4>Weight History</h4>
-                    <div class="weight-records">
-                        ${weightHistory.length > 0 ? 
-                            weightHistory.slice(-10).reverse().map(record => `
-                                <div class="weight-record">
-                                    <div class="record-date">${this.formatDate(record.date)}</div>
-                                    <div class="record-weight">${record.weight} kg</div>
-                                    <div class="record-bcs">${record.body_condition_score ? 'BCS: ' + record.body_condition_score : ''}</div>
-                                    <div class="record-notes">${record.notes || ''}</div>
+                <div class="modal-body-scrollable">
+                    <form id="add-pet-form" class="professional-pet-form" onsubmit="app.handleAddPet(event)">
+                        <div class="sections-grid">
+                        <!-- Basic Information -->
+                        <div class="section-block">
+                            <div class="section-title"><span class="section-accent"></span>Basic Information</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label required">Pet Name</label>
+                                    <input type="text" name="name" class="form-input" required placeholder="Enter your pet's name">
+                                <div class="field-help">Choose a name you'll use regularly</div>
                                 </div>
-                            `).join('') :
-                            '<div class="empty-records">No weight records yet. Add the first one above!</div>'
-                        }
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    renderWeightChart(weightHistory) {
-        if (weightHistory.length < 2) {
-            return `
-                <div class="chart-placeholder">
-                    <i class="fas fa-chart-line"></i>
-                    <p>Add more weight records to see trends</p>
-                </div>
-            `;
-        }
-
-        // Simple ASCII-style chart for now (can be enhanced with Chart.js later)
-        const weights = weightHistory.map(r => r.weight);
-        const minWeight = Math.min(...weights);
-        const maxWeight = Math.max(...weights);
-        const range = maxWeight - minWeight;
-
-        return `
-            <div class="simple-chart">
-                <div class="chart-info">
-                    <div class="chart-stat">
-                        <span class="label">Current:</span>
-                        <span class="value">${weights[weights.length - 1]} kg</span>
-                    </div>
-                    <div class="chart-stat">
-                        <span class="label">Change:</span>
-                        <span class="value ${weights[weights.length - 1] > weights[0] ? 'positive' : 'negative'}">
-                            ${weights.length > 1 ? (weights[weights.length - 1] - weights[0] > 0 ? '+' : '') + (weights[weights.length - 1] - weights[0]).toFixed(1) + ' kg' : '0 kg'}
-                        </span>
-                    </div>
-                    <div class="chart-stat">
-                        <span class="label">Records:</span>
-                        <span class="value">${weightHistory.length}</span>
-                    </div>
-                </div>
-                <div class="chart-visual">
-                    ${weightHistory.map((record, index) => {
-                        const height = range > 0 ? ((record.weight - minWeight) / range) * 100 : 50;
-                        return `
-                            <div class="chart-bar" style="height: ${height}%" title="${record.date}: ${record.weight}kg">
-                                <div class="bar-value">${record.weight}</div>
+                                <div class="form-group">
+                                    <label class="form-label">Gender</label>
+                                    <select name="gender" class="form-select">
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="unknown">Unknown</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Species</label>
+                                    <select name="species" class="form-select" required>
+                                        <option value="">Select Species</option>
+                                        <option value="dog">Dog</option>
+                                        <option value="cat">Cat</option>
+                                        <option value="bird">Bird</option>
+                                        <option value="rabbit">Rabbit</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Breed</label>
+                                    <input type="text" name="breed" class="form-input" placeholder="e.g., Golden Retriever">
+                                </div>
                             </div>
-                        `;
-                    }).join('')}
+                                </div>
+                                
+                        <!-- Physical Information -->
+                        <div class="section-block">
+                            <div class="section-title"><span class="section-accent"></span>Physical Information</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Age (years)</label>
+                                    <input type="number" name="age" class="form-input" step="0.1" min="0" placeholder="0.0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Current Weight (kg)</label>
+                                    <input type="number" name="weight" class="form-input" required step="0.1" min="0.1" placeholder="0.0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Ideal Weight (kg)</label>
+                                    <input type="number" name="ideal_weight" class="form-input" step="0.1" min="0.1" placeholder="Optional">
+                            </div>
+                                <div class="form-group">
+                                    <label class="form-label">Body Condition Score (1-9)</label>
+                                    <select name="body_condition_score" class="form-select">
+                                        <option value="">Select Score</option>
+                                        ${Array.from({length:9}, (_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                                </div>
+                                
+                        <!-- Activity & Health -->
+                        <div class="section-block section--full">
+                            <div class="section-title"><span class="section-accent"></span>Activity & Health</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Activity Level</label>
+                                    <select name="activity_level" class="form-select">
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Spay/Neuter Status</label>
+                                    <select name="spay_neuter_status" class="form-select">
+                                        <option value="">Select Status</option>
+                                        <option value="spayed">Spayed</option>
+                                        <option value="neutered">Neutered</option>
+                                        <option value="intact">Intact</option>
+                                        <option value="unknown">Unknown</option>
+                                    </select>
+                            </div>
+                                <div class="form-group form-group--full">
+                                <label class="form-label">Notes</label>
+                                    <textarea name="personality" class="form-textarea" rows="3" placeholder="Any additional information about your pet..."></textarea>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Pet</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         `;
+        this.showModal();
     }
 
-    switchHealthTab(tab, petId) {
-        // Update active tab
-        document.querySelectorAll('.health-tab').forEach(t => t.classList.remove('active'));
-        event.target.classList.add('active');
+    async handleAddPet(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.target);
+        const petData = {};
+        
+        for (let [key, value] of formData.entries()) {
+            if (value.trim() !== '') {
+                petData[key] = value;
+            }
+        }
+        
+        if (petData.age) {
+            petData.age = parseFloat(petData.age);
+            // Convert provided age to a birth_date for backend persistence
+            try {
+                const now = new Date();
+                const birth = new Date(now.getFullYear() - Math.floor(petData.age), now.getMonth(), now.getDate());
+                const yyyy = birth.getFullYear();
+                const mm = String(birth.getMonth() + 1).padStart(2, '0');
+                const dd = String(birth.getDate()).padStart(2, '0');
+                petData.birth_date = `${yyyy}-${mm}-${dd}`;
+            } catch (_) {}
+        }
+        if (petData.weight) petData.weight = parseFloat(petData.weight);
+        if (petData.ideal_weight) petData.ideal_weight = parseFloat(petData.ideal_weight);
+        if (petData.body_condition_score) petData.body_condition_score = parseInt(petData.body_condition_score, 10);
 
-        const pet = this.pets.find(p => p.id == petId);
-        const content = document.getElementById('health-tab-content');
+        try {
+            const response = await fetch('/api/pets.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(petData)
+            });
 
-        switch(tab) {
-            case 'weight':
-                content.innerHTML = this.renderWeightTracking(pet);
-                break;
-            case 'records':
-                content.innerHTML = this.renderHealthRecords(pet);
-                break;
-            case 'medications':
-                content.innerHTML = this.renderMedications(pet);
-                break;
-            case 'activity':
-                content.innerHTML = this.renderActivityLog(pet);
-                break;
+            const result = await response.json();
+
+            if (result.success) {
+                this.closeModal();
+                await this.loadPets();
+                this.showNotification('Pet added successfully!', 'success');
+                
+                // Dispatch event for dashboard statistics to refresh
+                document.dispatchEvent(new CustomEvent('petAdded', {
+                    detail: { pet: result.pet }
+                }));
+                
+                // Log activity for dashboard
+                this.logActivity('pet_added', {
+                    pet_id: result.pet.id,
+                    pet_name: result.pet.name,
+                    description: `Added new pet: ${result.pet.name}`
+                });
+                
+                return result; // Return result for quick actions integration
+            } else {
+                throw new Error(result.error || 'Failed to add pet');
+            }
+        } catch (error) {
+            console.error('Error adding pet:', error);
+            this.showNotification('Failed to add pet: ' + error.message, 'error');
+            throw error; // Re-throw for quick actions error handling
         }
     }
 
-    renderHealthRecords(pet) {
-        const healthRecords = pet.health_records || [];
-        
-        return `
-            <div class="health-records">
-                <div class="records-actions">
-                    <button class="btn btn-primary" onclick="app.showAddHealthRecord(${pet.id})">
-                        <i class="fas fa-plus"></i> Add Health Record
-                    </button>
-                    <button class="btn btn-outline" onclick="app.exportHealthRecords(${pet.id})">
-                        <i class="fas fa-download"></i> Export for Vet
-                    </button>
-                </div>
-
-                <div class="records-list">
-                    ${healthRecords.length > 0 ? 
-                        healthRecords.reverse().map(record => `
-                            <div class="health-record-card">
-                                <div class="record-header">
-                                    <div class="record-type">
-                                        <i class="fas fa-${this.getHealthRecordIcon(record.type)}"></i>
-                                        ${record.type.replace('_', ' ').toUpperCase()}
-                                    </div>
-                                    <div class="record-date">${this.formatDate(record.date)}</div>
-                                </div>
-                                <div class="record-content">
-                                    <h5>${record.title}</h5>
-                                    <p>${record.notes}</p>
-                                    ${record.vet_name ? `<div class="vet-info">Vet: ${record.vet_name}</div>` : ''}
-                                </div>
-                            </div>
-                        `).join('') :
-                        '<div class="empty-records">No health records yet. Add the first one above!</div>'
-                    }
-                </div>
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
             </div>
+            <button class="notification-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
         `;
-    }
-
-    renderMedications(pet) {
-        const medications = pet.medications_list || [];
         
-        return `
-            <div class="medications">
-                <div class="medications-actions">
-                    <button class="btn btn-primary" onclick="app.showAddMedication(${pet.id})">
-                        <i class="fas fa-plus"></i> Add Medication
-                    </button>
-                </div>
-
-                <div class="medications-list">
-                    ${medications.length > 0 ? 
-                        medications.map(med => `
-                            <div class="medication-card">
-                                <div class="med-header">
-                                    <h5>${med.name}</h5>
-                                    <span class="med-status ${med.active ? 'active' : 'inactive'}">
-                                        ${med.active ? 'Active' : 'Inactive'}
-                                    </span>
-                                </div>
-                                <div class="med-details">
-                                    <div class="med-dosage">Dosage: ${med.dosage}</div>
-                                    <div class="med-frequency">Frequency: ${med.frequency}</div>
-                                    <div class="med-duration">Duration: ${med.start_date} - ${med.end_date || 'Ongoing'}</div>
-                                </div>
-                                <div class="med-notes">${med.notes}</div>
-                            </div>
-                        `).join('') :
-                        '<div class="empty-records">No medications recorded. Add medications above!</div>'
-                    }
-                </div>
-            </div>
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: slideInRight 0.3s ease;
         `;
-    }
-
-    renderActivityLog(pet) {
-        const activityLog = pet.activity_log || [];
         
-        return `
-            <div class="activity-log">
-                <div class="activity-actions">
-                    <button class="btn btn-primary" onclick="app.showAddActivity(${pet.id})">
-                        <i class="fas fa-plus"></i> Log Activity
-                    </button>
-                </div>
-
-                <div class="activity-list">
-                    ${activityLog.length > 0 ? 
-                        activityLog.slice(-20).reverse().map(activity => `
-                            <div class="activity-record">
-                                <div class="activity-header">
-                                    <div class="activity-type">
-                                        <i class="fas fa-${this.getActivityIcon(activity.type)}"></i>
-                                        ${activity.type.replace('_', ' ').toUpperCase()}
-                                    </div>
-                                    <div class="activity-date">${this.formatDate(activity.date)}</div>
-                                </div>
-                                <div class="activity-details">
-                                    <div class="activity-duration">Duration: ${activity.duration} minutes</div>
-                                    <div class="activity-intensity">Intensity: ${activity.intensity}</div>
-                                    <div class="activity-notes">${activity.notes}</div>
-                                </div>
-                            </div>
-                        `).join('') :
-                        '<div class="empty-records">No activity logged yet. Start tracking above!</div>'
-                    }
-                </div>
-            </div>
-        `;
+        if (type === 'error') {
+            notification.style.background = '#ef4444';
+        } else if (type === 'success') {
+            notification.style.background = '#10b981';
+        } else {
+            notification.style.background = '#3b82f6';
+        }
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+    
+    /**
+     * Log activity for dashboard activity feed
+     */
+    async logActivity(type, data) {
+        try {
+            const activityData = {
+                type: type,
+                description: data.description,
+                pet_id: data.pet_id || null,
+                metadata: data.metadata || {}
+            };
+            
+            const response = await fetch('/api/dashboard.php?action=log_activity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(activityData)
+            });
+            
+            if (response.ok) {
+                // Dispatch event for activity feed to refresh
+                document.dispatchEvent(new CustomEvent('activityLogged', {
+                    detail: { activity: activityData }
+                }));
+            }
+        } catch (error) {
+            console.warn('Failed to log activity:', error);
+            // Don't throw - activity logging is not critical
+        }
     }
 
-    getHealthRecordIcon(type) {
-        const icons = {
-            'vet_visit': 'stethoscope',
-            'vaccination': 'syringe',
-            'medication': 'pills',
-            'injury': 'band-aid',
-            'illness': 'thermometer',
-            'surgery': 'cut',
-            'dental': 'tooth',
-            'other': 'notes-medical'
-        };
-        return icons[type] || 'notes-medical';
-    }
-
-    getActivityIcon(type) {
-        const icons = {
-            'walk': 'walking',
-            'run': 'running',
-            'play': 'futbol',
-            'swim': 'swimmer',
-            'training': 'graduation-cap',
-            'other': 'paw'
-        };
-        return icons[type] || 'paw';
-    }
-
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
+    // Tab Management
+    switchToTab(tabName) {
+        // Update navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
         });
-    }
-
-    generateNutritionPlan() {
-        alert('Nutrition plan generation feature coming soon!');
-    }
-
-    showAddWeightRecord(petId) {
-        const pet = this.pets.find(p => p.id == petId);
-        if (!pet) return;
-
-        const modalBody = document.getElementById('modal-body');
-        modalBody.innerHTML = `
-            <h2>Log Weight for ${pet.name}</h2>
-            <form onsubmit="app.handleAddWeightRecord(event, ${petId})" class="weight-form">
-                <div class="form-group">
-                    <label class="form-label">Date *</label>
-                    <input type="date" class="form-input" name="date" value="${new Date().toISOString().split('T')[0]}" required>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Weight (kg) *</label>
-                        <input type="number" class="form-input" name="weight" step="0.1" min="0" value="${pet.weight}" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Body Condition Score (1-9)</label>
-                        <select class="form-select" name="body_condition_score">
-                            <option value="">Select Score</option>
-                            <option value="1">1 - Emaciated</option>
-                            <option value="2">2 - Very Thin</option>
-                            <option value="3">3 - Thin</option>
-                            <option value="4">4 - Underweight</option>
-                            <option value="5" ${pet.body_condition_score == 5 ? 'selected' : ''}>5 - Ideal</option>
-                            <option value="6">6 - Slightly Overweight</option>
-                            <option value="7">7 - Overweight</option>
-                            <option value="8">8 - Obese</option>
-                            <option value="9">9 - Severely Obese</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Notes</label>
-                    <textarea class="form-textarea" name="notes" rows="3" placeholder="Any observations about weight change, diet, or health..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Log Weight</button>
-                </div>
-            </form>
-        `;
-        this.showModal();
-    }
-
-    async handleAddWeightRecord(event, petId) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
+        const activeLink = document.querySelector(`[data-tab="${tabName}"]`);
+        if (activeLink) {
+            activeLink.classList.add('active');
+        }
         
-        const weightData = {
-            pet_id: petId,
-            date: formData.get('date'),
-            weight: parseFloat(formData.get('weight')),
-            body_condition_score: formData.get('body_condition_score') ? parseInt(formData.get('body_condition_score')) : null,
-            notes: formData.get('notes')
+        // Update content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        const activeContent = document.getElementById(`${tabName}-tab`);
+        if (activeContent) {
+            activeContent.classList.add('active');
+        }
+        
+        // Update page title
+        const titles = {
+            dashboard: { title: 'Dashboard', subtitle: 'Welcome back! Here\'s what\'s happening with your pets.' },
+            pets: { title: 'My Pets', subtitle: 'Manage your pet profiles and information.' },
+            nutrition: { title: 'Nutrition Plans', subtitle: 'Create and manage custom nutrition plans for your pets.' },
+            health: { title: 'Health Records', subtitle: 'Track your pets\' health data and medical records.' }
         };
+        
+        const titleData = titles[tabName] || titles.dashboard;
+        const pageTitle = document.getElementById('page-title');
+        const pageSubtitle = document.getElementById('page-subtitle');
+        
+        if (pageTitle) pageTitle.textContent = titleData.title;
+        if (pageSubtitle) pageSubtitle.textContent = titleData.subtitle;
+    }
 
+    // Data loading
+    async loadDashboardData() {
         try {
-            const response = await fetch('/api-bridge.php?action=add_weight_record', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: JSON.stringify(weightData)
-            });
+            await this.loadPets();
 
-            const data = await response.json();
-            
-            if (data.success) {
-                this.closeModal();
-                await this.loadPets(); // Refresh pet data
-                // Refresh the health tab if it's currently showing
-                const healthPetSelector = document.getElementById('health-pet-selector');
-                if (healthPetSelector && healthPetSelector.value == petId) {
-                    this.switchHealthPet(petId);
+            // The dashboard statistics component will handle loading stats automatically
+            // We just need to load recent activity here
+            const response = await fetch('/api/dashboard.php?action=activities', { credentials: 'same-origin' });
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.success && Array.isArray(data.activities)) {
+                    this.updateRecentActivity(data.activities);
                 }
-                alert('Weight record added successfully!');
-            } else {
-                alert('Failed to add weight record: ' + (data.error || 'Unknown error'));
             }
-        } catch (error) {
-            console.error('Add weight record error:', error);
-            alert('Failed to add weight record. Please try again.');
+        } catch (e) {
+            console.warn('Dashboard load warning:', e);
         }
     }
 
-    showAddHealthRecord(petId = null) {
-        const selectedPetId = petId || document.getElementById('health-pet-selector')?.value;
-        if (!selectedPetId) {
-            alert('Please select a pet first');
+    updateDashboardCards(stats) {
+        const setText = (id, text) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = String(text);
+        };
+
+        setText('total-pets', stats.total_pets ?? 0);
+        setText('meals-today', stats.meals_today ?? 0);
+        const healthScoreEl = document.getElementById('health-score');
+        if (healthScoreEl && typeof stats.health_score !== 'undefined') {
+            healthScoreEl.textContent = `${stats.health_score}%`;
+        }
+        setText('next-checkup', stats.next_checkup ?? 0);
+    }
+
+    updateRecentActivity(activities) {
+        const container = document.getElementById('recent-activity');
+        if (!container) return;
+        if (!activities || activities.length === 0) return;
+        container.innerHTML = activities.map(a => `
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="${a.icon || 'fas fa-info-circle'}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-text">${a.description || ''}</div>
+                    <div class="activity-time">${a.time_ago || ''}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async loadPets() {
+        try {
+            const response = await fetch('/api/pets.php', { credentials: 'same-origin' });
+            const result = await response.json();
+            if (!result.success) throw new Error(result.error || 'Failed to load pets');
+
+            const pets = result.pets || [];
+            this.pets = pets;
+
+            // Update count badge
+            const countEl = document.getElementById('pets-count');
+            if (countEl) countEl.textContent = String(pets.length);
+
+            this.renderPets();
+            this.attachPetsTabListeners();
+
+            // Populate pet selectors for Nutrition and Health tabs
+            this.populatePetSelectors();
+        } catch (error) {
+            console.error('Failed to load pets:', error);
+        }
+    }
+
+    populatePetSelectors() {
+        const renderOptions = (pets) => ['<option value="" disabled selected>Select Pet...</option>']
+            .concat(pets.map(p => `<option value="${p.id}">${p.name} (${p.species}${p.weight ? ` · ${p.weight}kg` : ''})</option>`))
+            .join('');
+
+        const nutritionSelect = document.getElementById('nutrition-pet-select');
+        if (nutritionSelect) nutritionSelect.innerHTML = renderOptions(this.pets);
+
+        const healthSelect = document.getElementById('health-pet-select');
+        if (healthSelect) healthSelect.innerHTML = renderOptions(this.pets);
+
+        // Auto-select first pet for convenience
+        const firstId = this.pets?.[0]?.id;
+        if (firstId) {
+            if (nutritionSelect && !nutritionSelect.value) nutritionSelect.value = String(firstId);
+            if (healthSelect && !healthSelect.value) healthSelect.value = String(firstId);
+        }
+    }
+
+    speciesIcon(species) {
+        switch ((species || '').toLowerCase()) {
+            case 'dog': return 'fa-dog';
+            case 'cat': return 'fa-cat';
+            case 'bird': return 'fa-dove';
+            case 'rabbit': return 'fa-paw';
+            default: return 'fa-paw';
+        }
+    }
+
+    // Deterministic gradient generator for vibrant species cards
+    hashVariant(seed, modulo) {
+        const str = String(seed || 'x');
+        let h = 0;
+        for (let i = 0; i < str.length; i++) {
+            h = (h << 5) - h + str.charCodeAt(i);
+            h |= 0;
+        }
+        return Math.abs(h) % Math.max(1, modulo);
+    }
+
+    gradientForSpecies(species, seed) {
+        const dog = [
+            ['#60a5fa', '#2563eb'], // blue
+            ['#818cf8', '#4f46e5'], // indigo
+            ['#38bdf8', '#0ea5e9'], // sky
+            ['#22d3ee', '#06b6d4'], // cyan
+            ['#c4b5fd', '#7c3aed'], // violet
+        ];
+        const cat = [
+            ['#34d399', '#059669'], // emerald
+            ['#2dd4bf', '#0d9488'], // teal
+            ['#22c55e', '#16a34a'], // green
+            ['#a7f3d0', '#10b981'], // mint → emerald
+        ];
+        const bird = [
+            ['#fb923c', '#f97316'], // orange
+            ['#f59e0b', '#d97706'], // amber
+            ['#fda4af', '#f43f5e'], // warm red-pink
+        ];
+        const other = [
+            ['#a78bfa', '#6366f1'], // violet/indigo
+            ['#94a3b8', '#475569'], // slate
+        ];
+
+        const map = { dog, cat, bird, rabbit: dog, other };
+        const list = map[(species || 'other').toLowerCase()] || other;
+        const [c1, c2] = list[this.hashVariant(seed, list.length)];
+        return `linear-gradient(135deg, ${c1}, ${c2})`;
+    }
+
+    renderPets() {
+        const container = document.getElementById('pets-container');
+        if (!container) return;
+
+        let filtered = this.pets.slice();
+        const spec = s => (s || '').toLowerCase();
+        if (this.currentPetsFilter === 'dogs') filtered = filtered.filter(p => spec(p.species) === 'dog');
+        if (this.currentPetsFilter === 'cats') filtered = filtered.filter(p => spec(p.species) === 'cat');
+        if (this.currentPetsFilter === 'other') filtered = filtered.filter(p => !['dog','cat'].includes(spec(p.species)));
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-state"><h3>No pets in this filter</h3><p>Try a different filter or add a pet.</p></div>';
             return;
         }
 
-        const pet = this.pets.find(p => p.id == selectedPetId);
-        if (!pet) return;
+        container.innerHTML = filtered.map(p => {
+            const species = spec(p.species) || 'other';
+            const icon = this.speciesIcon(species);
+            const gradient = this.gradientForSpecies(species, p.name || p.id);
+            return `
+                <div class="pet-card vibrant tile" data-species="${species}" style="background: ${gradient}" onclick="openPetDashboard(${p.id})">
+                    <div class="tile-actions">
+                        <button class="tile-action-btn" onclick="event.stopPropagation(); editPet(${p.id})" title="Edit Pet"><i class="fas fa-pen"></i></button>
+                        <button class="tile-action-btn" onclick="event.stopPropagation(); logWeight(${p.id})" title="Log Weight"><i class="fas fa-weight-hanging"></i></button>
+                    </div>
+                    <div class="tile-avatar"><i class="fas ${icon}"></i></div>
+                    <div class="tile-title">
+                        <div class="tile-name">${p.name}</div>
+                        <div class="tile-breed">${p.breed || ''}</div>
+                    </div>
+                    <div class="tile-stats">
+                        <span class="pet-chip glass-chip"><i class="fas fa-birthday-cake"></i>${p.age ?? '—'} yrs</span>
+                        <span class="pet-chip glass-chip"><i class="fas fa-weight-hanging"></i>${p.weight ?? '—'} kg</span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
 
+    // Utilities
+    getPetById(petId) {
+        return this.pets.find(p => String(p.id) === String(petId));
+    }
+
+    // Edit Pet Modal (modern, consistent)
+    showEditPet(petId) {
+        const pet = this.getPetById(petId);
+        if (!pet) return this.showNotification('Pet not found', 'error');
         const modalBody = document.getElementById('modal-body');
+        if (!modalBody) return;
         modalBody.innerHTML = `
-            <h2>Add Health Record for ${pet.name}</h2>
-            <form onsubmit="app.handleAddHealthRecord(event, ${selectedPetId})" class="health-record-form">
-                <div class="form-group">
-                    <label class="form-label">Record Type *</label>
-                    <select class="form-select" name="type" required>
-                        <option value="">Select Type</option>
-                        <option value="vet_visit">Vet Visit</option>
-                        <option value="vaccination">Vaccination</option>
-                        <option value="medication">Medication</option>
-                        <option value="injury">Injury</option>
-                        <option value="illness">Illness</option>
-                        <option value="surgery">Surgery</option>
-                        <option value="dental">Dental Care</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Date *</label>
-                        <input type="date" class="form-input" name="date" value="${new Date().toISOString().split('T')[0]}" required>
+            <div class="professional-modal-content professional-modal--wide">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fas fa-pen"></i>
+                        <h2>Edit Pet</h2>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Veterinarian</label>
-                        <input type="text" class="form-input" name="vet_name" placeholder="Dr. Smith">
-                    </div>
+                    <button class="modal-close-btn" onclick="app.closeModal()"><i class="fas fa-times"></i></button>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Title/Summary *</label>
-                    <input type="text" class="form-input" name="title" placeholder="e.g., Annual checkup, Rabies vaccination" required>
+                <div class="modal-body-scrollable">
+                    <form id="edit-pet-form" class="professional-pet-form" onsubmit="app.handleUpdatePet(event, ${pet.id})">
+                        <div class="sections-grid">
+                            <div class="section-block">
+                                <div class="section-title"><span class="section-accent"></span>Basic Information</div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label required">Pet Name</label>
+                                        <input type="text" name="name" class="form-input" required value="${pet.name || ''}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Gender</label>
+                                        <select name="gender" class="form-select">
+                                            <option value="" ${!pet.gender ? 'selected' : ''}>Select Gender</option>
+                                            <option value="male" ${pet.gender==='male'?'selected':''}>Male</option>
+                                            <option value="female" ${pet.gender==='female'?'selected':''}>Female</option>
+                                            <option value="unknown" ${pet.gender==='unknown'?'selected':''}>Unknown</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Species</label>
+                                        <select name="species" class="form-select" required>
+                                            ${['dog','cat','bird','rabbit','other'].map(s => `<option value="${s}" ${String(pet.species).toLowerCase()===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Breed</label>
+                                        <input type="text" name="breed" class="form-input" value="${pet.breed || ''}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-block">
+                                <div class="section-title"><span class="section-accent"></span>Physical Information</div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">Age (years)</label>
+                                        <input type="number" name="age" class="form-input" step="0.1" min="0" value="${pet.age ?? ''}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Current Weight (kg)</label>
+                                        <input type="number" name="weight" class="form-input" required step="0.1" min="0.1" value="${pet.weight ?? ''}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Ideal Weight (kg)</label>
+                                        <input type="number" name="ideal_weight" class="form-input" step="0.1" min="0.1" value="${pet.ideal_weight ?? ''}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Body Condition Score (1-9)</label>
+                                        <select name="body_condition_score" class="form-select">
+                                            <option value="" ${!pet.body_condition_score?'selected':''}>Select Score</option>
+                                            ${Array.from({length:9}, (_,i)=>`<option value="${i+1}" ${Number(pet.body_condition_score)===i+1?'selected':''}>${i+1}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-block section--full">
+                                <div class="section-title"><span class="section-accent"></span>Activity & Health</div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">Activity Level</label>
+                                        <select name="activity_level" class="form-select">
+                                            <option value="low" ${pet.activity_level==='low'?'selected':''}>Low</option>
+                                            <option value="medium" ${!pet.activity_level||pet.activity_level==='medium'?'selected':''}>Medium</option>
+                                            <option value="high" ${pet.activity_level==='high'?'selected':''}>High</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Spay/Neuter Status</label>
+                                        <select name="spay_neuter_status" class="form-select">
+                                            <option value="" ${!pet.spay_neuter_status?'selected':''}>Select Status</option>
+                                            <option value="spayed" ${pet.spay_neuter_status==='spayed'?'selected':''}>Spayed</option>
+                                            <option value="neutered" ${pet.spay_neuter_status==='neutered'?'selected':''}>Neutered</option>
+                                            <option value="intact" ${pet.spay_neuter_status==='intact'?'selected':''}>Intact</option>
+                                            <option value="unknown" ${pet.spay_neuter_status==='unknown'?'selected':''}>Unknown</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group form-group--full">
+                                        <label class="form-label">Notes</label>
+                                        <textarea name="personality" class="form-textarea" rows="3">${pet.personality || ''}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                        </div>
+                    </form>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Notes</label>
-                    <textarea class="form-textarea" name="notes" rows="4" placeholder="Detailed notes about the visit, treatment, or observations..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Add Health Record</button>
-                </div>
-            </form>
-        `;
+            </div>`;
         this.showModal();
-    }
-
-    async handleAddHealthRecord(event, petId) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        
-        const recordData = {
-            pet_id: petId,
-            type: formData.get('type'),
-            date: formData.get('date'),
-            title: formData.get('title'),
-            notes: formData.get('notes'),
-            vet_name: formData.get('vet_name')
-        };
-
-        try {
-            const response = await fetch('/api-bridge.php?action=add_health_record', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: JSON.stringify(recordData)
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                this.closeModal();
-                await this.loadPets(); // Refresh pet data
-                // Refresh the health tab if it's currently showing
-                const healthPetSelector = document.getElementById('health-pet-selector');
-                if (healthPetSelector && healthPetSelector.value == petId) {
-                    this.switchHealthPet(petId);
-                }
-                alert('Health record added successfully!');
-            } else {
-                alert('Failed to add health record: ' + (data.error || 'Unknown error'));
-            }
-        } catch (error) {
-            console.error('Add health record error:', error);
-            alert('Failed to add health record. Please try again.');
-        }
-    }
-
-    async editPet(petId) {
-        try {
-            // Get pet data first
-            const response = await fetch(`/api-bridge.php?action=get_pets`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: JSON.stringify({ pet_id: petId })
-            });
-
-            const data = await response.json();
-            
-            if (data.success && data.pet) {
-                this.showEditPetForm(data.pet);
-            } else {
-                alert('Failed to load pet data');
-            }
-        } catch (error) {
-            console.error('Error loading pet:', error);
-            alert('Failed to load pet data');
-        }
-    }
-
-    showEditPetForm(pet) {
-        const modalBody = document.getElementById('modal-body');
-        modalBody.innerHTML = `
-            <h2>Edit Pet: ${pet.name}</h2>
-            <form onsubmit="app.handleUpdatePet(event, ${pet.id})" class="pet-form">
-                <div class="form-section">
-                    <h3>Basic Information</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Pet Name *</label>
-                            <input type="text" class="form-input" name="name" value="${pet.name}" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Gender</label>
-                            <select class="form-select" name="gender">
-                                <option value="">Select Gender</option>
-                                <option value="male" ${pet.gender === 'male' ? 'selected' : ''}>Male</option>
-                                <option value="female" ${pet.gender === 'female' ? 'selected' : ''}>Female</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Species *</label>
-                            <select class="form-select" name="species" required>
-                                <option value="dog" ${pet.species === 'dog' ? 'selected' : ''}>Dog</option>
-                                <option value="cat" ${pet.species === 'cat' ? 'selected' : ''}>Cat</option>
-                                <option value="rabbit" ${pet.species === 'rabbit' ? 'selected' : ''}>Rabbit</option>
-                                <option value="bird" ${pet.species === 'bird' ? 'selected' : ''}>Bird</option>
-                                <option value="fish" ${pet.species === 'fish' ? 'selected' : ''}>Fish</option>
-                                <option value="reptile" ${pet.species === 'reptile' ? 'selected' : ''}>Reptile</option>
-                                <option value="other" ${pet.species === 'other' ? 'selected' : ''}>Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Breed</label>
-                            <input type="text" class="form-input" name="breed" value="${pet.breed || ''}" placeholder="e.g., Golden Retriever">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Physical Information</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Age (years) *</label>
-                            <input type="number" class="form-input" name="age" min="0" max="30" step="0.1" value="${pet.age}" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Current Weight (kg) *</label>
-                            <input type="number" class="form-input" name="weight" step="0.1" min="0" value="${pet.weight}" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Ideal Weight (kg)</label>
-                            <input type="number" class="form-input" name="ideal_weight" step="0.1" min="0" value="${pet.ideal_weight || ''}">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Body Condition Score (1-9)</label>
-                            <select class="form-select" name="body_condition_score">
-                                <option value="">Select Score</option>
-                                ${[1,2,3,4,5,6,7,8,9].map(score => 
-                                    `<option value="${score}" ${pet.body_condition_score == score ? 'selected' : ''}>${score} - ${this.getBodyConditionLabel(score)}</option>`
-                                ).join('')}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Activity & Health</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Activity Level *</label>
-                            <select class="form-select" name="activity_level" required>
-                                <option value="low" ${pet.activity_level === 'low' ? 'selected' : ''}>Low - Sedentary, minimal exercise</option>
-                                <option value="medium" ${pet.activity_level === 'medium' ? 'selected' : ''}>Medium - Regular walks/play</option>
-                                <option value="high" ${pet.activity_level === 'high' ? 'selected' : ''}>High - Very active, lots of exercise</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Spayed/Neutered</label>
-                            <select class="form-select" name="spayed_neutered">
-                                <option value="">Select Status</option>
-                                <option value="yes" ${pet.spayed_neutered === 'yes' ? 'selected' : ''}>Yes</option>
-                                <option value="no" ${pet.spayed_neutered === 'no' ? 'selected' : ''}>No</option>
-                                <option value="unknown" ${pet.spayed_neutered === 'unknown' ? 'selected' : ''}>Unknown</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Medical Conditions</label>
-                        <textarea class="form-textarea" name="medical_conditions" rows="2" placeholder="List any known medical conditions, allergies, or health concerns">${pet.medical_conditions || ''}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Current Medications</label>
-                        <textarea class="form-textarea" name="medications" rows="2" placeholder="List current medications and dosages">${pet.medications || ''}</textarea>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Additional Notes</h3>
-                    <div class="form-group">
-                        <label class="form-label">Personality & Behavior</label>
-                        <textarea class="form-textarea" name="personality" rows="2" placeholder="Describe your pet's personality, behavior, and preferences">${pet.personality || ''}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Special Dietary Needs</label>
-                        <textarea class="form-textarea" name="dietary_notes" rows="2" placeholder="Any special dietary requirements, food allergies, or feeding preferences">${pet.dietary_notes || ''}</textarea>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Update Pet</button>
-                </div>
-            </form>
-        `;
-        this.showModal();
-    }
-
-    getBodyConditionLabel(score) {
-        const labels = {
-            1: 'Emaciated', 2: 'Very Thin', 3: 'Thin', 4: 'Underweight', 5: 'Ideal',
-            6: 'Slightly Overweight', 7: 'Overweight', 8: 'Obese', 9: 'Severely Obese'
-        };
-        return labels[score] || '';
     }
 
     async handleUpdatePet(event, petId) {
         event.preventDefault();
-        const formData = new FormData(event.target);
-        
-        const petData = {
-            pet_id: petId,
-            name: formData.get('name'),
-            species: formData.get('species'),
-            breed: formData.get('breed'),
-            gender: formData.get('gender'),
-            age: parseFloat(formData.get('age')),
-            weight: parseFloat(formData.get('weight')),
-            ideal_weight: formData.get('ideal_weight') ? parseFloat(formData.get('ideal_weight')) : null,
-            body_condition_score: formData.get('body_condition_score') ? parseInt(formData.get('body_condition_score')) : null,
-            activity_level: formData.get('activity_level'),
-            spayed_neutered: formData.get('spayed_neutered'),
-            medical_conditions: formData.get('medical_conditions'),
-            medications: formData.get('medications'),
-            personality: formData.get('personality'),
-            dietary_notes: formData.get('dietary_notes')
-        };
-
+        const form = event.target;
+        const formData = new FormData(form);
+        const data = {};
+        for (let [k, v] of formData.entries()) {
+            if (v !== '') data[k] = v;
+        }
+        if (data.age) data.age = parseFloat(data.age);
+        if (data.weight) data.weight = parseFloat(data.weight);
+        if (data.ideal_weight) data.ideal_weight = parseFloat(data.ideal_weight);
+        if (data.body_condition_score) data.body_condition_score = parseInt(data.body_condition_score, 10);
         try {
-            const response = await fetch('/api-bridge.php?action=update_pet', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: JSON.stringify(petData)
+            const res = await fetch(`/api/pets.php/${petId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify(data)
             });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                this.closeModal();
-                await this.loadPets();
-                alert('Pet updated successfully!');
-            } else {
-                alert('Failed to update pet: ' + (data.error || 'Unknown error'));
-            }
-        } catch (error) {
-            console.error('Update pet error:', error);
-            alert('Failed to update pet. Please try again.');
+            const result = await res.json();
+            if (!res.ok || !result.success) throw new Error(result.error || 'Failed to update pet');
+            this.closeModal();
+            await this.loadPets();
+            this.showNotification('Pet updated successfully', 'success');
+        } catch (e) {
+            console.error(e);
+            this.showNotification(e.message || 'Failed to update pet', 'error');
         }
     }
 
-    async deletePet(petId) {
-        if (!confirm('Are you sure you want to delete this pet? This action cannot be undone.')) {
-            return;
-        }
-
-        try {
-            const response = await fetch('/api-bridge.php?action=delete_pet', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: JSON.stringify({ pet_id: petId })
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                await this.loadPets();
-                alert('Pet deleted successfully');
-            } else {
-                alert('Failed to delete pet: ' + (data.error || 'Unknown error'));
-            }
-        } catch (error) {
-            console.error('Delete pet error:', error);
-            alert('Failed to delete pet. Please try again.');
-        }
-    }
-
-    showDemo() {
-        alert('Demo feature coming soon!');
-    }
-
-    // User Menu Management
-    toggleUserMenu() {
-        const userMenu = document.getElementById('user-menu');
-        if (userMenu) {
-            userMenu.classList.toggle('show');
-        }
-    }
-
-    // User Profile Management
-    showUserProfile() {
+    // Log Weight Modal
+    showLogWeight(petId) {
+        const pet = this.getPetById(petId);
+        if (!pet) return this.showNotification('Pet not found', 'error');
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth()+1).padStart(2,'0');
+        const dd = String(today.getDate()).padStart(2,'0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
         const modalBody = document.getElementById('modal-body');
+        if (!modalBody) return;
         modalBody.innerHTML = `
-            <h2>User Profile</h2>
-            <form onsubmit="app.handleUpdateProfile(event)">
-                <div class="form-group">
-                    <label class="form-label">First Name</label>
-                    <input type="text" class="form-input" name="first_name" value="${this.currentUser?.first_name || ''}" required>
+            <div class="professional-modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fas fa-weight-hanging"></i>
+                        <h2>Log Weight - ${pet.name}</h2>
+                    </div>
+                    <button class="modal-close-btn" onclick="app.closeModal()"><i class="fas fa-times"></i></button>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Last Name</label>
-                    <input type="text" class="form-input" name="last_name" value="${this.currentUser?.last_name || ''}" required>
+                <div class="modal-body-scrollable">
+                    <form id="log-weight-form" class="professional-pet-form" onsubmit="app.handleLogWeight(event, ${pet.id})">
+                        <div class="section-block section--full">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label required">Weight (kg)</label>
+                                    <input type="number" name="weight" class="form-input" required step="0.1" min="0.1" value="${pet.weight ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Date</label>
+                                    <input type="date" name="recorded_date" class="form-input" required value="${todayStr}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Body Condition Score</label>
+                                    <select name="body_condition_score" class="form-select">
+                                        <option value="">Select Score</option>
+                                        ${Array.from({length:9}, (_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="form-group form-group--full">
+                                    <label class="form-label">Notes</label>
+                                    <textarea name="notes" class="form-textarea" rows="3" placeholder="Optional notes..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Record</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" name="email" value="${this.currentUser?.email || ''}" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">New Password (leave blank to keep current)</label>
-                    <input type="password" class="form-input" name="password" placeholder="Enter new password">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Confirm New Password</label>
-                    <input type="password" class="form-input" name="confirm_password" placeholder="Confirm new password">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Update Profile</button>
-                </div>
-            </form>
-        `;
+            </div>`;
         this.showModal();
     }
 
-    async handleUpdateProfile(event) {
+    async handleLogWeight(event, petId) {
         event.preventDefault();
-        const formData = new FormData(event.target);
-        
-        // Validate password confirmation
-        const password = formData.get('password');
-        const confirmPassword = formData.get('confirm_password');
-        
-        if (password && password !== confirmPassword) {
-            alert('Passwords do not match');
-            return;
+        const form = event.target;
+        const formData = new FormData(form);
+        const payload = { pet_id: petId };
+        for (let [k, v] of formData.entries()) {
+            if (v !== '') payload[k] = v;
         }
-        
-        const profileData = {
-            first_name: formData.get('first_name'),
-            last_name: formData.get('last_name'),
-            email: formData.get('email')
-        };
-        
-        // Only include password if provided
-        if (password) {
-            profileData.password = password;
-        }
-
+        if (payload.weight) payload.weight = parseFloat(payload.weight);
+        if (payload.body_condition_score) payload.body_condition_score = parseInt(payload.body_condition_score, 10);
         try {
-            const response = await fetch('/api-bridge.php?action=update_profile', {
+            const res = await fetch('/api/weight-log.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.getAuthToken()}`
-                },
-                body: JSON.stringify(profileData)
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify(payload)
             });
+            const result = await res.json();
+            if (!res.ok || !result.success) throw new Error(result.error || 'Failed to log weight');
+            this.closeModal();
+            await this.loadPets();
+            this.showNotification('Weight recorded successfully', 'success');
+        } catch (e) {
+            console.error(e);
+            this.showNotification(e.message || 'Failed to log weight', 'error');
+        }
+    }
 
-            const data = await response.json();
+    attachPetsTabListeners() {
+        const filterButtons = document.querySelectorAll('#pets-tab .filter-btn');
+        if (!filterButtons.length) return;
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.currentPetsFilter = btn.getAttribute('data-filter') || 'all';
+                this.renderPets();
+            });
+        });
+    }
+    
+    /**
+     * Show pet dashboard modal with detailed information
+     */
+    showPetDashboard(pet) {
+        const modalBody = document.getElementById('modal-body');
+        if (!modalBody) return;
+        
+        const age = pet.age ? `${pet.age} years` : 'Unknown age';
+        const weight = pet.weight || pet.current_weight || 'Unknown';
+        const breed = pet.breed || 'Mixed breed';
+        const activityLevel = pet.activity_level || 'Medium';
+        
+        modalBody.innerHTML = `
+            <div class="professional-modal-content professional-modal--wide">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fas ${this.speciesIcon(pet.species)}"></i>
+                        <h2>${pet.name}'s Dashboard</h2>
+                    </div>
+                    <button class="modal-close-btn" onclick="app.closeModal()"><i class="fas fa-times"></i></button>
+                </div>
+                
+                <div class="modal-body-scrollable">
+                    <div class="pet-dashboard-content">
+                        <!-- Pet Overview -->
+                        <div class="pet-overview-section">
+                            <div class="pet-avatar-large">
+                                <i class="fas ${this.speciesIcon(pet.species)}"></i>
+                            </div>
+                            <div class="pet-basic-info">
+                                <h3>${pet.name}</h3>
+                                <p class="pet-details">${breed} • ${age} • ${weight} kg</p>
+                                <div class="pet-tags">
+                                    <span class="pet-tag">${pet.species}</span>
+                                    <span class="pet-tag activity-${activityLevel.toLowerCase()}">${activityLevel} Activity</span>
+                                    ${pet.spay_neuter_status ? `<span class="pet-tag">${pet.spay_neuter_status}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Stats -->
+                        <div class="pet-stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-weight"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-value">${weight}</div>
+                                    <div class="stat-label">Current Weight (kg)</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-birthday-cake"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-value">${pet.age || '—'}</div>
+                                    <div class="stat-label">Age (years)</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-running"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-value">${activityLevel}</div>
+                                    <div class="stat-label">Activity Level</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-value">—</div>
+                                    <div class="stat-label">Health Score</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="pet-actions-section">
+                            <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                            <div class="pet-actions-grid">
+                                <button class="pet-action-btn" onclick="app.showEditPet(${pet.id}); app.closeModal();">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Edit Profile</span>
+                                </button>
+                                <button class="pet-action-btn" onclick="app.showLogWeight(${pet.id}); app.closeModal();">
+                                    <i class="fas fa-weight-hanging"></i>
+                                    <span>Log Weight</span>
+                                </button>
+                                <button class="pet-action-btn" onclick="if(window.nutritionCalculator) { window.nutritionCalculator.calculateForPet(${pet.id}); app.closeModal(); }">
+                                    <i class="fas fa-calculator"></i>
+                                    <span>Calculate Nutrition</span>
+                                </button>
+                                <button class="pet-action-btn" onclick="if(window.mealPlanner) { window.mealPlanner.createMealPlan(${pet.id}); app.closeModal(); }">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>Plan Meals</span>
+                                </button>
+                                <button class="pet-action-btn" onclick="alert('Health records coming soon!');">
+                                    <i class="fas fa-stethoscope"></i>
+                                    <span>Health Records</span>
+                                </button>
+                                <button class="pet-action-btn" onclick="alert('Photo gallery coming soon!');">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Photos</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Activity -->
+                        <div class="pet-activity-section">
+                            <h4><i class="fas fa-clock"></i> Recent Activity</h4>
+                            <div id="pet-recent-activity-${pet.id}" class="pet-activity-list">
+                                <div class="loading-state">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <span>Loading recent activity...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${pet.personality ? `
+                        <!-- Notes -->
+                        <div class="pet-notes-section">
+                            <h4><i class="fas fa-sticky-note"></i> Notes</h4>
+                            <div class="pet-notes">
+                                <p>${pet.personality}</p>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        this.showModal();
+        
+        // Load recent activity for this pet
+        this.loadPetRecentActivity(pet.id);
+        
+        // Log activity
+        this.logActivity('pet_dashboard_viewed', {
+            pet_id: pet.id,
+            pet_name: pet.name,
+            description: `Viewed dashboard for ${pet.name}`
+        });
+    }
+    
+    /**
+     * Load recent activity for a specific pet
+     */
+    async loadPetRecentActivity(petId) {
+        try {
+            const response = await fetch(`/api/dashboard.php?action=activities&pet_id=${petId}&limit=5`, {
+                credentials: 'same-origin'
+            });
             
-            if (data.success) {
-                this.currentUser = data.user;
-                this.closeModal();
-                alert('Profile updated successfully!');
-                // Refresh the page to show updated user info
-                window.location.reload();
-            } else {
-                alert('Failed to update profile: ' + (data.error || 'Unknown error'));
+            if (response.ok) {
+                const data = await response.json();
+                const container = document.getElementById(`pet-recent-activity-${petId}`);
+                
+                if (container && data.success && data.activities) {
+                    if (data.activities.length === 0) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-info-circle"></i>
+                                <p>No recent activity for this pet</p>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = data.activities.map(activity => `
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="${this.getActivityIcon(activity.type)}"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-text">${activity.description}</div>
+                                    <div class="activity-time">${activity.time_ago || 'Recently'}</div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
             }
         } catch (error) {
-            console.error('Profile update error:', error);
-            alert('Failed to update profile. Please try again.');
+            console.error('Error loading pet activity:', error);
+            const container = document.getElementById(`pet-recent-activity-${petId}`);
+            if (container) {
+                container.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Failed to load recent activity</p>
+                    </div>
+                `;
+            }
         }
     }
-
-    // Reports
-    generateReport() {
-        alert('Report generation feature coming soon!');
+    
+    /**
+     * Get icon for activity type
+     */
+    getActivityIcon(type) {
+        const icons = {
+            'pet_added': 'fa-plus-circle',
+            'pet_updated': 'fa-edit',
+            'weight_logged': 'fa-weight-hanging',
+            'nutrition_calculated': 'fa-calculator',
+            'meal_plan_created': 'fa-utensils',
+            'meal_logged': 'fa-check-circle',
+            'health_record_added': 'fa-stethoscope',
+            'photo_uploaded': 'fa-camera',
+            'vet_visit': 'fa-user-md'
+        };
+        return icons[type] || 'fa-info-circle';
     }
 }
 
-// Global functions for onclick handlers
-function showLogin() { app.showLogin(); }
-function showRegister() { app.showRegister(); }
-function showDemo() { app.showDemo(); }
-function closeModal() { app.closeModal(); }
-function logout() { app.logout(); }
-function showAddPet() { app.showAddPet(); }
-function showUserProfile() { app.showUserProfile(); }
-function showAddHealthRecord() { app.showAddHealthRecord(); }
-function switchTab(tab) { app.switchTab(tab); }
-function generateNutritionPlan() { app.generateNutritionPlan(); }
-function showAddHealthRecord() { app.showAddHealthRecord(); }
-function toggleUserMenu() { app.toggleUserMenu(); }
-function generateReport() { app.generateReport(); }
-
-// Contact form handler
-function handleContactForm(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    
-    // Simulate form submission
-    alert(`Thank you ${formData.get('name')}! Your message has been sent. We'll get back to you soon.`);
-    event.target.reset();
+// Global functions
+function showAddPet() { if (window.app) window.app.showAddPet(); }
+function closeModal() { if (window.app) window.app.closeModal(); }
+function switchToTab(tabName) { 
+    if (window.app) {
+        window.app.switchToTab(tabName);
+    }
+}
+// Backward-compatibility alias for existing inline handlers
+function switchTab(tabName) {
+    switchToTab(tabName);
 }
 
-// Initialize app when DOM is loaded
+// Sidebar footer helpers
+function toggleUserMenu() {
+    const menu = document.getElementById('user-menu');
+    if (menu) menu.classList.toggle('show');
+}
+
+function showUserProfile() {
+    try {
+        const root = document.getElementById('modal-body');
+        if (!root) return;
+        const userEl = document.querySelector('.sidebar-footer .user-profile');
+        const name = userEl?.getAttribute('data-user-name') || 'User';
+        const email = userEl?.getAttribute('data-user-email') || '';
+        const avatar = userEl?.getAttribute('data-user-avatar') || '';
+
+        root.innerHTML = `
+            <div class="professional-modal-content profile-modal">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fas fa-user"></i>
+                        <h2>Profile</h2>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <button class="btn btn-outline" onclick="switchToTab('settings')"><i class="fas fa-sliders-h"></i> Settings</button>
+                        <button class="modal-close-btn" onclick="app.closeModal()"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="modal-body-scrollable">
+                    <div class="profile-header">
+                        <div class="user-avatar">
+                            ${avatar ? `<img src="${avatar}" alt="${name}">` : `<span class="user-avatar--letter">${(name||'U').charAt(0).toUpperCase()}</span>`}
+                        </div>
+                        <div>
+                            <div class="profile-name">${name}</div>
+                            <div class="profile-email">${email}</div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn btn-outline" onclick="app.showNotification('Edit profile coming soon','info')"><i class="fas fa-pen"></i> Edit</button>
+                            <a href="logout.php" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h4>Account</h4>
+                        <div class="profile-row"><div>Full name</div><div>${name}</div></div>
+                        <div class="profile-row"><div>Email</div><div>${email}</div></div>
+                    </div>
+                </div>
+            </div>`;
+        const modal = document.querySelector('.modal-content');
+        if (modal) modal.classList.add('modal--professional');
+        if (window.app) window.app.showModal();
+    } catch (e) {
+        console.error(e);
+        if (window.app) window.app.showNotification('Unable to open profile','error');
+    }
+}
+function logWeight(petId) { if (window.app) window.app.showLogWeight(petId); }
+function editPet(petId) { if (window.app) window.app.showEditPet(petId); }
+function openPetDashboard(petId) { 
+    if (window.app) {
+        const pet = window.app.getPetById(petId);
+        if (pet) {
+            window.app.showPetDashboard(pet);
+        } else {
+            console.error('Pet not found:', petId);
+        }
+    }
+}
+// Lazy loader for component scripts
+const __scriptPromises = {};
+function loadScriptOnce(src) {
+    if (__scriptPromises[src]) return __scriptPromises[src];
+    __scriptPromises[src] = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.body.appendChild(s);
+    });
+    return __scriptPromises[src];
+}
+
+function waitForGlobal(key, timeoutMs = 3000, intervalMs = 50) {
+    return new Promise((resolve) => {
+        const start = Date.now();
+        const tick = () => {
+            if (window[key]) return resolve(true);
+            if (Date.now() - start >= timeoutMs) return resolve(false);
+            setTimeout(tick, intervalMs);
+        };
+        tick();
+    });
+}
+
+function scriptTagExists(srcSuffix) {
+    const scripts = document.getElementsByTagName('script');
+    for (let i = 0; i < scripts.length; i++) {
+        const s = scripts[i];
+        if (!s.src) continue;
+        if (s.src.endsWith(srcSuffix)) return true;
+        // also handle absolute path vs relative
+        const idx = s.src.indexOf('/assets/js/');
+        if (idx !== -1 && s.src.substring(idx) === srcSuffix) return true;
+    }
+    return false;
+}
+
+async function ensureCalculatorLoaded() {
+    if (window.nutritionCalculator) return true;
+    try {
+        const suffix = 'assets/js/components/nutrition-calculator.js';
+        if (!scriptTagExists(suffix)) {
+            await loadScriptOnce(suffix);
+        }
+    } catch {
+        // ignore and fall through to wait
+    }
+    return await waitForGlobal('nutritionCalculator', 4000);
+}
+
+async function ensureMealPlannerLoaded() {
+    if (window.mealPlanner) return true;
+    try {
+        const suffix = 'assets/js/components/meal-planner.js';
+        if (!scriptTagExists(suffix)) {
+            await loadScriptOnce(suffix);
+        }
+    } catch {
+        // ignore and wait
+    }
+    return await waitForGlobal('mealPlanner', 4000);
+}
+
+async function ensureNutritionPlansPanelLoaded() {
+    if (window.nutritionPlansPanel) return true;
+    try {
+        await loadScriptOnce('assets/js/components/nutrition-plans-panel.js');
+        const getSelectedPetId = () => {
+            const select = document.getElementById('nutrition-pet-select');
+            return select && select.value ? parseInt(select.value) : null;
+        };
+        window.nutritionPlansPanel = new window.NutritionPlansPanel({ getSelectedPetId });
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+async function openNutritionCalculator() { 
+    console.log('Opening nutrition calculator');
+    const select = document.getElementById('nutrition-pet-select');
+    const selectedId = select ? parseInt(select.value) : null;
+    const ready = await ensureCalculatorLoaded();
+    if (!ready) {
+        // Retry once; on failure, show non-blocking toast and exit silently
+        const retry = await ensureCalculatorLoaded();
+        if (!retry) {
+            if (window.app) window.app.showNotification('Unable to load nutrition calculator. Please refresh.', 'error');
+            return;
+        }
+    }
+    
+    // Log activity
+    if (window.app && window.app.logActivity) {
+        window.app.logActivity('nutrition_calculator_opened', {
+            description: 'Opened nutrition calculator',
+            pet_id: selectedId
+        });
+    }
+    
+    if (selectedId) {
+        window.nutritionCalculator.calculateForPet(selectedId);
+    } else {
+        window.nutritionCalculator.loadNutritionInterface();
+    }
+}
+
+async function openMealPlanner() { 
+    console.log('Opening meal planner');
+    const select = document.getElementById('nutrition-pet-select');
+    const selectedId = select ? parseInt(select.value) : null;
+    const ready = await ensureMealPlannerLoaded();
+    if (!ready) {
+        const retry = await ensureMealPlannerLoaded();
+        if (!retry) {
+            if (window.app) window.app.showNotification('Unable to load meal planner. Please refresh.', 'error');
+            return;
+        }
+    }
+    
+    // Log activity
+    if (window.app && window.app.logActivity) {
+        window.app.logActivity('meal_planner_opened', {
+            description: 'Opened meal planner',
+            pet_id: selectedId
+        });
+    }
+    
+    window.mealPlanner.createMealPlan(selectedId || undefined);
+}
+
+// Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     window.app = new ANMSApp();
+    // Lazy init the nutrition plans panel and refresh when tab opens or selector changes
+    ensureNutritionPlansPanelLoaded().then(() => {
+        const select = document.getElementById('nutrition-pet-select');
+        if (select) select.addEventListener('change', () => window.nutritionPlansPanel.refresh());
+        // Also refresh once after pets load (slight delay to allow list population)
+        setTimeout(() => window.nutritionPlansPanel.refresh(), 400);
+    });
+
+    // Apply persisted theme
+    const persisted = localStorage.getItem('anms_theme');
+    if (persisted) document.documentElement.setAttribute('data-theme', persisted);
 });
+
+// Theme helpers
+function setTheme(theme) {
+    if (theme === 'system') {
+        localStorage.setItem('anms_theme', 'system');
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const apply = () => document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+        apply();
+        try { mq.onchange = apply; } catch { mq.addEventListener && mq.addEventListener('change', apply); }
+        return;
+    }
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('anms_theme', theme);
+}
+function applyThemeToggle() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(current === 'light' ? 'dark' : 'light');
+}

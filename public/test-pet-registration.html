@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Registration Form Test - ANMS</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/pet-registration-form.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background: var(--gray-50);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px 0;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .test-header h1 {
+            color: var(--gray-900);
+            margin: 0 0 10px 0;
+        }
+        
+        .test-header p {
+            color: var(--gray-600);
+            margin: 0;
+        }
+        
+        .login-notice {
+            background: var(--blue-50);
+            border: 1px solid var(--blue-200);
+            border-radius: var(--radius-lg);
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .login-notice p {
+            margin: 0 0 10px 0;
+            color: var(--blue-800);
+        }
+        
+        .login-notice a {
+            color: var(--blue-600);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .login-notice a:hover {
+            text-decoration: underline;
+        }
+        
+        .feature-info {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .feature-info h3 {
+            margin: 0 0 15px 0;
+            color: var(--gray-900);
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray-700);
+        }
+        
+        .feature-list li i {
+            color: var(--green-500);
+            width: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>🐾 Pet Registration Form Test</h1>
+        <p>Testing the multi-step pet registration form with progress indicator</p>
+    </div>
+    
+    <div class="login-notice">
+        <p><strong>Note:</strong> You need to be logged in to register pets.</p>
+        <a href="login.php">Login with test@example.com / password</a> or 
+        <a href="register.php">create a new account</a>
+    </div>
+    
+    <div class="feature-info">
+        <h3>🚀 Form Features</h3>
+        <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Multi-step form with progress indicator</li>
+            <li><i class="fas fa-check"></i> Real-time validation and error messages</li>
+            <li><i class="fas fa-check"></i> Species-specific breed autocomplete</li>
+            <li><i class="fas fa-check"></i> Automatic age calculation from birth date</li>
+            <li><i class="fas fa-check"></i> Weight validation based on species</li>
+            <li><i class="fas fa-check"></i> Health conditions and allergies management</li>
+            <li><i class="fas fa-check"></i> Form persistence (auto-save draft)</li>
+            <li><i class="fas fa-check"></i> Responsive design for all devices</li>
+            <li><i class="fas fa-check"></i> Character count for text areas</li>
+            <li><i class="fas fa-check"></i> Professional UI with smooth transitions</li>
+        </ul>
+    </div>
+    
+    <!-- Pet Registration Form Component Container -->
+    <div id="pet-registration-container"></div>
+    
+    <!-- JavaScript -->
+    <script src="assets/js/components/pet-form-validator.js"></script>
+    <script src="assets/js/components/pet-registration-form.js"></script>
+    
+    <script>
+        // Check if user is logged in
+        fetch('/api/pets.php', {
+            method: 'GET',
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (response.status === 401) {
+                // User not logged in
+                document.getElementById('pet-registration-container').innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 12px; margin: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-size: 3rem; color: #6b7280; margin-bottom: 20px;">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3 style="color: #374151; margin-bottom: 10px;">Authentication Required</h3>
+                        <p style="color: #6b7280; margin-bottom: 30px;">Please log in to register new pets.</p>
+                        <a href="login.php" class="btn btn-primary" style="margin-right: 10px;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                        <a href="register.php" class="btn btn-secondary">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error checking authentication:', error);
+        });
+        
+        // Add some demo functionality
+        window.addEventListener('load', () => {
+            // Add demo data button for testing
+            if (petRegistrationForm) {
+                const demoBtn = document.createElement('button');
+                demoBtn.className = 'btn btn-outline';
+                demoBtn.innerHTML = '<i class="fas fa-magic"></i> Fill Demo Data';
+                demoBtn.style.position = 'fixed';
+                demoBtn.style.top = '20px';
+                demoBtn.style.right = '20px';
+                demoBtn.style.zIndex = '1000';
+                
+                demoBtn.onclick = () => {
+                    // Fill form with demo data
+                    document.getElementById('pet-name').value = 'Demo Pet';
+                    document.getElementById('pet-species').value = 'dog';
+                    document.getElementById('pet-species').dispatchEvent(new Event('change'));
+                    
+                    setTimeout(() => {
+                        document.getElementById('pet-breed').value = 'Golden Retriever';
+                        document.getElementById('pet-gender').value = 'male';
+                        document.getElementById('pet-birth-date').value = '2020-06-15';
+                        document.getElementById('pet-birth-date').dispatchEvent(new Event('change'));
+                        document.getElementById('pet-weight').value = '25.5';
+                        document.getElementById('pet-activity-level').value = 'high';
+                        document.getElementById('pet-personality').value = 'Friendly and energetic dog who loves playing fetch and swimming.';
+                        document.getElementById('pet-emergency-contact').value = 'City Vet Clinic - Dr. Smith - (555) 123-4567';
+                        
+                        // Trigger input events for validation
+                        document.getElementById('pet-personality').dispatchEvent(new Event('input'));
+                        document.getElementById('pet-emergency-contact').dispatchEvent(new Event('input'));
+                    }, 100);
+                };
+                
+                document.body.appendChild(demoBtn);
+            }
+        });
+    </script>
+</body>
+</html>

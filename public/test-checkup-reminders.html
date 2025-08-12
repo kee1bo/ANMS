@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkup Reminders Test - ANMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/checkup-reminders.css">
+    <link rel="stylesheet" href="assets/css/professional-modal.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-calendar-check"></i> Checkup Reminders System Test</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="testCheckupSystem()">
+                    <i class="fas fa-play"></i> Test System
+                </button>
+                <button class="btn btn-outline" onclick="refreshReminders()">
+                    <i class="fas fa-refresh"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Checkup Reminders Container -->
+        <div class="checkup-reminders-container">
+            <div class="reminders-header">
+                <div class="reminders-title">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>Veterinary Checkup Reminders</h3>
+                </div>
+                <div class="reminders-count">
+                    <div class="count-badge overdue">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="overdue-count">0</span> Overdue
+                    </div>
+                    <div class="count-badge upcoming">
+                        <i class="fas fa-clock"></i>
+                        <span id="upcoming-count">0</span> Due Soon
+                    </div>
+                    <div class="count-badge suggestions">
+                        <i class="fas fa-lightbulb"></i>
+                        <span id="suggestions-count">0</span> Suggestions
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overdue Checkups -->
+            <div class="reminders-section">
+                <div class="section-header">
+                    <h4 class="section-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Overdue Checkups
+                    </h4>
+                    <div class="section-actions">
+                        <button class="btn btn-sm btn-outline" onclick="scheduleAllOverdue()">
+                            <i class="fas fa-calendar-plus"></i> Schedule All
+                        </button>
+                    </div>
+                </div>
+                <div id="overdue-checkups">
+                    <div class="reminders-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading overdue checkups...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Checkups -->
+            <div class="reminders-section">
+                <div class="section-header">
+                    <h4 class="section-title">
+                        <i class="fas fa-clock"></i>
+                        Upcoming Checkups
+                    </h4>
+                </div>
+                <div id="upcoming-checkups">
+                    <div class="reminders-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading upcoming checkups...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scheduling Suggestions -->
+            <div class="reminders-section">
+                <div class="section-header">
+                    <h4 class="section-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Scheduling Suggestions
+                    </h4>
+                </div>
+                <div id="scheduling-suggestions">
+                    <div class="reminders-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading suggestions...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pet Status Cards -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2><i class="fas fa-paw"></i> Pet Checkup Status</h2>
+                <div class="section-actions">
+                    <button class="btn btn-outline" onclick="loadPetStatuses()">
+                        <i class="fas fa-refresh"></i> Refresh Status
+                    </button>
+                </div>
+            </div>
+            
+            <div id="pet-statuses" class="pet-statuses-grid">
+                <div class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading pet statuses...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Results -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2><i class="fas fa-clipboard-check"></i> System Test Results</h2>
+            </div>
+            
+            <div id="test-results" class="test-results">
+                <div class="test-info">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Click "Test System" to verify checkup reminder functionality</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/components/checkup-reminders.js"></script>
+    
+    <script>
+        let checkupReminders = null;
+        
+        // Initialize components
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize checkup reminders
+            checkupReminders = new CheckupReminders();
+            window.checkupReminders = checkupReminders;
+            
+            // Load pet statuses
+            loadPetStatuses();
+            
+            // Test system automatically
+            setTimeout(testCheckupSystem, 1000);
+        });
+        
+        function refreshReminders() {
+            if (checkupReminders) {
+                checkupReminders.refresh();
+            }
+            loadPetStatuses();
+        }
+        
+        async function loadPetStatuses() {
+            const container = document.getElementById('pet-statuses');
+            container.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i><p>Loading pet statuses...</p></div>';
+            
+            try {
+                // Get pets first
+                const petsResponse = await fetch('/api/pets.php', {
+                    credentials: 'same-origin'
+                });
+                const petsData = await petsResponse.json();
+                
+                if (!petsData.success || !petsData.pets || petsData.pets.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-paw"></i>
+                            <p>No pets found. Add pets to see checkup statuses.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Get status for each pet
+                const petStatuses = [];
+                for (const pet of petsData.pets) {
+                    try {
+                        const statusResponse = await fetch(`/api/checkup-reminders.php?action=pet_status&pet_id=${pet.id}`, {
+                            credentials: 'same-origin'
+                        });
+                        const statusData = await statusResponse.json();
+                        
+                        if (statusData.success) {
+                            petStatuses.push(statusData.pet_status);
+                        }
+                    } catch (error) {
+                        console.error(`Error getting status for pet ${pet.id}:`, error);
+                    }
+                }
+                
+                // Render pet status cards
+                if (petStatuses.length === 0) {
+                    container.innerHTML = `
+                        <div class="error-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Failed to load pet statuses</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div class="pet-statuses-grid">
+                        ${petStatuses.map(status => `
+                            <div class="pet-status-card status-${status.status} priority-${status.priority}">
+                                <div class="pet-status-header">
+                                    <h4>${status.pet_name}</h4>
+                                    <div class="status-badges">
+                                        <span class="status-badge status-${status.status}">${status.status.replace('_', ' ')}</span>
+                                        <span class="priority-badge priority-${status.priority}">${status.priority}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="pet-status-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>
+                                            ${status.status === 'overdue' 
+                                                ? `${Math.abs(status.days_until_due)} days overdue`
+                                                : status.status === 'due_soon'
+                                                ? `Due in ${status.days_until_due} days`
+                                                : `Next checkup in ${status.days_until_due} days`
+                                            }
+                                        </span>
+                                    </div>
+                                    
+                                    ${status.last_checkup_date ? `
+                                        <div class="detail-item">
+                                            <i class="fas fa-history"></i>
+                                            <span>Last: ${new Date(status.last_checkup_date).toLocaleDateString()}</span>
+                                        </div>
+                                    ` : `
+                                        <div class="detail-item">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            <span>No previous checkup</span>
+                                        </div>
+                                    `}
+                                    
+                                    <div class="detail-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Frequency: ${getFrequencyText(status.recommended_frequency)}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="pet-status-actions">
+                                    <button class="btn btn-sm btn-primary" onclick="checkupReminders.scheduleCheckup(${status.pet_id})">
+                                        <i class="fas fa-calendar-plus"></i> Schedule
+                                    </button>
+                                    <button class="btn btn-sm btn-outline" onclick="checkupReminders.markCompleted(${status.pet_id})">
+                                        <i class="fas fa-check"></i> Mark Done
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error loading pet statuses:', error);
+                container.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading pet statuses: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function getFrequencyText(days) {
+            if (days <= 120) return 'Every 4 months';
+            if (days <= 180) return 'Every 6 months';
+            return 'Annually';
+        }
+        
+        function scheduleAllOverdue() {
+            alert('Batch scheduling feature coming soon!');
+        }
+        
+        async function testCheckupSystem() {
+            const resultsContainer = document.getElementById('test-results');
+            resultsContainer.innerHTML = '<div class="test-loading"><i class="fas fa-spinner fa-spin"></i> Running system tests...</div>';
+            
+            const tests = [];
+            
+            // Test 1: Checkup Reminders API
+            try {
+                const remindersResponse = await fetch('/api/checkup-reminders.php?action=reminders', {
+                    credentials: 'same-origin'
+                });
+                const remindersData = await remindersResponse.json();
+                
+                tests.push({
+                    name: 'Checkup Reminders API',
+                    status: remindersData.success ? 'pass' : 'fail',
+                    details: remindersData.success ? 
+                        `Loaded ${remindersData.summary.overdue_count} overdue, ${remindersData.summary.upcoming_count} upcoming` : 
+                        remindersData.error,
+                    data: remindersData.reminders
+                });
+            } catch (error) {
+                tests.push({
+                    name: 'Checkup Reminders API',
+                    status: 'fail',
+                    details: error.message
+                });
+            }
+            
+            // Test 2: Pet Status API
+            try {
+                const petsResponse = await fetch('/api/pets.php', {
+                    credentials: 'same-origin'
+                });
+                const petsData = await petsResponse.json();
+                
+                if (petsData.success && petsData.pets && petsData.pets.length > 0) {
+                    const petId = petsData.pets[0].id;
+                    const statusResponse = await fetch(`/api/checkup-reminders.php?action=pet_status&pet_id=${petId}`, {
+                        credentials: 'same-origin'
+                    });
+                    const statusData = await statusResponse.json();
+                    
+                    tests.push({
+                        name: 'Pet Status API',
+                        status: statusData.success ? 'pass' : 'fail',
+                        details: statusData.success ? 
+                            `Pet status: ${statusData.pet_status.status}, Priority: ${statusData.pet_status.priority}` : 
+                            statusData.error,
+                        data: statusData.pet_status
+                    });
+                } else {
+                    tests.push({
+                        name: 'Pet Status API',
+                        status: 'skip',
+                        details: 'No pets available for testing'
+                    });
+                }
+            } catch (error) {
+                tests.push({
+                    name: 'Pet Status API',
+                    status: 'fail',
+                    details: error.message
+                });
+            }
+            
+            // Test 3: Component Integration
+            tests.push({
+                name: 'Checkup Reminders Component',
+                status: window.checkupReminders ? 'pass' : 'fail',
+                details: window.checkupReminders ? 'Component initialized successfully' : 'Component not found'
+            });
+            
+            // Test 4: Dashboard Integration
+            try {
+                const dashboardResponse = await fetch('/api/dashboard.php?action=stats', {
+                    credentials: 'same-origin'
+                });
+                const dashboardData = await dashboardResponse.json();
+                
+                tests.push({
+                    name: 'Dashboard Integration',
+                    status: dashboardData.success ? 'pass' : 'fail',
+                    details: dashboardData.success ? 
+                        `Next checkup in ${dashboardData.stats.next_checkup} days` : 
+                        dashboardData.error,
+                    data: { next_checkup: dashboardData.stats?.next_checkup }
+                });
+            } catch (error) {
+                tests.push({
+                    name: 'Dashboard Integration',
+                    status: 'fail',
+                    details: error.message
+                });
+            }
+            
+            // Display results
+            displayTestResults(tests);
+        }
+        
+        function displayTestResults(tests) {
+            const resultsContainer = document.getElementById('test-results');
+            const passCount = tests.filter(t => t.status === 'pass').length;
+            const failCount = tests.filter(t => t.status === 'fail').length;
+            const skipCount = tests.filter(t => t.status === 'skip').length;
+            
+            resultsContainer.innerHTML = `
+                <div class="test-summary">
+                    <div class="summary-item pass">
+                        <i class="fas fa-check-circle"></i>
+                        <span>${passCount} Passed</span>
+                    </div>
+                    <div class="summary-item fail">
+                        <i class="fas fa-times-circle"></i>
+                        <span>${failCount} Failed</span>
+                    </div>
+                    <div class="summary-item skip">
+                        <i class="fas fa-minus-circle"></i>
+                        <span>${skipCount} Skipped</span>
+                    </div>
+                </div>
+                
+                <div class="test-details">
+                    ${tests.map(test => `
+                        <div class="test-item ${test.status}">
+                            <div class="test-header">
+                                <i class="fas fa-${test.status === 'pass' ? 'check' : test.status === 'fail' ? 'times' : 'minus'}-circle"></i>
+                                <span class="test-name">${test.name}</span>
+                                <span class="test-status">${test.status.toUpperCase()}</span>
+                            </div>
+                            <div class="test-description">${test.details}</div>
+                            ${test.data ? `
+                                <div class="test-data">
+                                    <details>
+                                        <summary>View Data</summary>
+                                        <pre>${JSON.stringify(test.data, null, 2)}</pre>
+                                    </details>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        // Listen for checkup events
+        window.addEventListener('checkupCompleted', function(event) {
+            console.log('Checkup completed:', event.detail);
+            showNotification('Checkup marked as completed - refreshing data...', 'success');
+            setTimeout(refreshReminders, 1000);
+        });
+        
+        window.addEventListener('checkupScheduled', function(event) {
+            console.log('Checkup scheduled:', event.detail);
+            showNotification('Checkup scheduled successfully - refreshing data...', 'success');
+            setTimeout(refreshReminders, 1000);
+        });
+        
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check' : 'info'}-circle"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+    </script>
+    
+    <style>
+        .pet-statuses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .pet-status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        
+        .pet-status-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .pet-status-card.status-overdue {
+            border-left-color: #dc3545;
+        }
+        
+        .pet-status-card.status-due_soon {
+            border-left-color: #ffc107;
+        }
+        
+        .pet-status-card.status-current {
+            border-left-color: #28a745;
+        }
+        
+        .pet-status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .pet-status-header h4 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .status-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-end;
+        }
+        
+        .pet-status-details {
+            margin-bottom: 16px;
+        }
+        
+        .pet-status-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .loading-state,
+        .empty-state,
+        .error-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .loading-state i,
+        .empty-state i,
+        .error-state i {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+        
+        .loading-state i {
+            color: #17a2b8;
+        }
+        
+        .empty-state i {
+            color: #dee2e6;
+        }
+        
+        .error-state i {
+            color: #dc3545;
+        }
+    </style>
+</body>
+</html>

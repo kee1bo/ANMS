@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <title>Allergies Management Test - Pet Management</title>
+    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css\">
+    <link rel=\"stylesheet\" href=\"assets/css/app.css\">
+    <link rel=\"stylesheet\" href=\"assets/css/allergies-management.css\">
+    <style>
+        body {
+            background: #f3f4f6;
+            padding: 20px;
+        }
+        
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .test-header {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pet-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pet-selector h3 {
+            margin: 0 0 16px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .pet-select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .pet-option {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .pet-option:hover {
+            border-color: #3b82f6;
+            background: #f0f9ff;
+        }
+        
+        .pet-option.active {
+            border-color: #3b82f6;
+            background: #dbeafe;
+        }
+        
+        .pet-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .pet-species {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .debug-panel {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .debug-title {
+            color: #60a5fa;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class=\"test-container\">
+        <div class=\"test-header\">
+            <h1><i class=\"fas fa-exclamation-triangle\"></i> Allergies Management Test</h1>
+            <p>Test the comprehensive allergy tracking and management system for pets.</p>
+        </div>
+        
+        <!-- Pet Selector -->
+        <div class=\"pet-selector\">
+            <h3>Select a Pet to Manage Allergies</h3>
+            <div class=\"pet-select-grid\" id=\"pet-select-grid\">
+                <!-- Pet options will be populated here -->
+            </div>
+        </div>
+        
+        <!-- Allergies Management Component -->
+        <div id=\"allergies-container\"></div>
+        
+        <!-- Debug Panel -->
+        <div class=\"debug-panel\">
+            <div class=\"debug-title\">Debug Information</div>
+            <div id=\"debug-info\">No pet selected</div>
+        </div>
+    </div>
+
+    <script src=\"assets/js/components/allergies-management.js\"></script>
+    <script>
+        // Mock pet data for testing
+        const mockPets = [
+            {
+                id: 1,
+                name: \"Buddy\",
+                species: \"dog\",
+                breed: \"Golden Retriever\"
+            },
+            {
+                id: 2,
+                name: \"Whiskers\",
+                species: \"cat\",
+                breed: \"Persian\"
+            },
+            {
+                id: 3,
+                name: \"Charlie\",
+                species: \"dog\",
+                breed: \"Labrador Retriever\"
+            },
+            {
+                id: 4,
+                name: \"Luna\",
+                species: \"cat\",
+                breed: \"Maine Coon\"
+            }
+        ];
+
+        // Mock allergies data for testing
+        const mockAllergies = {
+            1: [ // Buddy's allergies
+                {
+                    id: 1,
+                    pet_id: 1,
+                    category: 'food',
+                    allergen: 'Chicken',
+                    severity: 'moderate',
+                    reaction_type: 'digestive',
+                    symptoms: 'Vomiting, diarrhea after eating chicken-based foods',
+                    treatment: 'Avoid chicken, use lamb or fish-based foods',
+                    created_at: '2024-01-15T10:30:00Z'
+                },
+                {
+                    id: 2,
+                    pet_id: 1,
+                    category: 'environmental',
+                    allergen: 'Pollen',
+                    severity: 'mild',
+                    reaction_type: 'skin',
+                    symptoms: 'Mild itching during spring season',
+                    treatment: 'Antihistamines during high pollen days',
+                    created_at: '2024-01-20T14:15:00Z'
+                }
+            ],
+            2: [ // Whiskers' allergies
+                {
+                    id: 3,
+                    pet_id: 2,
+                    category: 'food',
+                    allergen: 'Dairy',
+                    severity: 'severe',
+                    reaction_type: 'digestive',
+                    symptoms: 'Severe vomiting, diarrhea, lethargy',
+                    treatment: 'Strict dairy-free diet, emergency vet if consumed',
+                    created_at: '2024-01-10T09:45:00Z'
+                },
+                {
+                    id: 4,
+                    pet_id: 2,
+                    category: 'medication',
+                    allergen: 'Penicillin',
+                    severity: 'severe',
+                    reaction_type: 'systemic',
+                    symptoms: 'Difficulty breathing, swelling, hives',
+                    treatment: 'Avoid all penicillin-based antibiotics, use alternatives',
+                    created_at: '2024-01-12T16:20:00Z'
+                }
+            ],
+            3: [], // Charlie has no allergies
+            4: [ // Luna's allergies
+                {
+                    id: 5,
+                    pet_id: 4,
+                    category: 'environmental',
+                    allergen: 'Dust Mites',
+                    severity: 'mild',
+                    reaction_type: 'respiratory',
+                    symptoms: 'Occasional sneezing, watery eyes',
+                    treatment: 'Regular cleaning, air purifier',
+                    created_at: '2024-01-18T11:00:00Z'
+                }
+            ]
+        };
+
+        let allergiesManager;
+        let selectedPetId = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPetSelector();
+            
+            // Initialize allergies manager (will be empty until pet is selected)
+            allergiesManager = new AllergiesManagementComponent('allergies-container');
+            
+            // Override the loadAllergies method to use mock data
+            allergiesManager.loadAllergies = async function() {
+                if (!this.petId) return;
+                
+                try {
+                    this.showLoading();
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    const allergies = mockAllergies[this.petId] || [];
+                    this.allergies = allergies;
+                    this.displayAllergies();
+                    
+                    updateDebugInfo();
+                } catch (error) {
+                    console.error('Error loading allergies:', error);
+                    this.showError(error.message);
+                } finally {
+                    this.hideLoading();
+                }
+            };
+            
+            // Override the handleAddAllergy method to use mock data
+            allergiesManager.handleAddAllergy = async function(event) {
+                const formData = new FormData(event.target);
+                const allergyData = {
+                    id: Date.now(), // Mock ID
+                    pet_id: this.petId,
+                    category: formData.get('category'),
+                    allergen: formData.get('allergen'),
+                    severity: formData.get('severity'),
+                    reaction_type: formData.get('reaction_type') || null,
+                    symptoms: formData.get('symptoms') || null,
+                    treatment: formData.get('treatment') || null,
+                    created_at: new Date().toISOString()
+                };
+                
+                try {
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    
+                    // Add to mock data
+                    if (!mockAllergies[this.petId]) {
+                        mockAllergies[this.petId] = [];
+                    }
+                    mockAllergies[this.petId].push(allergyData);
+                    
+                    this.closeModal();
+                    await this.loadAllergies();
+                    this.showMessage('Allergy added successfully!', 'success');
+                    
+                    updateDebugInfo();
+                } catch (error) {
+                    console.error('Error adding allergy:', error);
+                    this.showMessage('Failed to add allergy: ' + error.message, 'error');
+                }
+            };
+            
+            updateDebugInfo();
+        });
+
+        function renderPetSelector() {
+            const container = document.getElementById('pet-select-grid');
+            
+            container.innerHTML = mockPets.map(pet => `
+                <div class=\"pet-option\" onclick=\"selectPet(${pet.id})\" data-pet-id=\"${pet.id}\">
+                    <div class=\"pet-name\">${pet.name}</div>
+                    <div class=\"pet-species\">${pet.breed} ${pet.species}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectPet(petId) {
+            selectedPetId = petId;
+            
+            // Update visual selection
+            document.querySelectorAll('.pet-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`[data-pet-id=\"${petId}\"]`).classList.add('active');
+            
+            // Update allergies manager
+            if (allergiesManager) {
+                allergiesManager.setPetId(petId);
+            }
+            
+            updateDebugInfo();
+        }
+
+        function updateDebugInfo() {
+            const debugInfo = document.getElementById('debug-info');
+            const selectedPet = mockPets.find(p => p.id === selectedPetId);
+            const allergies = selectedPetId ? (mockAllergies[selectedPetId] || []) : [];
+            
+            if (!selectedPet) {
+                debugInfo.innerHTML = 'No pet selected';
+                return;
+            }
+            
+            const severeCounts = {
+                mild: allergies.filter(a => a.severity === 'mild').length,
+                moderate: allergies.filter(a => a.severity === 'moderate').length,
+                severe: allergies.filter(a => a.severity === 'severe').length
+            };
+            
+            const categoryCounts = {
+                food: allergies.filter(a => a.category === 'food').length,
+                environmental: allergies.filter(a => a.category === 'environmental').length,
+                medication: allergies.filter(a => a.category === 'medication').length,
+                other: allergies.filter(a => a.category === 'other').length
+            };
+            
+            debugInfo.innerHTML = `
+                <strong>Selected Pet:</strong> ${selectedPet.name} (${selectedPet.breed} ${selectedPet.species})<br>
+                <strong>Total Allergies:</strong> ${allergies.length}<br>
+                <strong>By Severity:</strong><br>
+                &nbsp;&nbsp;Mild: ${severeCounts.mild}<br>
+                &nbsp;&nbsp;Moderate: ${severeCounts.moderate}<br>
+                &nbsp;&nbsp;Severe: ${severeCounts.severe}<br>
+                <strong>By Category:</strong><br>
+                &nbsp;&nbsp;Food: ${categoryCounts.food}<br>
+                &nbsp;&nbsp;Environmental: ${categoryCounts.environmental}<br>
+                &nbsp;&nbsp;Medication: ${categoryCounts.medication}<br>
+                &nbsp;&nbsp;Other: ${categoryCounts.other}<br>
+                <strong>Has Severe Allergies:</strong> ${severeCounts.severe > 0 ? 'Yes' : 'No'}
+            `;
+        }
+
+        // Make functions available globally for testing
+        window.selectPet = selectPet;
+        window.allergiesManager = allergiesManager;
+    </script>
+</body>
+</html>"

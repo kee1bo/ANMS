@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dashboard - ANMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .nav-link.active {
+            background: #0056b3;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #218838;
+        }
+        
+        .stat-card {
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-test-tube"></i> Dashboard Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>Navigation Test</h2>
+        <p>Click these tabs to test navigation:</p>
+        <a href="#" class="nav-link active" data-tab="dashboard">Dashboard</a>
+        <a href="#" class="nav-link" data-tab="pets">My Pets</a>
+        <a href="#" class="nav-link" data-tab="nutrition">Nutrition</a>
+        <a href="#" class="nav-link" data-tab="health">Health</a>
+        
+        <div id="dashboard-tab" class="tab-content active">
+            <h3>Dashboard Content</h3>
+            <div class="stat-card">
+                <div class="stat-value" id="total-pets">0</div>
+                <div class="stat-label">Total Pets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="meals-today">0</div>
+                <div class="stat-label">Meals Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="health-score">95%</div>
+                <div class="stat-label">Health Score</div>
+            </div>
+            <button class="btn" onclick="testAddPet()">Add Pet</button>
+            <button class="btn" onclick="testLoadData()">Load Data</button>
+        </div>
+        
+        <div id="pets-tab" class="tab-content">
+            <h3>Pets Content</h3>
+            <div id="pets-container">
+                <p>Pets will be loaded here...</p>
+            </div>
+        </div>
+        
+        <div id="nutrition-tab" class="tab-content">
+            <h3>Nutrition Content</h3>
+            <div id="nutrition-plans">
+                <p>Nutrition calculator will be loaded here...</p>
+                <button class="btn" onclick="testNutrition()">Test Nutrition Calculator</button>
+            </div>
+        </div>
+        
+        <div id="health-tab" class="tab-content">
+            <h3>Health Content</h3>
+            <div id="health-content">
+                <p>Health records will be loaded here...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Log</h2>
+        <button class="btn" onclick="clearLog()">Clear Log</button>
+        <div id="test-log" class="log"></div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modal-body">
+                <h3>Test Modal</h3>
+                <p>This is a test modal to verify modal functionality.</p>
+                <button class="btn" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test logging
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'blue';
+            logEl.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('test-log').innerHTML = '';
+        }
+        
+        // Test tab switching
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabName = e.target.dataset.tab;
+                log(`Switching to tab: ${tabName}`, 'info');
+                
+                // Update active nav
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Update active content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                const activeContent = document.getElementById(`${tabName}-tab`);
+                if (activeContent) {
+                    activeContent.classList.add('active');
+                    log(`Successfully switched to ${tabName} tab`, 'success');
+                } else {
+                    log(`ERROR: Tab content not found for ${tabName}`, 'error');
+                }
+            });
+        });
+        
+        // Test functions
+        function testAddPet() {
+            log('Testing Add Pet modal...', 'info');
+            const modal = document.getElementById('modal-overlay');
+            modal.style.display = 'flex';
+            log('Modal opened successfully', 'success');
+        }
+        
+        function closeModal() {
+            log('Closing modal...', 'info');
+            const modal = document.getElementById('modal-overlay');
+            modal.style.display = 'none';
+            log('Modal closed successfully', 'success');
+        }
+        
+        async function testLoadData() {
+            log('Testing data loading...', 'info');
+            try {
+                // Test dashboard API
+                const response = await fetch('/api/dashboard.php');
+                log(`Dashboard API status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Dashboard API response: ${JSON.stringify(data)}`, 'success');
+                    
+                    if (data.success && data.stats) {
+                        document.getElementById('total-pets').textContent = data.stats.total_pets || 0;
+                        document.getElementById('meals-today').textContent = data.stats.meals_today || 0;
+                        log('Dashboard stats updated', 'success');
+                    }
+                } else {
+                    const errorText = await response.text();
+                    log(`Dashboard API error: ${errorText}`, 'error');
+                }
+                
+                // Test pets API
+                const petsResponse = await fetch('/api/pets.php');
+                log(`Pets API status: ${petsResponse.status}`, petsResponse.ok ? 'success' : 'error');
+                
+                if (petsResponse.ok) {
+                    const petsData = await petsResponse.json();
+                    log(`Pets API response: ${JSON.stringify(petsData)}`, 'success');
+                } else {
+                    const errorText = await petsResponse.text();
+                    log(`Pets API error: ${errorText}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`Error testing APIs: ${error.message}`, 'error');
+            }
+        }
+        
+        function testNutrition() {
+            log('Testing nutrition calculator...', 'info');
+            const nutritionPlans = document.getElementById('nutrition-plans');
+            if (window.nutritionCalculator) {
+                log('Nutrition calculator found, loading interface...', 'success');
+                window.nutritionCalculator.loadNutritionInterface();
+            } else {
+                log('Nutrition calculator not found, showing placeholder', 'error');
+                nutritionPlans.innerHTML = `
+                    <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+                        <h4>Nutrition Calculator</h4>
+                        <p>The nutrition calculator component is not loaded.</p>
+                        <p>This could be due to:</p>
+                        <ul>
+                            <li>JavaScript file not loaded</li>
+                            <li>Component initialization error</li>
+                            <li>Missing dependencies</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+        
+        // Test app initialization
+        window.addEventListener('load', function() {
+            log('Page loaded, testing app initialization...', 'info');
+            
+            setTimeout(() => {
+                if (window.app) {
+                    log('ANMS App found and initialized', 'success');
+                    log(`App has ${window.app.pets ? window.app.pets.length : 0} pets loaded`, 'info');
+                } else {
+                    log('ERROR: ANMS App not found or not initialized', 'error');
+                }
+                
+                if (window.nutritionCalculator) {
+                    log('Nutrition calculator component loaded', 'success');
+                } else {
+                    log('WARNING: Nutrition calculator component not loaded', 'error');
+                }
+                
+                if (window.mealPlanner) {
+                    log('Meal planner component loaded', 'success');
+                } else {
+                    log('WARNING: Meal planner component not loaded', 'error');
+                }
+                
+                // Test if required elements exist
+                const requiredElements = ['total-pets', 'meals-today', 'health-score', 'pets-container', 'nutrition-plans', 'health-content'];
+                requiredElements.forEach(id => {
+                    const el = document.getElementById(id);
+                    log(`Element #${id}: ${el ? 'found' : 'NOT FOUND'}`, el ? 'success' : 'error');
+                });
+                
+            }, 1000);
+        });
+    </script>
+    
+    <!-- Load the actual app components -->
+    <script src="assets/js/components/nutrition-calculator.js"></script>
+    <script src="assets/js/components/meal-planner.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>"

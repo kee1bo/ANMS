@@ -1,0 +1,26 @@
+{
+  "servers": {
+    "office-word": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/home/ashuran/ANMS/Office-Word-MCP-Server",
+        "python",
+        "word_document_server/main.py"
+      ],
+      "env": {}
+    },
+    "pandoc-converter": {
+      "type": "stdio", 
+      "command": "uv",
+      "args": [
+        "tool",
+        "run",
+        "mcp-pandoc"
+      ],
+      "env": {}
+    }
+  }
+}

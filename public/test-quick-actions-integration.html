@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Actions Integration Test</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="main-content">
+            <h1>Quick Actions Integration Test</h1>
+            
+            <!-- Modal Overlay -->
+            <div id="modal-overlay" class="modal-overlay">
+                <div class="modal-content">
+                    <div id="modal-body"></div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions Test Area -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                </div>
+                <div class="card-body">
+                    <div class="quick-actions">
+                        <h3><i class="fas fa-zap"></i> Quick Actions</h3>
+                        <div id="quick-actions-container" class="actions-grid">
+                            <!-- Quick actions will be rendered here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Test Controls -->
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                        <h4>Test Controls</h4>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                            <button class="btn btn-outline" onclick="testLoadingState()">Test Loading State</button>
+                            <button class="btn btn-outline" onclick="testSuccessState()">Test Success State</button>
+                            <button class="btn btn-outline" onclick="testDisabledState()">Test Disabled State</button>
+                            <button class="btn btn-outline" onclick="togglePets()">Toggle Pets (Enable/Disable Actions)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Test Navigation Tabs -->
+            <div class="tab-navigation">
+                <button class="nav-link active" data-tab="dashboard">Dashboard</button>
+                <button class="nav-link" data-tab="pets">Pets</button>
+                <button class="nav-link" data-tab="nutrition">Nutrition</button>
+                <button class="nav-link" data-tab="health">Health</button>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="tab-content active" id="dashboard-tab">
+                <h2>Dashboard Content</h2>
+                <p>This is the dashboard tab content.</p>
+            </div>
+            
+            <div class="tab-content" id="pets-tab">
+                <h2>Pets Content</h2>
+                <p>This is the pets tab content.</p>
+                <div class="return-to-dashboard-test"></div>
+            </div>
+            
+            <div class="tab-content" id="nutrition-tab">
+                <h2>Nutrition Content</h2>
+                <p>This is the nutrition tab content.</p>
+                <div id="nutrition-plans">
+                    <!-- Nutrition content will be loaded here -->
+                </div>
+                <div class="return-to-dashboard-test"></div>
+            </div>
+            
+            <div class="tab-content" id="health-tab">
+                <h2>Health Content</h2>
+                <p>This is the health tab content.</p>
+                <div class="return-to-dashboard-test"></div>
+            </div>
+            
+            <!-- Test Results -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Test Results</h3>
+                </div>
+                <div class="card-body">
+                    <div id="test-results">
+                        <p>Click the quick action buttons above to test the integration.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .dashboard-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .tab-navigation {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .nav-link {
+            padding: 10px 20px;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: auto;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: #374151;
+        }
+        
+        .quick-action-btn:hover:not(.disabled) {
+            background: #f9fafb;
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quick-action-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .quick-action-btn i {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+        
+        .quick-action-btn.disabled i {
+            color: #9ca3af;
+        }
+    </style>
+
+    <!-- Load Scripts -->
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/components/quick-actions.js"></script>
+    <script src="/assets/js/components/nutrition-calculator.js"></script>
+    <script src="/assets/js/components/meal-planner.js"></script>
+
+    <script>
+        // Test script
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Testing Quick Actions Integration');
+            
+            // Initialize test environment
+            window.app = new ANMSApp();
+            
+            // Mock some pets for testing
+            window.app.pets = [
+                { id: 1, name: 'Buddy', species: 'dog', weight: 25.5, age: 3 },
+                { id: 2, name: 'Whiskers', species: 'cat', weight: 4.2, age: 2 }
+            ];
+            
+            // Initialize quick actions
+            if (typeof QuickActions !== 'undefined') {
+                window.quickActions = new QuickActions(window.app, window.app);
+                console.log('Quick Actions initialized');
+            }
+            
+            // Test tab switching
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    
+                    // Update active nav
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update active content
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(tabName + '-tab').classList.add('active');
+                    
+                    // Log test result
+                    logTestResult(`Switched to ${tabName} tab`);
+                });
+            });
+            
+            // Listen for events
+            document.addEventListener('petAdded', function(e) {
+                logTestResult('Pet added event received: ' + JSON.stringify(e.detail));
+            });
+            
+            document.addEventListener('activityLogged', function(e) {
+                logTestResult('Activity logged event received: ' + JSON.stringify(e.detail));
+            });
+            
+            document.addEventListener('modalClosed', function() {
+                logTestResult('Modal closed event received');
+            });
+        });
+        
+        function logTestResult(message) {
+            const results = document.getElementById('test-results');
+            const timestamp = new Date().toLocaleTimeString();
+            results.innerHTML += `<p><strong>${timestamp}:</strong> ${message}</p>`;
+            console.log('Test:', message);
+        }
+        
+        // Mock nutrition calculator and meal planner for testing
+        if (!window.nutritionCalculator) {
+            window.nutritionCalculator = {
+                loadNutritionInterface: function() {
+                    logTestResult('Nutrition calculator interface loaded');
+                    document.getElementById('nutrition-plans').innerHTML = '<p>Mock nutrition calculator loaded</p>';
+                },
+                calculateForPet: function(petId) {
+                    logTestResult(`Nutrition calculated for pet ${petId}`);
+                }
+            };
+        }
+        
+        if (!window.mealPlanner) {
+            window.mealPlanner = {
+                createMealPlan: function(petId) {
+                    logTestResult(`Meal plan created for pet ${petId || 'none'}`);
+                    document.getElementById('nutrition-plans').innerHTML = '<p>Mock meal planner loaded</p>';
+                }
+            };
+        }
+        
+        // Test functions
+        window.testLoadingState = function() {
+            if (window.quickActions) {
+                window.quickActions.setActionLoading('add_pet', true);
+                logTestResult('Loading state activated for Add Pet action');
+                
+                setTimeout(() => {
+                    window.quickActions.setActionLoading('add_pet', false);
+                    logTestResult('Loading state cleared for Add Pet action');
+                }, 3000);
+            }
+        };
+        
+        window.testSuccessState = function() {
+            if (window.quickActions) {
+                window.quickActions.setActionSuccess('plan_meal', 3000);
+                logTestResult('Success state activated for Plan Meal action');
+            }
+        };
+        
+        window.testDisabledState = function() {
+            if (window.quickActions) {
+                const action = window.quickActions.getAction('calculate_nutrition');
+                if (action) {
+                    action.enabled = !action.enabled;
+                    window.quickActions.updateActionButton('calculate_nutrition', action);
+                    logTestResult(`Nutrition Calculator action ${action.enabled ? 'enabled' : 'disabled'}`);
+                }
+            }
+        };
+        
+        window.togglePets = function() {
+            if (window.app && window.quickActions) {
+                if (window.app.pets.length > 0) {
+                    window.app.pets = [];
+                    logTestResult('Pets cleared - actions should be disabled');
+                } else {
+                    window.app.pets = [
+                        { id: 1, name: 'Buddy', species: 'dog', weight: 25.5, age: 3 },
+                        { id: 2, name: 'Whiskers', species: 'cat', weight: 4.2, age: 2 }
+                    ];
+                    logTestResult('Pets added - actions should be enabled');
+                }
+                window.quickActions.pets = window.app.pets;
+                window.quickActions.updateActionAvailability();
+            }
+        };
+    </script>
+</body>
+</html>

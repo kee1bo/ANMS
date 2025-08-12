@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Component Tests</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-header {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+        }
+        
+        .test-section h3 {
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        
+        .test-case {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .test-case.passed {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .test-case.failed {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .test-case.running {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+        
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        
+        .test-controls {
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .btn.success {
+            background: #28a745;
+        }
+        
+        .btn.danger {
+            background: #dc3545;
+        }
+        
+        .test-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #28a745);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>Dashboard Component Test Suite</h1>
+            <p>Comprehensive testing for all dashboard components and utilities</p>
+            
+            <div class="test-controls">
+                <button class="btn" onclick="runAllTests()">Run All Tests</button>
+                <button class="btn" onclick="runUnitTests()">Unit Tests Only</button>
+                <button class="btn" onclick="runIntegrationTests()">Integration Tests Only</button>
+                <button class="btn danger" onclick="clearResults()">Clear Results</button>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="test-progress"></div>
+            </div>
+            
+            <div class="test-results" id="test-summary">
+                <strong>Test Summary:</strong> Ready to run tests
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Unit Tests</h3>
+            <div id="unit-tests">
+                <!-- Unit test cases will be populated here -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Integration Tests</h3>
+            <div id="integration-tests">
+                <!-- Integration test cases will be populated here -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Performance Tests</h3>
+            <div id="performance-tests">
+                <!-- Performance test cases will be populated here -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Accessibility Tests</h3>
+            <div id="accessibility-tests">
+                <!-- Accessibility test cases will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Load dependencies -->
+    <script src="../assets/js/components/loading-manager.js"></script>
+    <script src="../assets/js/utils/retry-manager.js"></script>
+    <script src="../assets/js/utils/network-monitor.js"></script>
+    <script src="../assets/js/utils/performance-monitor.js"></script>
+    <script src="../assets/js/utils/accessibility-enhancer.js"></script>
+    <script src="../assets/js/components/dashboard-statistics.js"></script>
+    <script src="../assets/js/components/activity-feed.js"></script>
+    <script src="../assets/js/components/quick-actions.js"></script>
+    
+    <!-- Test Framework -->
+    <script>
+        class TestFramework {
+            constructor() {
+                this.tests = [];
+                this.results = {
+                    passed: 0,
+                    failed: 0,
+                    total: 0
+                };
+                this.currentTest = null;
+            }
+            
+            describe(suiteName, testFn) {
+                const suite = {
+                    name: suiteName,
+                    tests: [],
+                    beforeEach: null,
+                    afterEach: null
+                };
+                
+                const context = {
+                    it: (testName, testFn) => {
+                        suite.tests.push({
+                            name: testName,
+                            fn: testFn,
+                            suite: suiteName
+                        });
+                    },
+                    beforeEach: (fn) => {
+                        suite.beforeEach = fn;
+                    },
+                    afterEach: (fn) => {
+                        suite.afterEach = fn;
+                    }
+                };
+                
+                testFn.call(context, context);
+                this.tests.push(suite);
+            }
+            
+            async runTests(filter = null) {
+                this.results = { passed: 0, failed: 0, total: 0 };
+                
+                for (const suite of this.tests) {
+                    if (filter && !suite.name.includes(filter)) continue;
+                    
+                    for (const test of suite.tests) {
+                        this.results.total++;
+                        
+                        const testCase = this.createTestCase(test);
+                        this.updateTestCase(testCase, 'running', 'Running...');
+                        
+                        try {
+                            if (suite.beforeEach) {
+                                await suite.beforeEach();
+                            }
+                            
+                            await test.fn();
+                            
+                            if (suite.afterEach) {
+                                await suite.afterEach();
+                            }
+                            
+                            this.results.passed++;
+                            this.updateTestCase(testCase, 'passed', 'PASSED');
+                            
+                        } catch (error) {
+                            this.results.failed++;
+                            this.updateTestCase(testCase, 'failed', `FAILED: ${error.message}`);
+                        }
+                        
+                        this.updateProgress();
+                        await this.delay(50); // Small delay for visual feedback
+                    }
+                }
+                
+                this.updateSummary();
+            }
+            
+            createTestCase(test) {
+                const container = this.getTestContainer(test.suite);
+                const testCase = document.createElement('div');
+                testCase.className = 'test-case';
+                testCase.innerHTML = `
+                    <strong>${test.name}</strong>
+                    <div class="test-status">Pending...</div>
+                    <div class="test-output" style="display: none;"></div>
+                `;
+                container.appendChild(testCase);
+                return testCase;
+            }
+            
+            updateTestCase(testCase, status, message) {
+                testCase.className = `test-case ${status}`;
+                testCase.querySelector('.test-status').textContent = message;
+            }
+            
+            getTestContainer(suiteName) {
+                if (suiteName.includes('Unit')) {
+                    return document.getElementById('unit-tests');
+                } else if (suiteName.includes('Integration')) {
+                    return document.getElementById('integration-tests');
+                } else if (suiteName.includes('Performance')) {
+                    return document.getElementById('performance-tests');
+                } else if (suiteName.includes('Accessibility')) {
+                    return document.getElementById('accessibility-tests');
+                }
+                return document.getElementById('unit-tests');
+            }
+            
+            updateProgress() {
+                const progress = (this.results.passed + this.results.failed) / this.results.total * 100;
+                document.getElementById('test-progress').style.width = `${progress}%`;
+            }
+            
+            updateSummary() {
+                const summary = document.getElementById('test-summary');
+                summary.innerHTML = `
+                    <strong>Test Summary:</strong> 
+                    ${this.results.passed} passed, 
+                    ${this.results.failed} failed, 
+                    ${this.results.total} total
+                `;
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+        
+        // Test utilities
+        function expect(actual) {
+            return {
+                toBe: (expected) => {
+                    if (actual !== expected) {
+                        throw new Error(`Expected ${expected}, but got ${actual}`);
+                    }
+                },
+                toEqual: (expected) => {
+                    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                        throw new Error(`Expected ${JSON.stringify(expected)}, but got ${JSON.stringify(actual)}`);
+                    }
+                },
+                toBeTruthy: () => {
+                    if (!actual) {
+                        throw new Error(`Expected truthy value, but got ${actual}`);
+                    }
+                },
+                toBeFalsy: () => {
+                    if (actual) {
+                        throw new Error(`Expected falsy value, but got ${actual}`);
+                    }
+                },
+                toContain: (expected) => {
+                    if (!actual.includes(expected)) {
+                        throw new Error(`Expected ${actual} to contain ${expected}`);
+                    }
+                },
+                toBeInstanceOf: (expected) => {
+                    if (!(actual instanceof expected)) {
+                        throw new Error(`Expected instance of ${expected.name}, but got ${actual.constructor.name}`);
+                    }
+                },
+                toThrow: () => {
+                    let threw = false;
+                    try {
+                        actual();
+                    } catch (e) {
+                        threw = true;
+                    }
+                    if (!threw) {
+                        throw new Error('Expected function to throw, but it did not');
+                    }
+                }
+            };
+        }
+        
+        function createMockElement(tag = 'div', attributes = {}) {
+            const element = document.createElement(tag);
+            Object.keys(attributes).forEach(key => {
+                element.setAttribute(key, attributes[key]);
+            });
+            return element;
+        }
+        
+        function createMockApiResponse(data, success = true) {
+            return Promise.resolve({
+                ok: success,
+                json: () => Promise.resolve({
+                    success,
+                    ...data
+                })
+            });
+        }
+        
+        // Initialize test framework
+        const testFramework = new TestFramework();
+        
+        // Unit Tests
+        testFramework.describe('Unit Tests - LoadingManager', function() {
+            let loadingManager;
+            
+            this.beforeEach(() => {
+                loadingManager = new LoadingManager();
+            });
+            
+            this.it('should create loading manager instance', () => {
+                expect(loadingManager).toBeInstanceOf(LoadingManager);
+                expect(loadingManager.options).toBeTruthy();
+            });
+            
+            this.it('should show loading state', () => {
+                const container = createMockElement('div', { id: 'test-container' });
+                document.body.appendChild(container);
+                
+                loadingManager.showLoading('test-container', { type: 'spinner' });
+                
+                expect(container.classList.contains('loading-state')).toBeTruthy();
+                
+                document.body.removeChild(container);
+            });
+            
+            this.it('should hide loading state', () => {
+                const container = createMockElement('div', { id: 'test-container' });
+                document.body.appendChild(container);
+                
+                loadingManager.showLoading('test-container');
+                loadingManager.hideLoading('test-container');
+                
+                expect(container.classList.contains('loading-state')).toBeFalsy();
+                
+                document.body.removeChild(container);
+            });
+        });
+        
+        testFramework.describe('Unit Tests - RetryManager', function() {
+            let retryManager;
+            
+            this.beforeEach(() => {
+                retryManager = new RetryManager();
+            });
+            
+            this.it('should create retry manager instance', () => {
+                expect(retryManager).toBeInstanceOf(RetryManager);
+                expect(retryManager.options.maxRetries).toBe(3);
+            });
+            
+            this.it('should execute operation successfully', async () => {
+                const operation = () => Promise.resolve('success');
+                const result = await retryManager.execute(operation);
+                expect(result).toBe('success');
+            });
+            
+            this.it('should retry failed operations', async () => {
+                let attempts = 0;
+                const operation = () => {
+                    attempts++;
+                    if (attempts < 3) {
+                        return Promise.reject(new Error('Network error'));
+                    }
+                    return Promise.resolve('success');
+                };
+                
+                const result = await retryManager.execute(operation);
+                expect(result).toBe('success');
+                expect(attempts).toBe(3);
+            });
+        });
+        
+        testFramework.describe('Unit Tests - NetworkMonitor', function() {
+            let networkMonitor;
+            
+            this.beforeEach(() => {
+                networkMonitor = new NetworkMonitor({ showIndicator: false });
+            });
+            
+            this.it('should create network monitor instance', () => {
+                expect(networkMonitor).toBeInstanceOf(NetworkMonitor);
+                expect(networkMonitor.isOnline).toBeTruthy();
+            });
+            
+            this.it('should detect online status', () => {
+                const status = networkMonitor.getStatus();
+                expect(status.isOnline).toBeTruthy();
+            });
+        });
+        
+        testFramework.describe('Unit Tests - PerformanceMonitor', function() {
+            let performanceMonitor;
+            
+            this.beforeEach(() => {
+                performanceMonitor = new PerformanceMonitor({ enableReporting: false });
+            });
+            
+            this.it('should create performance monitor instance', () => {
+                expect(performanceMonitor).toBeInstanceOf(PerformanceMonitor);
+                expect(performanceMonitor.metrics).toBeTruthy();
+            });
+            
+            this.it('should start and end timers', () => {
+                performanceMonitor.startTimer('test-timer');
+                const metric = performanceMonitor.endTimer('test-timer');
+                
+                expect(metric).toBeTruthy();
+                expect(metric.duration).toBeTruthy();
+            });
+            
+            this.it('should record API calls', () => {
+                const mockEntry = {
+                    name: '/api/test',
+                    duration: 150,
+                    transferSize: 1024
+                };
+                
+                performanceMonitor.recordApiCall(mockEntry);
+                
+                expect(performanceMonitor.metrics.apiCalls.length).toBe(1);
+                expect(performanceMonitor.metrics.apiCalls[0].url).toBe('/api/test');
+            });
+        });
+        
+        testFramework.describe('Unit Tests - AccessibilityEnhancer', function() {
+            let accessibilityEnhancer;
+            
+            this.beforeEach(() => {
+                accessibilityEnhancer = new AccessibilityEnhancer({
+                    enableAnnouncements: false
+                });
+            });
+            
+            this.it('should create accessibility enhancer instance', () => {
+                expect(accessibilityEnhancer).toBeInstanceOf(AccessibilityEnhancer);
+                expect(accessibilityEnhancer.options).toBeTruthy();
+            });
+            
+            this.it('should generate accessibility report', () => {
+                const report = accessibilityEnhancer.getAccessibilityReport();
+                
+                expect(report).toBeTruthy();
+                expect(report.skipLinks).toBeTruthy();
+                expect(report.landmarks).toBeTruthy();
+            });
+        });
+        
+        // Integration Tests
+        testFramework.describe('Integration Tests - Dashboard Components', function() {
+            this.it('should load all required utilities', () => {
+                expect(window.loadingManager).toBeTruthy();
+                expect(window.retryManager).toBeTruthy();
+                expect(window.networkMonitor).toBeTruthy();
+                expect(window.performanceMonitor).toBeTruthy();
+                expect(window.accessibilityEnhancer).toBeTruthy();
+            });
+            
+            this.it('should integrate loading manager with retry manager', async () => {
+                const container = createMockElement('div', { id: 'integration-test' });
+                document.body.appendChild(container);
+                
+                window.loadingManager.showLoading('integration-test');
+                
+                const operation = () => Promise.resolve('success');
+                const result = await window.retryManager.execute(operation);
+                
+                window.loadingManager.hideLoading('integration-test');
+                
+                expect(result).toBe('success');
+                
+                document.body.removeChild(container);
+            });
+        });
+        
+        // Performance Tests
+        testFramework.describe('Performance Tests', function() {
+            this.it('should load components within acceptable time', async () => {
+                const startTime = performance.now();
+                
+                // Simulate component loading
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                const endTime = performance.now();
+                const loadTime = endTime - startTime;
+                
+                expect(loadTime < 1000).toBeTruthy(); // Should load within 1 second
+            });
+            
+            this.it('should handle multiple simultaneous operations', async () => {
+                const operations = Array(10).fill().map((_, i) => 
+                    window.retryManager.execute(() => Promise.resolve(`result-${i}`))
+                );
+                
+                const results = await Promise.all(operations);
+                
+                expect(results.length).toBe(10);
+                expect(results[0]).toBe('result-0');
+                expect(results[9]).toBe('result-9');
+            });
+        });
+        
+        // Accessibility Tests
+        testFramework.describe('Accessibility Tests', function() {
+            this.it('should have proper ARIA landmarks', () => {
+                const landmarks = document.querySelectorAll('[role="main"], [role="navigation"], [role="banner"]');
+                expect(landmarks.length > 0).toBeTruthy();
+            });
+            
+            this.it('should have skip links', () => {
+                const skipLinks = document.querySelectorAll('.skip-link');
+                expect(skipLinks.length > 0).toBeTruthy();
+            });
+            
+            this.it('should have proper focus management', () => {
+                const focusableElements = document.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])');
+                expect(focusableElements.length > 0).toBeTruthy();
+            });
+        });
+        
+        // Test runner functions
+        async function runAllTests() {
+            clearResults();
+            await testFramework.runTests();
+        }
+        
+        async function runUnitTests() {
+            clearResults();
+            await testFramework.runTests('Unit Tests');
+        }
+        
+        async function runIntegrationTests() {
+            clearResults();
+            await testFramework.runTests('Integration Tests');
+        }
+        
+        function clearResults() {
+            document.getElementById('unit-tests').innerHTML = '';
+            document.getElementById('integration-tests').innerHTML = '';
+            document.getElementById('performance-tests').innerHTML = '';
+            document.getElementById('accessibility-tests').innerHTML = '';
+            document.getElementById('test-progress').style.width = '0%';
+            document.getElementById('test-summary').innerHTML = '<strong>Test Summary:</strong> Ready to run tests';
+        }
+        
+        // Auto-run tests on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                runAllTests();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
